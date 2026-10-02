@@ -47,6 +47,8 @@ const stats = asyncHandler(async (req, res) => {
     ...summary,
     usedStorageBytes,
     storageLimitBytes: env.uploads.maxStoragePerUserBytes,
+    maxFileSizeBytes: env.uploads.maxFileSizeBytes,
+    maxFilesPerUpload: env.uploads.maxFilesPerUpload,
     recentItems: recentItems.map(attachResourceUrls),
   }).send(res);
 });

@@ -86,6 +86,8 @@ async function main() {
   assert.equal(usage.totalFiles, 1);
   assert.equal(usage.usedStorageBytes, Buffer.byteLength(payload));
   assert.equal(usage.storageLimitBytes, 2 * 1024 ** 3);
+  assert.equal(usage.maxFileSizeBytes, 1024 * 1024 ** 2);
+  assert.equal(usage.maxFilesPerUpload, 20);
 
   // A tiny upload is rejected when metadata for this test user fills the quota.
   const quotaFixture = await Item.create({

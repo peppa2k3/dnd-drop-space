@@ -30,4 +30,4 @@ Script `scripts/deploy.sh` tự quay về release trước nếu bước `up --w
 - Đặt quota/upload phù hợp RAM; một replica API vì cron còn nằm trong process API. Thêm giám sát uptime/dung lượng và backup định kỳ.
 - Image nền Node/Nginx dùng tag dòng; pin digest cho release production sau khi kiểm chứng. Chưa có registry/image signing.
 
-Checklist thực hiện: [prompt 004](../prompts/backlog/004-production-release.md).
+Checklist thực hiện: [prompt 005](../prompts/backlog/005-production-release.md).

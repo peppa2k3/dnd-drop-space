@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, File as FileIcon, CheckCircle2 } from 'lucide-react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
@@ -8,9 +8,11 @@ import IconButton from '../common/IconButton';
 import UploadDropzone from './UploadDropzone';
 import { useFolders } from '../../hooks/useFolders';
 import { useUploadFiles } from '../../hooks/useItems';
+import { useDashboardStats } from '../../hooks/useDashboard';
 import { useToast } from '../../context/ToastContext';
 import { buildFolderTree, flattenForSelect } from '../../utils/folderTree';
 import { formatBytes } from '../../utils/format';
+import { getUploadIssue } from '../../utils/uploadCapacity';
 
 export default function UploadModal({ open, onClose, defaultFolder = null }) {
   const [files, setFiles] = useState([]); // { file, progress, done }
@@ -18,30 +20,49 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
+  const [checkingCapacity, setCheckingCapacity] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
   const { data: folders = [] } = useFolders();
   const folderOptions = flattenForSelect(buildFolderTree(folders));
   const uploadMutation = useUploadFiles();
+  const { data: stats, refetch, isFetching, isError } = useDashboardStats();
   const { addToast } = useToast();
+  const selectedFiles = files.map(({ file }) => file);
+  const capacityIssue = stats ? getUploadIssue(selectedFiles, stats) : null;
+  const capacityUnavailable = !stats || isError;
+  const uploadDisabled = files.length === 0 || capacityUnavailable || Boolean(capacityIssue) ||
+    isFetching || checkingCapacity || uploadMutation.isPending;
+
+  useEffect(() => {
+    if (open) refetch();
+  }, [open, refetch]);
 
   const reset = () => {
     setFiles([]);
     setDescription('');
     setTags([]);
     setTagInput('');
+    setUploadError('');
   };
 
   const handleClose = () => {
-    if (uploadMutation.isPending) return;
+    if (uploadMutation.isPending || checkingCapacity) return;
     reset();
     onClose();
   };
 
   const addFiles = (newFiles) => {
+    setUploadError('');
+    const issue = stats && getUploadIssue([...selectedFiles, ...newFiles], stats);
+    if (issue) addToast(issue, 'error');
     setFiles((prev) => [...prev, ...newFiles.map((file) => ({ file, progress: 0 }))]);
   };
 
-  const removeFile = (index) => setFiles((prev) => prev.filter((_, i) => i !== index));
+  const removeFile = (index) => {
+    setUploadError('');
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const addTag = () => {
     const t = tagInput.trim().toLowerCase();
@@ -49,8 +70,28 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
     setTagInput('');
   };
 
-  const handleUpload = () => {
-    if (files.length === 0) return;
+  const handleUpload = async () => {
+    if (files.length === 0 || uploadDisabled) return;
+
+    setCheckingCapacity(true);
+    try {
+      const result = await refetch();
+      if (result.error || !result.data) throw result.error || new Error('Unavailable');
+      const issue = getUploadIssue(selectedFiles, result.data);
+      if (issue) {
+        setUploadError(issue);
+        addToast(issue, 'error');
+        return;
+      }
+      setUploadError('');
+    } catch {
+      const message = 'Không thể kiểm tra dung lượng lưu trữ. Vui lòng thử lại.';
+      setUploadError(message);
+      addToast(message, 'error');
+      return;
+    } finally {
+      setCheckingCapacity(false);
+    }
 
     const formData = new FormData();
     files.forEach(({ file }) => formData.append('files', file));
@@ -73,7 +114,12 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
           onClose();
         },
         onError: (err) => {
-          addToast(err?.response?.data?.message || 'Tải lên thất bại', 'error');
+          const message = err?.response?.status === 413
+            ? 'Không đủ dung lượng lưu trữ hoặc tệp vượt giới hạn. Hãy kiểm tra lại các tệp đã chọn.'
+            : err?.response?.data?.message || 'Tải lên thất bại';
+          setUploadError(message);
+          addToast(message, 'error');
+          refetch();
         },
       }
     );
@@ -87,17 +133,26 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
       size="lg"
       footer={
         <>
-          <Button variant="ghost" onClick={handleClose} disabled={uploadMutation.isPending}>
+          <Button variant="ghost" onClick={handleClose} disabled={uploadMutation.isPending || checkingCapacity}>
             Hủy
           </Button>
-          <Button onClick={handleUpload} loading={uploadMutation.isPending} disabled={files.length === 0}>
+          <Button onClick={handleUpload} loading={uploadMutation.isPending || checkingCapacity} disabled={uploadDisabled}>
             Tải lên {files.length > 0 && `(${files.length})`}
           </Button>
         </>
       }
     >
       <div className="flex flex-col gap-4">
-        <UploadDropzone onFilesSelected={addFiles} />
+        <UploadDropzone onFilesSelected={addFiles} disabled={uploadMutation.isPending || checkingCapacity ||
+          (stats && stats.usedStorageBytes >= stats.storageLimitBytes)} />
+        <p className="text-xs text-slate-light" aria-live="polite">
+          {stats ? `${formatBytes(stats.usedStorageBytes)} / ${formatBytes(stats.storageLimitBytes)} đã dùng; còn ${formatBytes(Math.max(0, stats.storageLimitBytes - stats.usedStorageBytes))}` : 'Đang kiểm tra dung lượng...'}
+        </p>
+        {(capacityIssue || uploadError || isError) && (
+          <p role="alert" className="rounded-card bg-brick-soft px-3 py-2 text-sm text-brick">
+            {isError ? 'Không thể kiểm tra dung lượng lưu trữ. Vui lòng thử lại.' : capacityIssue || uploadError}
+          </p>
+        )}
 
         {files.length > 0 && (
           <div className="flex flex-col gap-1.5">

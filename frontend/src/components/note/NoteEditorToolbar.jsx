@@ -1,10 +1,13 @@
 import { useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Bold, Italic, Heading2, List, ListOrdered, CheckSquare, Code, Link2, Image as ImageIcon, Loader2 } from 'lucide-react';
 import IconButton from '../common/IconButton';
 import { markdownActions } from '../../utils/markdownEditor';
 import { itemApi } from '../../api/item.api';
 import { mediaUrl } from '../../utils/mediaUrl';
 import { useToast } from '../../context/ToastContext';
+import { useDashboardStats } from '../../hooks/useDashboard';
+import { getUploadIssue } from '../../utils/uploadCapacity';
 
 const BUTTONS = [
   { key: 'bold', icon: Bold, label: 'In đậm' },
@@ -21,6 +24,9 @@ export default function NoteEditorToolbar({ textareaRef, value, onChange, folder
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const { addToast } = useToast();
+  const queryClient = useQueryClient();
+  const { data: stats, refetch } = useDashboardStats();
+  const storageFull = stats && stats.usedStorageBytes >= stats.storageLimitBytes;
 
   const runAction = (key) => {
     const el = textareaRef.current;
@@ -41,10 +47,21 @@ export default function NoteEditorToolbar({ textareaRef, value, onChange, folder
 
     setUploading(true);
     try {
+      const capacity = await refetch();
+      if (capacity.error || !capacity.data) {
+        addToast('Không thể kiểm tra dung lượng lưu trữ. Vui lòng thử lại.', 'error');
+        return;
+      }
+      const issue = getUploadIssue([file], capacity.data);
+      if (issue) {
+        addToast(issue, 'error');
+        return;
+      }
       const formData = new FormData();
       formData.append('files', file);
       if (folderId) formData.append('folder', folderId);
       const [created] = await itemApi.upload(formData);
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
 
       const el = textareaRef.current;
       const isImage = created.fileMeta?.category === 'image';
@@ -55,7 +72,10 @@ export default function NoteEditorToolbar({ textareaRef, value, onChange, folder
       const result = markdownActions.insertAtCursor(value, selectionStart, selectionEnd, markdown);
       onChange(result.value);
     } catch (err) {
-      addToast('Không thể tải tệp lên', 'error');
+      addToast(err?.response?.status === 413
+        ? 'Không đủ dung lượng lưu trữ hoặc tệp vượt giới hạn.'
+        : err?.response?.data?.message || 'Không thể tải tệp lên', 'error');
+      refetch();
     } finally {
       setUploading(false);
     }
@@ -69,12 +89,12 @@ export default function NoteEditorToolbar({ textareaRef, value, onChange, folder
       <div className="mx-1 h-4 w-px bg-line" />
       <IconButton
         icon={uploading ? Loader2 : ImageIcon}
-        label="Chèn ảnh/tệp"
+        label={storageFull ? 'Bộ lưu trữ đã đầy' : 'Chèn ảnh/tệp'}
         onClick={() => fileInputRef.current?.click()}
-        disabled={uploading}
+        disabled={uploading || storageFull}
         className={uploading ? 'animate-spin' : ''}
       />
-      <input ref={fileInputRef} type="file" hidden onChange={handleFileChosen} />
+      <input ref={fileInputRef} type="file" hidden disabled={uploading || storageFull} onChange={handleFileChosen} />
     </div>
   );
 }
