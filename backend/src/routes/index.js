@@ -11,7 +11,22 @@ const trashRoutes = require('./trash.routes');
 
 const router = express.Router();
 
-router.get('/health', (req, res) => res.json({ success: true, message: 'API is healthy' }));
+router.get('/health', async (req, res) => {
+  try {
+    const mongoose = require('mongoose');
+    const { minioClient } = require('../config/minio');
+    const env = require('../config/env');
+    if (mongoose.connection.readyState !== 1) throw new Error('Database unavailable');
+    const [, bucketExists] = await Promise.all([
+      mongoose.connection.db.admin().ping(),
+      minioClient.bucketExists(env.minio.bucket),
+    ]);
+    if (!bucketExists) throw new Error('Bucket unavailable');
+    return res.json({ success: true, message: 'API is healthy' });
+  } catch {
+    return res.status(503).json({ success: false, message: 'Storage unavailable' });
+  }
+});
 
 // Auth routes handle their own mix of public (register/login/refresh) and
 // protected (me) endpoints internally.

@@ -1,20 +1,15 @@
-FROM node:20-bullseye-slim
-
-# sharp and fluent-ffmpeg's screenshot generation need a couple of native
-# libs present on the base image; installing them here avoids relying on
-# postinstall scripts to fetch prebuilt binaries at build time.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libvips-dev \
-    && rm -rf /var/lib/apt/lists/*
+FROM node:22-bookworm-slim
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN npm ci --omit=dev
+RUN node -e "for (const name of ['@ffmpeg-installer/ffmpeg', '@ffprobe-installer/ffprobe']) require('node:fs').chmodSync(require(name).path, 0o755)"
 
 COPY . .
 
 ENV NODE_ENV=production
 EXPOSE 5000
+USER node
 
 CMD ["node", "src/server.js"]

@@ -28,6 +28,7 @@ const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   isProduction: process.env.NODE_ENV === 'production',
   port: parseInt(process.env.PORT || '5000', 10),
+  trustProxyHops: parseInt(process.env.TRUST_PROXY_HOPS || '0', 10),
   clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
 
   mongoUri: required('MONGO_URI', 'mongodb://localhost:27017/personal_knowledge_hub'),

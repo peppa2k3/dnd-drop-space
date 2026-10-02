@@ -1,58 +1,82 @@
-version: '3.9'
-
 services:
   mongo:
-    image: mongo:4.4
+    image: mongo:4.0
     restart: unless-stopped
     volumes:
-      - mongo-data:/data/db
+      - mongo40-data:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongo", "--quiet", "--eval", "quit(db.adminCommand('ping').ok ? 0 : 1)"]
       interval: 10s
       timeout: 5s
       retries: 10
 
   minio:
-    image: minio/minio:latest
+    image: minio/minio:RELEASE.2025-07-23T15-54-02Z
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-pkh_admin}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-change_this_minio_secret}
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:?Set MINIO_ACCESS_KEY in backend/.env}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:?Set MINIO_SECRET_KEY in backend/.env}
     volumes:
       - minio-data:/data
     ports:
-      - '9000:9000' # object API (also used directly by the backend container)
-      - '9001:9001' # web console, handy for inspecting stored files
+      - '127.0.0.1:${MINIO_API_PORT:-9000}:9000'
+      - '127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   backend:
+    image: pkh-backend:${IMAGE_TAG:-local}
     build:
       context: ./backend
     restart: unless-stopped
     env_file:
-      - ./backend/.env
+      - ${PKH_ENV_FILE:-./backend/.env}
     environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 5000
+      CLIENT_ORIGIN: ${CLIENT_ORIGIN:-http://localhost:8080}
+      TRUST_PROXY_HOPS: 1
       MONGO_URI: mongodb://mongo:27017/personal_knowledge_hub
       MINIO_ENDPOINT: minio
       MINIO_PORT: 9000
+      MINIO_USE_SSL: 'false'
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:?Set MINIO_ACCESS_KEY in backend/.env}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:?Set MINIO_SECRET_KEY in backend/.env}
     depends_on:
       mongo:
         condition: service_healthy
       minio:
-        condition: service_started
+        condition: service_healthy
     expose:
       - '5000'
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:5000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
 
   nginx:
+    image: pkh-web:${IMAGE_TAG:-local}
     build:
       context: .
       dockerfile: nginx/Dockerfile
     restart: unless-stopped
     ports:
-      - '8080:80'
+      - '127.0.0.1:${WEB_PORT:-8080}:80'
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  mongo-data:
+  mongo40-data:
   minio-data:

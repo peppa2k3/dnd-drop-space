@@ -1,0 +1,25 @@
+name: Deploy production
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pkh-production
+  cancel-in-progress: false
+jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+  deploy:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    needs: verify
+    environment: production
+    runs-on: [self-hosted, linux, x64, pkh-production]
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Deploy verified commit
+        env:
+          PKH_DEPLOY_ROOT: ${{ vars.PKH_DEPLOY_ROOT }}
+        run: bash scripts/deploy.sh

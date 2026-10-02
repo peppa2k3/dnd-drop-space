@@ -59,7 +59,8 @@ const itemSchema = new mongoose.Schema(
 
     // ----- type: file (image, video, pdf, word, excel, archive, other) -----
     fileMeta: {
-      category: { type: String, enum: FILE_CATEGORIES, default: null },
+      // Notes/bookmarks have no file category; Mongoose 7 requires explicit null.
+      category: { type: String, enum: [...FILE_CATEGORIES, null], default: null },
       originalName: { type: String, default: null },
       extension: { type: String, default: null },
       mimeType: { type: String, default: null },

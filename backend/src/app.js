@@ -12,6 +12,8 @@ const { notFound, errorHandler } = require('./middlewares/error.middleware');
 const { generalLimiter } = require('./middlewares/rateLimit.middleware');
 
 const app = express();
+app.set('trust proxy', env.trustProxyHops);
+morgan.token('safe-path', (req) => req.originalUrl.split('?')[0]);
 
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(
@@ -25,7 +27,8 @@ app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
-  morgan(env.isProduction ? 'combined' : 'dev', {
+  // Media URLs contain JWT query parameters; log only the path.
+  morgan(':method :safe-path :status :response-time ms', {
     stream: { write: (message) => logger.info(message.trim()) },
   })
 );

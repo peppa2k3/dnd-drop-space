@@ -5,9 +5,11 @@ const crypto = require('crypto');
 const sharp = require('sharp');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffprobePath = require('@ffprobe-installer/ffprobe').path;
 const logger = require('../utils/logger');
 
 ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfprobePath(ffprobePath);
 
 const THUMB_WIDTH = 480;
 
