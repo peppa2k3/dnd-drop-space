@@ -2,7 +2,7 @@
 
 - Mục tiêu: chạy website local với `mongo:4.0`, kiểm chứng API và chuẩn bị pipeline.
 - Phạm vi: Compose, Dockerfile, dependency/lock backend, proxy/env, scripts, workflows, hướng dẫn.
-- Ngoài phạm vi: public khi chưa có server/domain/Git remote (prompt 003).
+- Ngoài phạm vi: public khi chưa có server/domain/Git remote (prompt 004, đổi ID khi thêm prompt sửa lỗi 003).
 - Rủi ro: hạ MongoDB có thể hỏng volume cũ; dùng volume mới và giữ volume hiện có. Smoke chỉ tạo/xóa dữ liệu test riêng.
 
 ## Tiêu chí hoàn tất

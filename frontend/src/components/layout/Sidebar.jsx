@@ -8,8 +8,6 @@ import { useFolders } from '../../hooks/useFolders';
 import { useDashboardStats } from '../../hooks/useDashboard';
 import { formatBytes } from '../../utils/format';
 
-const MAX_STORAGE_DISPLAY_BYTES = 5 * 1024 * 1024 * 1024; // display-only reference ceiling when no quota is configured
-
 export default function Sidebar({ mobileOpen, onCloseMobile }) {
   const { data: folders = [] } = useFolders();
   const { data: stats } = useDashboardStats();
@@ -17,8 +15,9 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
   const { folderId } = useParams();
   const location = useLocation();
 
-  const usedBytes = stats?.usedStorageBytes || 0;
-  const usedPercent = Math.min((usedBytes / MAX_STORAGE_DISPLAY_BYTES) * 100, 100);
+  const usedBytes = stats?.usedStorageBytes ?? 0;
+  const storageLimitBytes = stats?.storageLimitBytes ?? 0;
+  const usedPercent = storageLimitBytes > 0 ? Math.min((usedBytes / storageLimitBytes) * 100, 100) : 0;
   const activeFolderId = location.pathname.startsWith('/app/folder') ? folderId : null;
 
   return (
@@ -95,7 +94,9 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
           <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
             <div className="h-full rounded-full bg-gold" style={{ width: `${usedPercent}%` }} />
           </div>
-          <p className="mt-1.5 font-mono text-[10px] text-paper/40">{formatBytes(usedBytes)} đã sử dụng</p>
+          <p className="mt-1.5 font-mono text-[10px] text-paper/60">
+            {stats ? `${formatBytes(usedBytes)} / ${formatBytes(storageLimitBytes)} đã dùng` : 'Đang tải dung lượng...'}
+          </p>
         </div>
       </aside>
     </>

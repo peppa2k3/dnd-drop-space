@@ -1,8 +1,8 @@
-# 003 — Triển khai production
+# 004 — Triển khai production
 
 - Mục tiêu: website HTTPS trên domain thật, backup và rollback đã kiểm chứng.
 - Thiếu: Git remote, VPS/domain, quyền triển khai, nơi lưu backup.
-- Phạm vi: GitHub environment/runner, secrets, HTTPS, vận hành; giữ MongoDB 4.0.
+- Phạm vi: GitHub environment/runner, secrets, HTTPS, vận hành; giữ MongoDB 4.0. Quota 2 GB thuộc prompt 003.
 - Rủi ro: dữ liệu thật; backup MongoDB + MinIO và kiểm thử restore trước thay đổi.
 
 ## Tiêu chí hoàn tất

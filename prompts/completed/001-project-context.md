@@ -12,5 +12,5 @@
 ## Kết quả
 - Hoàn tất 2026-10-02: rút gọn README, tạo bối cảnh/kiến trúc/quy tắc/runbook và template/bảng prompt.
 - Kiểm tra: đọc đối chiếu code; kiểm tra link Markdown nội bộ; `git diff --check` đạt.
-- Việc public nằm ở prompt 003, không gộp vào trạng thái đã chạy local.
+- Việc public nằm ở prompt 004 (đổi ID khi thêm prompt sửa lỗi 003), không gộp vào trạng thái đã chạy local.
 - Commit: `git log --all -- prompts/completed/001-project-context.md`.

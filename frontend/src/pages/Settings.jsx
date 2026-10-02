@@ -33,7 +33,9 @@ export default function Settings() {
         <HardDrive size={20} className="shrink-0 text-gold-deep" />
         <div>
           <p className="text-sm font-medium text-ink">Dung lượng đã sử dụng</p>
-          <p className="font-mono text-xs text-slate-light">{formatBytes(stats?.usedStorageBytes || 0)}</p>
+          <p className="font-mono text-xs text-slate-light">
+            {stats ? `${formatBytes(stats.usedStorageBytes)} / ${formatBytes(stats.storageLimitBytes)}` : 'Đang tải...'}
+          </p>
         </div>
       </div>
 

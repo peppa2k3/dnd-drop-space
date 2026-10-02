@@ -9,6 +9,7 @@ Personal Knowledge Hub: kho cá nhân cho ghi chú Markdown, bookmark và tệp.
 - `001/002` hoàn tất: tài liệu/prompt, Docker local, cấu hình CI/CD.
 - Website trên máy hiện tại: **http://localhost:18080** (`WEB_PORT` trong `.env`; mặc định ở repo là 8080). Bốn service healthy, MongoDB **4.0.28**, Mongoose **7.8.12**.
 - Đã qua: build frontend, syntax backend, smoke qua Nginx (auth/refresh, note, folder/tag, search, upload/download, trash/restore), thumbnail ảnh/video và ffprobe.
+- Prompt `003` hoàn tất: mặc định 2 GiB/tài khoản, Sidebar/Dashboard/Settings hiện dung lượng đúng; upload Unicode và download đúng tên. Ba tên cũ bị lỗi đã sửa riêng trong MongoDB. Smoke kiểm tra quota, upload đồng thời và vòng đời Trash trên MongoDB 4.0.28.
 - Workflow qua actionlint, deploy script qua `bash -n`; **chưa chạy trên GitHub/server thật**. Browser không có kết nối nên chưa kiểm thử giao diện tương tác.
 - Chưa có Git remote/domain/server production. Chưa audit bảo mật đầy đủ hoặc diễn tập backup/restore; dự án hiện ở mức MVP chạy local + nền tảng triển khai.
 
@@ -18,4 +19,4 @@ Personal Knowledge Hub: kho cá nhân cho ghi chú Markdown, bookmark và tệp.
 - Tính năng có code không đồng nghĩa đã kiểm thử đầy đủ. Ghi kết quả chạy thật vào prompt.
 
 ## Tiếp theo
-Không có prompt đang làm. Bắt đầu `003` khi có hạ tầng và Git remote; điều kiện đưa public trong `docs/DEPLOYMENT.md`. Giữ nguyên các volumes cũ; bản local này dùng `pkh_mongo40-data` và `pkh_minio-data` mới.
+Không có prompt đang làm. `004` đưa public khi có hạ tầng và Git remote. Điều kiện đưa public trong `docs/DEPLOYMENT.md`. Giữ nguyên các volumes cũ; bản local này dùng `pkh_mongo40-data` và `pkh_minio-data` mới.

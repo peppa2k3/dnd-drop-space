@@ -61,7 +61,9 @@ export default function Dashboard() {
         <HardDrive size={20} className="shrink-0 text-gold-deep" />
         <div className="min-w-0 grow">
           <p className="text-sm font-medium text-ink">Dung lượng đã sử dụng</p>
-          <p className="font-mono text-xs text-slate-light">{formatBytes(stats.usedStorageBytes)}</p>
+          <p className="font-mono text-xs text-slate-light">
+            {formatBytes(stats.usedStorageBytes)} / {formatBytes(stats.storageLimitBytes)}
+          </p>
         </div>
       </div>
 

@@ -1,12 +1,14 @@
 const Item = require('../models/Item');
+const mongoose = require('mongoose');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiResponse = require('../utils/ApiResponse');
 const storageService = require('../services/storage.service');
+const env = require('../config/env');
 const { attachResourceUrls } = require('./item.controller');
 
 const stats = asyncHandler(async (req, res) => {
   const userId = req.userId;
-  const baseMatch = { user: userId, isTrashed: false };
+  const baseMatch = { user: new mongoose.Types.ObjectId(userId), isTrashed: false };
 
   const [counts, usedStorageBytes, recentItems] = await Promise.all([
     Item.aggregate([
@@ -44,6 +46,7 @@ const stats = asyncHandler(async (req, res) => {
   return new ApiResponse(200, {
     ...summary,
     usedStorageBytes,
+    storageLimitBytes: env.uploads.maxStoragePerUserBytes,
     recentItems: recentItems.map(attachResourceUrls),
   }).send(res);
 });

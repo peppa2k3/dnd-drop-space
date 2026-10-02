@@ -49,6 +49,8 @@ Mở http://localhost:5173. Nếu chạy backend ngoài Docker, tự cung cấp 
 
 Đã có code: đăng ký/login/refresh JWT; ghi chú Markdown/autosave; bookmark preview; upload/download/thumbnail/stream; thư mục, tags, yêu thích, tìm kiếm; trash/restore/purge; dashboard, grid/list, PWA.
 
+Mỗi tài khoản có hạn mức lưu tệp mặc định **2 GiB** (`MAX_STORAGE_PER_USER_MB=2048`). Dung lượng đã dùng tính cả tệp trong Thùng rác cho tới khi xóa vĩnh viễn; Sidebar hiển thị đã dùng/tổng hạn mức.
+
 Chưa có: bulk actions, chia sẻ giữa tài khoản, render nội dung Office. Kết quả đã kiểm tra và giới hạn hiện tại: [AI_CONTEXT](docs/AI_CONTEXT.md).
 
 | Thư mục | Vai trò |

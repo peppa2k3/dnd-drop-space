@@ -53,10 +53,7 @@ const env = {
   uploads: {
     maxFileSizeBytes: parseInt(process.env.MAX_FILE_SIZE_MB || '1024', 10) * 1024 * 1024,
     maxFilesPerUpload: parseInt(process.env.MAX_FILES_PER_UPLOAD || '20', 10),
-    maxStoragePerUserBytes: (() => {
-      const mb = toIntOrNull(process.env.MAX_STORAGE_PER_USER_MB);
-      return mb === null ? null : mb * 1024 * 1024;
-    })(),
+    maxStoragePerUserBytes: (toIntOrNull(process.env.MAX_STORAGE_PER_USER_MB) ?? 2048) * 1024 * 1024,
   },
 
   trash: {

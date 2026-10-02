@@ -71,23 +71,74 @@ async function main() {
   }
 
   const payload = `PKH smoke ${runId}`;
+  const fileName = 'tiếng trung chương 1.pdf';
   const form = new FormData();
-  form.append('files', new Blob([payload], { type: 'text/plain' }), 'smoke.txt');
+  form.append('files', new Blob([payload], { type: 'application/pdf' }), fileName);
   const uploaded = (await (await request('/api/items/upload', {
     method: 'POST', status: 201, body: form,
   })).json()).data.items[0];
-  assert.equal(await (await request(`/api/items/${uploaded._id}/download`)).text(), payload);
+  assert.equal(uploaded.title, fileName);
+  assert.equal(uploaded.fileMeta.originalName, fileName);
+  const download = await request(`/api/items/${uploaded._id}/download`);
+  assert.match(download.headers.get('content-disposition'), /filename\*=UTF-8''ti%E1%BA%BFng/);
+  assert.equal(await download.text(), payload);
+  const usage = (await (await request('/api/dashboard/stats')).json()).data;
+  assert.equal(usage.totalFiles, 1);
+  assert.equal(usage.usedStorageBytes, Buffer.byteLength(payload));
+  assert.equal(usage.storageLimitBytes, 2 * 1024 ** 3);
+
+  // A tiny upload is rejected when metadata for this test user fills the quota.
+  const quotaFixture = await Item.create({
+    user: registered.data.user.id,
+    type: 'file',
+    title: 'quota-fixture',
+    fileMeta: { category: 'other', size: usage.storageLimitBytes - usage.usedStorageBytes - 1 },
+  });
+  try {
+    const extra = new FormData();
+    extra.append('files', new Blob(['extra'], { type: 'text/plain' }), 'extra.txt');
+    await request('/api/items/upload', { method: 'POST', body: extra, status: 413 });
+  } finally {
+    await Item.deleteOne({ _id: quotaFixture._id, user: registered.data.user.id });
+  }
+
+  const concurrentFixture = await Item.create({
+    user: registered.data.user.id,
+    type: 'file',
+    title: 'concurrent-quota-fixture',
+    fileMeta: { category: 'other', size: usage.storageLimitBytes - usage.usedStorageBytes - 5 },
+  });
+  try {
+    const send = () => {
+      const body = new FormData();
+      body.append('files', new Blob(['12345'], { type: 'text/plain' }), 'small.txt');
+      return fetch(`${base}/api/items/upload`, {
+        method: 'POST', headers: { Authorization: `Bearer ${token}` }, body,
+        signal: AbortSignal.timeout(20000),
+      });
+    };
+    const responses = await Promise.all([send(), send()]);
+    assert.deepEqual(responses.map((response) => response.status).sort(), [201, 413]);
+    const accepted = responses.find((response) => response.status === 201);
+    const small = (await accepted.json()).data.items[0];
+    await request(`/api/items/${small._id}/permanent`, { method: 'DELETE' });
+  } finally {
+    await Item.deleteOne({ _id: concurrentFixture._id, user: registered.data.user.id });
+  }
   await request(`/api/items/${note._id}`, { method: 'DELETE' });
   const trashed = (await (await request(`/api/items/${note._id}`)).json()).data.item;
   assert.equal(trashed.isTrashed, true);
   await request(`/api/items/${note._id}/restore`, { method: 'POST' });
   const restored = (await (await request(`/api/items/${note._id}`)).json()).data.item;
   assert.equal(restored.isTrashed, false);
-  for (const id of [note._id, uploaded._id]) {
-    await request(`/api/items/${id}`, { method: 'DELETE' });
-    await request(`/api/items/${id}/permanent`, { method: 'DELETE' });
-    await request(`/api/items/${id}`, { status: 404 });
-  }
+  await request(`/api/items/${uploaded._id}`, { method: 'DELETE' });
+  assert.equal((await (await request('/api/dashboard/stats')).json()).data.usedStorageBytes, Buffer.byteLength(payload));
+  await request(`/api/items/${uploaded._id}/permanent`, { method: 'DELETE' });
+  assert.equal((await (await request('/api/dashboard/stats')).json()).data.usedStorageBytes, 0);
+  await request(`/api/items/${note._id}`, { method: 'DELETE' });
+  await request(`/api/items/${note._id}/permanent`, { method: 'DELETE' });
+  await request(`/api/items/${note._id}`, { status: 404 });
+  await request(`/api/items/${uploaded._id}`, { status: 404 });
   await request('/api/auth/logout', { method: 'POST' });
   await request('/api/auth/refresh', { method: 'POST', status: 401 });
   const login = await (await request('/api/auth/login', { method: 'POST', body: { email, password } })).json();

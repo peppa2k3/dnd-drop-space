@@ -5,6 +5,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const { detectFileCategory } = require('../utils/fileType');
+const decodeFileName = require('../utils/decodeFileName');
 const minioService = require('../services/minio.service');
 const thumbnailService = require('../services/thumbnail.service');
 const storageService = require('../services/storage.service');
@@ -12,8 +13,9 @@ const { findOrCreateTagIds } = require('../services/tag.service');
 
 /** Uploads one already-received file (buffer in memory) to MinIO + builds its Item. */
 async function persistUploadedFile(file, { userId, folder, tags, description }) {
-  const category = detectFileCategory(file.mimetype, file.originalname);
-  const ext = path.extname(file.originalname);
+  const originalName = decodeFileName(file.originalname);
+  const category = detectFileCategory(file.mimetype, originalName);
+  const ext = path.extname(originalName);
   const objectKey = `${userId}/files/${uuidv4()}${ext}`;
 
   await storageService.assertWithinQuota(userId, file.size);
@@ -33,7 +35,7 @@ async function persistUploadedFile(file, { userId, folder, tags, description }) 
       await minioService.uploadBuffer(thumbnailObjectKey, result.thumbnailBuffer, 'image/webp');
     }
   } else if (category === 'video') {
-    const result = await thumbnailService.generateVideoThumbnail(file.buffer, file.originalname);
+    const result = await thumbnailService.generateVideoThumbnail(file.buffer, originalName);
     durationSeconds = result.durationSeconds;
     if (result.thumbnailBuffer) {
       thumbnailObjectKey = `${userId}/thumbnails/${uuidv4()}.webp`;
@@ -44,13 +46,13 @@ async function persistUploadedFile(file, { userId, folder, tags, description }) 
   return Item.create({
     user: userId,
     type: 'file',
-    title: file.originalname,
+    title: originalName,
     description,
     folder,
     tags,
     fileMeta: {
       category,
-      originalName: file.originalname,
+      originalName,
       extension: ext.replace('.', ''),
       mimeType: file.mimetype,
       size: file.size,
@@ -75,12 +77,12 @@ const uploadFiles = asyncHandler(async (req, res) => {
   // files are buffered in RAM (see upload.middleware.js).
   const created = [];
   for (const file of req.files) {
-    const item = await persistUploadedFile(file, {
+    const item = await storageService.withUserUploadLock(req.userId, () => persistUploadedFile(file, {
       userId: req.userId,
       folder: folder || null,
       tags: tagIds,
       description,
-    });
+    }));
     created.push(item);
   }
 
@@ -101,7 +103,12 @@ const downloadFile = asyncHandler(async (req, res) => {
   const stream = await minioService.getObjectStream(item.fileMeta.objectKey);
 
   res.setHeader('Content-Type', item.fileMeta.mimeType || 'application/octet-stream');
-  res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(item.fileMeta.originalName)}"`);
+  const originalName = item.fileMeta.originalName;
+  const asciiName = originalName.replace(/[^\x20-\x7e]|["\\]/g, '_');
+  const encodedName = encodeURIComponent(originalName).replace(/['()*]/g, (char) =>
+    `%${char.charCodeAt(0).toString(16).toUpperCase()}`
+  );
+  res.setHeader('Content-Disposition', `attachment; filename="${asciiName}"; filename*=UTF-8''${encodedName}`);
   res.setHeader('Content-Length', item.fileMeta.size);
   stream.on('error', () => res.destroy());
   stream.pipe(res);
