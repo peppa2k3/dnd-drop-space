@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::selection {
+    background-color: theme('colors.gold.soft');
+    color: theme('colors.ink.DEFAULT');
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.line') transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: theme('colors.line');
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.gold.DEFAULT');
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* The signature "index card" look shared by every item card in the library. */
+  .catalog-card {
+    @apply relative bg-paper-card border border-line rounded-card;
+    background-image: radial-gradient(circle at 16px 16px, theme('colors.paper.dim') 3px, transparent 3.5px);
+  }
+}
+
+/* Markdown note preview typography */
+.note-prose {
+  @apply text-ink leading-relaxed;
+}
+.note-prose h1,
+.note-prose h2,
+.note-prose h3 {
+  @apply font-display font-semibold text-ink mt-5 mb-2;
+}
+.note-prose h1 { @apply text-2xl; }
+.note-prose h2 { @apply text-xl; }
+.note-prose h3 { @apply text-lg; }
+.note-prose p { @apply mb-3; }
+.note-prose ul { @apply list-disc pl-5 mb-3; }
+.note-prose ol { @apply list-decimal pl-5 mb-3; }
+.note-prose a { @apply text-gold-deep underline underline-offset-2; }
+.note-prose code { @apply font-mono text-sm bg-paper-dim px-1 py-0.5 rounded; }
+.note-prose pre { @apply font-mono text-sm bg-ink text-paper p-3 rounded-card overflow-x-auto mb-3; }
+.note-prose pre code { @apply bg-transparent p-0; }
+.note-prose blockquote { @apply border-l-2 border-gold pl-3 italic text-slate mb-3; }
+.note-prose input[type='checkbox'] { @apply accent-gold-deep mr-2; }

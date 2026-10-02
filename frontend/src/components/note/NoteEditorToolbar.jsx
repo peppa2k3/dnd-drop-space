@@ -1,0 +1,80 @@
+import { useRef, useState } from 'react';
+import { Bold, Italic, Heading2, List, ListOrdered, CheckSquare, Code, Link2, Image as ImageIcon, Loader2 } from 'lucide-react';
+import IconButton from '../common/IconButton';
+import { markdownActions } from '../../utils/markdownEditor';
+import { itemApi } from '../../api/item.api';
+import { mediaUrl } from '../../utils/mediaUrl';
+import { useToast } from '../../context/ToastContext';
+
+const BUTTONS = [
+  { key: 'bold', icon: Bold, label: 'In đậm' },
+  { key: 'italic', icon: Italic, label: 'In nghiêng' },
+  { key: 'heading', icon: Heading2, label: 'Tiêu đề' },
+  { key: 'bulletList', icon: List, label: 'Danh sách' },
+  { key: 'numberedList', icon: ListOrdered, label: 'Danh sách số' },
+  { key: 'checklist', icon: CheckSquare, label: 'Việc cần làm' },
+  { key: 'code', icon: Code, label: 'Mã code' },
+  { key: 'link', icon: Link2, label: 'Liên kết' },
+];
+
+export default function NoteEditorToolbar({ textareaRef, value, onChange, folderId }) {
+  const fileInputRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
+  const { addToast } = useToast();
+
+  const runAction = (key) => {
+    const el = textareaRef.current;
+    if (!el) return;
+    const { selectionStart, selectionEnd } = el;
+    const result = markdownActions[key](value, selectionStart, selectionEnd);
+    onChange(result.value);
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(result.start, result.end);
+    });
+  };
+
+  const handleFileChosen = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('files', file);
+      if (folderId) formData.append('folder', folderId);
+      const [created] = await itemApi.upload(formData);
+
+      const el = textareaRef.current;
+      const isImage = created.fileMeta?.category === 'image';
+      const url = mediaUrl(isImage ? created.urls.thumbnail || created.urls.stream : created.urls.download);
+      const markdown = isImage ? `![${created.title}](${url})` : `[${created.title}](${url})`;
+
+      const { selectionStart, selectionEnd } = el;
+      const result = markdownActions.insertAtCursor(value, selectionStart, selectionEnd, markdown);
+      onChange(result.value);
+    } catch (err) {
+      addToast('Không thể tải tệp lên', 'error');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-0.5 border-b border-line bg-paper-dim px-2 py-1.5">
+      {BUTTONS.map((btn) => (
+        <IconButton key={btn.key} icon={btn.icon} label={btn.label} onClick={() => runAction(btn.key)} />
+      ))}
+      <div className="mx-1 h-4 w-px bg-line" />
+      <IconButton
+        icon={uploading ? Loader2 : ImageIcon}
+        label="Chèn ảnh/tệp"
+        onClick={() => fileInputRef.current?.click()}
+        disabled={uploading}
+        className={uploading ? 'animate-spin' : ''}
+      />
+      <input ref={fileInputRef} type="file" hidden onChange={handleFileChosen} />
+    </div>
+  );
+}
