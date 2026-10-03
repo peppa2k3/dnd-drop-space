@@ -1,6 +1,6 @@
 const Item = require('../models/Item');
 const mongoose = require('mongoose');
-const env = require('../config/env');
+const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
 
 /** Uploaded file bytes recorded for a user, including files in Trash. */
@@ -13,15 +13,19 @@ async function getUsedStorageBytes(userId) {
 }
 
 /**
- * Throws 413 if uploading `incomingBytes` more would exceed the configured
+ * Throws 413 if uploading `incomingBytes` more would exceed the allocated
  * per-user quota. Files in Trash still occupy storage until purged.
  */
 async function assertWithinQuota(userId, incomingBytes) {
   const used = await getUsedStorageBytes(userId);
-  if (used + incomingBytes > env.uploads.maxStoragePerUserBytes) {
+  const user = await User.findById(userId);
+  if (!user || user.status !== 'active' || user.storageLimitBytes <= 0) {
+    throw ApiError.forbidden('Chưa được cấp dung lượng hoặc tài khoản đã bị khóa.');
+  }
+  if (used + incomingBytes > user.storageLimitBytes) {
     throw ApiError.payloadTooLarge(
       `Storage quota exceeded. Used ${(used / 1024 / 1024).toFixed(1)}MB of ` +
-        `${(env.uploads.maxStoragePerUserBytes / 1024 / 1024).toFixed(0)}MB allowed.`
+        `${(user.storageLimitBytes / 1024 / 1024).toFixed(0)}MB allowed.`
     );
   }
 }

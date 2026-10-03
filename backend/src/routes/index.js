@@ -1,5 +1,5 @@
 const express = require('express');
-const { authenticate } = require('../middlewares/auth.middleware');
+const { authenticate, requireStorage } = require('../middlewares/auth.middleware');
 
 const authRoutes = require('./auth.routes');
 const folderRoutes = require('./folder.routes');
@@ -31,12 +31,15 @@ router.get('/health', async (req, res) => {
 // Auth routes handle their own mix of public (register/login/refresh) and
 // protected (me) endpoints internally.
 router.use('/auth', authRoutes);
+router.use('/users', authenticate, require('./user.routes'));
+router.use('/admin', authenticate, require('./admin.routes'));
 
 // Everything below always requires a valid access token - this is the
 // single choke point that guarantees every user only ever sees their own
 // data (every controller then further scopes queries by req.userId).
-router.use('/folders', authenticate, folderRoutes);
-router.use('/tags', authenticate, tagRoutes);
+const storageWrite = (req, res, next) => ['POST', 'PATCH'].includes(req.method) ? requireStorage(req, res, next) : next();
+router.use('/folders', authenticate, storageWrite, folderRoutes);
+router.use('/tags', authenticate, storageWrite, tagRoutes);
 router.use('/items', authenticate, itemRoutes);
 router.use('/dashboard', authenticate, dashboardRoutes);
 router.use('/search', authenticate, searchRoutes);

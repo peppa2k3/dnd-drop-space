@@ -38,11 +38,12 @@ const register = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).select('+passwordHash');
+  const user = await User.findOne({ email }).select('+passwordHash +sessionVersion');
   if (!user) throw ApiError.unauthorized('Invalid email or password');
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch) throw ApiError.unauthorized('Invalid email or password');
+  if (user.status !== 'active') throw ApiError.forbidden('Account disabled');
 
   const { accessToken, refreshToken } = await tokenService.issueTokenPair(user, req.headers['user-agent']);
   setRefreshCookie(res, refreshToken);
@@ -69,8 +70,8 @@ const refresh = asyncHandler(async (req, res) => {
     throw ApiError.unauthorized('Session no longer valid, please log in again');
   }
 
-  const user = await User.findById(payload.sub);
-  if (!user) {
+  const user = await User.findById(payload.sub).select('+sessionVersion');
+  if (!user || user.status !== 'active') {
     clearRefreshCookie(res);
     throw ApiError.unauthorized('User no longer exists');
   }

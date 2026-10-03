@@ -2,6 +2,7 @@ import { formatBytes } from './format.js';
 
 export function getUploadIssue(files, stats) {
   if (!stats) return 'Không thể kiểm tra dung lượng lưu trữ. Vui lòng thử lại.';
+  if (stats.storageLimitBytes <= 0) return 'Chưa được cấp dung lượng. Vui lòng liên hệ quản trị viên để tải tệp lên.';
 
   const remaining = Math.max(0, stats.storageLimitBytes - stats.usedStorageBytes);
   if (remaining === 0) return 'Bộ lưu trữ đã đầy. Hãy xóa vĩnh viễn tệp không cần thiết trước khi tải lên.';

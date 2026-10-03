@@ -70,21 +70,19 @@ const uploadFiles = asyncHandler(async (req, res) => {
   if (!req.files || req.files.length === 0) throw ApiError.badRequest('No files were uploaded');
 
   const { folder = null, tags = [], description = '' } = req.body;
-  const tagIds = await findOrCreateTagIds(req.userId, tags || []);
 
   // Sequential on purpose: quota checks and MinIO/ffmpeg work are I/O and
   // CPU heavy per file, and running many at once could spike memory since
   // files are buffered in RAM (see upload.middleware.js).
-  const created = [];
-  for (const file of req.files) {
-    const item = await storageService.withUserUploadLock(req.userId, () => persistUploadedFile(file, {
-      userId: req.userId,
-      folder: folder || null,
-      tags: tagIds,
-      description,
-    }));
-    created.push(item);
-  }
+  const created = await storageService.withUserUploadLock(req.userId, async () => {
+    await storageService.assertWithinQuota(req.userId, req.files.reduce((sum, file) => sum + file.size, 0));
+    const tagIds = await findOrCreateTagIds(req.userId, tags || []);
+    const items = [];
+    for (const file of req.files) {
+      items.push(await persistUploadedFile(file, { userId: req.userId, folder: folder || null, tags: tagIds, description }));
+    }
+    return items;
+  });
 
   const { attachResourceUrls } = require('./item.controller');
   return new ApiResponse(201, { items: created.map(attachResourceUrls) }, `${created.length} file(s) uploaded`).send(

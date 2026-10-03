@@ -11,6 +11,15 @@ const minioClient = new Minio.Client({
 });
 
 const MAX_RETRIES = 15;
+// Used only for signing browser-facing avatar URLs; data writes use minioClient.
+const avatarClient = new Minio.Client({
+  endPoint: env.minio.publicEndPoint,
+  port: env.minio.publicPort,
+  useSSL: env.minio.publicUseSSL,
+  accessKey: env.minio.accessKey,
+  secretKey: env.minio.secretKey,
+  region: 'us-east-1',
+});
 const RETRY_DELAY_MS = 2000;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -44,4 +53,4 @@ async function ensureBucket() {
   }
 }
 
-module.exports = { minioClient, ensureBucket };
+module.exports = { minioClient, avatarClient, ensureBucket };

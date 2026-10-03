@@ -49,7 +49,17 @@ Mở http://localhost:5173. Nếu chạy backend ngoài Docker, tự cung cấp 
 
 Đã có code: đăng ký/login/refresh JWT; ghi chú Markdown/autosave; bookmark preview; upload/download/thumbnail/stream; thư mục, tags, yêu thích, tìm kiếm; trash/restore/purge; dashboard, grid/list, PWA.
 
-Mỗi tài khoản có hạn mức lưu tệp mặc định **2 GiB** (`MAX_STORAGE_PER_USER_MB=2048`). Dung lượng đã dùng tính cả tệp trong Thùng rác cho tới khi xóa vĩnh viễn; Sidebar hiển thị đã dùng/tổng hạn mức.
+Tài khoản mới có vai trò `user`, hạn mức **0 MB**. Admin cấp/thu hồi hạn mức tại `/app/admin/users`; người chưa được cấp vẫn đăng nhập và sửa hồ sơ tại `/app/settings`, nhưng chưa tạo dữ liệu/upload. Tài khoản cũ chưa có trường hạn mức cũng nhận 0 MB; dữ liệu giữ nguyên. Dung lượng tính cả Thùng rác; giảm hạn mức không tự xóa tệp. `MAX_STORAGE_PER_USER_MB` không còn được sử dụng.
+
+Quản trị viên đầu tiên: đăng ký tài khoản, sau đó người vận hành chạy lệnh với email chính xác (không tự nâng quyền người đăng ký đầu tiên):
+
+```sh
+docker compose --env-file backend/.env exec -T backend node scripts/set-admin.js admin@example.com
+```
+
+Đăng nhập lại để hiện menu quản trị. Admin có thể cấp dung lượng cho chính mình, quản lý hồ sơ/vai trò/trạng thái người dùng, tải xuống và đưa tệp vào Thùng rác/khôi phục/xóa vĩnh viễn; các thao tác được ghi lịch sử.
+
+Avatar: tối đa 2 MB, chuẩn hóa WebP 256×256, lưu riêng tại `avatars/<userId>/` trên MinIO; không lưu file vào backend và không trừ hạn mức tệp. Browser tải trực tiếp bằng URL ký 5 phút. `MINIO_PUBLIC_ENDPOINT/PORT/USE_SSL` phải trỏ tới MinIO/CDN mà browser truy cập được (local: `localhost:9000`; production: HTTPS và proxy giữ nguyên Host/path ký).
 
 Chưa có: bulk actions, chia sẻ giữa tài khoản, render nội dung Office. Kết quả đã kiểm tra và giới hạn hiện tại: [AI_CONTEXT](docs/AI_CONTEXT.md).
 

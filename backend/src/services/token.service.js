@@ -4,7 +4,7 @@ const env = require('../config/env');
 const RefreshToken = require('../models/RefreshToken');
 
 function signAccessToken(user) {
-  return jwt.sign({ sub: user._id.toString() }, env.jwt.accessSecret, {
+  return jwt.sign({ sub: user._id.toString(), ver: user.sessionVersion || 0 }, env.jwt.accessSecret, {
     expiresIn: env.jwt.accessExpiresIn,
   });
 }

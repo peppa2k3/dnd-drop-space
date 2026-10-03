@@ -46,7 +46,7 @@ const stats = asyncHandler(async (req, res) => {
   return new ApiResponse(200, {
     ...summary,
     usedStorageBytes,
-    storageLimitBytes: env.uploads.maxStoragePerUserBytes,
+    storageLimitBytes: req.user.storageLimitBytes,
     maxFileSizeBytes: env.uploads.maxFileSizeBytes,
     maxFilesPerUpload: env.uploads.maxFilesPerUpload,
     recentItems: recentItems.map(attachResourceUrls),

@@ -9,6 +9,7 @@ import CreateUrlModal from '../upload/CreateUrlModal';
 import { useAuth } from '../../context/AuthContext';
 import { useCreateNote } from '../../hooks/useItems';
 import { useToast } from '../../context/ToastContext';
+import { useDashboardStats } from '../../hooks/useDashboard';
 
 export default function Topbar({ onOpenMobileSidebar }) {
   const [search, setSearch] = useState('');
@@ -16,6 +17,7 @@ export default function Topbar({ onOpenMobileSidebar }) {
   const [urlModalOpen, setUrlModalOpen] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { data: stats } = useDashboardStats();
   const createNote = useCreateNote();
   const { addToast } = useToast();
 
@@ -51,7 +53,7 @@ export default function Topbar({ onOpenMobileSidebar }) {
       <div className="ml-auto flex items-center gap-2">
         <Menu
           trigger={
-            <Button variant="gold" size="md">
+            <Button variant="gold" size="md" disabled={!stats || stats.storageLimitBytes <= 0} title={stats?.storageLimitBytes === 0 ? 'Chưa được cấp dung lượng' : 'Tạo mới'}>
               <Plus size={15} /> Mới
             </Button>
           }

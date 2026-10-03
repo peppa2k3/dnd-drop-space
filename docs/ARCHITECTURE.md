@@ -25,6 +25,9 @@ Browser → Nginx (:8080 local, HTTPS ở production)
 - Tìm kiếm `$lookup` + regex; không dùng operator chỉ có từ MongoDB 4.2 trở lên.
 - Thumbnail chạy trong request; cron purge trong API. Chạy một replica API trước khi tách worker/cron.
 - MongoDB và MinIO có volume riêng; backup/restore phải nhất quán cả hai.
+- RBAC: `User.role=user|admin`, `status=active|disabled`, `storageLimitBytes=0` mặc định. Middleware đọc User mỗi request; `/admin` yêu cầu admin, API thường vẫn giới hạn chủ sở hữu. Khóa tài khoản thu hồi refresh token và tăng `sessionVersion` để token cũ không sống lại khi mở khóa.
+- Quota riêng theo User, tính cả Trash; cập nhật hạn mức dùng cùng khóa với upload (một replica API). Thu hồi không xóa dữ liệu. Avatar có giới hạn riêng 2 MB, được chuẩn hóa WebP và lưu prefix `avatars/` trên MinIO; browser dùng URL ký ngắn hạn.
+- `AdminAudit` ghi đổi quyền/hạn mức/hồ sơ và thao tác tệp. MongoDB 4.0 standalone chưa có transaction nhiều document; audit và thay đổi dữ liệu không nguyên tử. Bootstrap admin là lệnh CLI rõ ràng, không qua public register.
 
 ## Hướng triển khai
 Một VPS Linux + Docker Compose cho giai đoạn đầu. CI kiểm tra/build và smoke với MongoDB 4.0; CD triển khai commit qua CI, kiểm tra health và giữ bản trước để rollback. HTTPS, secrets, backup/restore là điều kiện đưa public; xem [DEPLOYMENT](DEPLOYMENT.md).

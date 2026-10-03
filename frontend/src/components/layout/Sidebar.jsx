@@ -7,8 +7,10 @@ import IconButton from '../common/IconButton';
 import { useFolders } from '../../hooks/useFolders';
 import { useDashboardStats } from '../../hooks/useDashboard';
 import { formatBytes } from '../../utils/format';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Sidebar({ mobileOpen, onCloseMobile }) {
+  const { user } = useAuth();
   const { data: folders = [] } = useFolders();
   const { data: stats } = useDashboardStats();
   const navigate = useNavigate();
@@ -42,6 +44,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
         </div>
 
         <nav className="flex flex-col gap-0.5 px-2 pb-2">
+          {user?.role === 'admin' && <NavLink to="/app/admin/users" onClick={onCloseMobile} className="rounded-card px-2.5 py-2 text-sm text-gold">Quản trị người dùng</NavLink>}
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.path}

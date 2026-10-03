@@ -7,6 +7,7 @@ import NoteEditorPage from './pages/NoteEditorPage';
 import Search from './pages/Search';
 import Trash from './pages/Trash';
 import Settings from './pages/Settings';
+import AdminUsers from './pages/AdminUsers';
 import NotFound from './pages/NotFound';
 import AppShell from './components/layout/AppShell';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="search" element={<Search />} />
         <Route path="trash" element={<Trash />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="admin/users" element={<AdminUsers />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

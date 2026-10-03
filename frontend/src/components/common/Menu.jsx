@@ -22,6 +22,7 @@ export default function Menu({ trigger, items, align = 'right' }) {
       <div
         onClick={(e) => {
           e.stopPropagation();
+          if (trigger.props.disabled) return;
           setOpen((o) => !o);
         }}
       >

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { authApi } from '../api/auth.api';
 import { setAccessToken, setSessionExpiredHandler } from '../api/axiosClient';
 
@@ -9,11 +10,13 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isInitializing, setIsInitializing] = useState(true);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleSessionExpired = useCallback(() => {
+    queryClient.clear();
     setUser(null);
     navigate('/login', { replace: true });
-  }, [navigate]);
+  }, [navigate, queryClient]);
 
   useEffect(() => {
     setSessionExpiredHandler(handleSessionExpired);
@@ -40,17 +43,19 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (email, password) => {
     const { user: loggedInUser, accessToken } = await authApi.login({ email, password });
+    queryClient.clear();
     setAccessToken(accessToken);
     setUser(loggedInUser);
     return loggedInUser;
-  }, []);
+  }, [queryClient]);
 
   const register = useCallback(async (name, email, password) => {
     const { user: newUser, accessToken } = await authApi.register({ name, email, password });
+    queryClient.clear();
     setAccessToken(accessToken);
     setUser(newUser);
     return newUser;
-  }, []);
+  }, [queryClient]);
 
   const logout = useCallback(async () => {
     try {
@@ -60,8 +65,9 @@ export function AuthProvider({ children }) {
     }
     setAccessToken(null);
     setUser(null);
+    queryClient.clear();
     navigate('/login', { replace: true });
-  }, [navigate]);
+  }, [navigate, queryClient]);
 
   const value = { user, isAuthenticated: Boolean(user), isInitializing, login, register, logout, setUser };
 

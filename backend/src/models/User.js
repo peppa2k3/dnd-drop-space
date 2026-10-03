@@ -3,6 +3,14 @@ const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    status: { type: String, enum: ['active', 'disabled'], default: 'active' },
+    sessionVersion: { type: Number, default: 0, select: false },
+    storageLimitBytes: { type: Number, default: 0, min: 0 },
+    username: { type: String, trim: true, lowercase: true, unique: true, sparse: true,
+      default: function () { return `user_${this._id}`; } },
+    bio: { type: String, default: '', maxlength: 500 },
+    avatarObjectKey: { type: String, default: null },
     name: {
       type: String,
       required: [true, 'Name is required'],
@@ -39,7 +47,12 @@ userSchema.methods.toSafeJSON = function toSafeJSON() {
     id: this._id,
     name: this.name,
     email: this.email,
-    avatarUrl: this.avatarUrl,
+    username: this.username || '',
+    bio: this.bio || '',
+    role: this.role,
+    status: this.status,
+    storageLimitBytes: this.storageLimitBytes,
+    avatarUrl: this.avatarObjectKey ? `/api/users/${this._id}/avatar?v=${this.updatedAt.getTime()}` : null,
     createdAt: this.createdAt,
   };
 };

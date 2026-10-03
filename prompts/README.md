@@ -8,6 +8,7 @@ Luồng: `backlog/` → `progress/` → `completed/`. Move cùng file, giữ ID;
 | [002](completed/002-mongo40-local-cicd.md) | MongoDB 4.0, local, nền tảng CI/CD | Hoàn tất; chưa deploy public |
 | [003](completed/003-fix-bug-not_show_usaged.md) | Sửa dung lượng và tên tệp tiếng Việt | Hoàn tất |
 | [004](completed/004-fix-bug-not-alert-when-upload.md) | Cảnh báo dung lượng trước khi upload | Hoàn tất |
-| [005](backlog/005-production-release.md) | Triển khai public, backup/restore | Chờ hạ tầng |
+| [005](completed/005-build_RBAC_feature.md) | RBAC, quản trị quota/tệp, hồ sơ và avatar | Hoàn tất; xem logscontext/005-rbac.md |
+| [006](backlog/006-production-release.md) | Triển khai public, backup/restore | Chờ hạ tầng |
 
 Code ban đầu ở commit `860f085`; không dựng lại lịch sử prompt chưa tồn tại.

@@ -18,12 +18,6 @@ const toBool = (value, fallback = false) => {
   return ['true', '1', 'yes'].includes(String(value).toLowerCase());
 };
 
-const toIntOrNull = (value) => {
-  if (value === undefined || value === null || value === '') return null;
-  const parsed = parseInt(value, 10);
-  return Number.isNaN(parsed) ? null : parsed;
-};
-
 const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   isProduction: process.env.NODE_ENV === 'production',
@@ -42,6 +36,9 @@ const env = {
   },
 
   minio: {
+    publicEndPoint: process.env.MINIO_PUBLIC_ENDPOINT || 'localhost',
+    publicPort: parseInt(process.env.MINIO_PUBLIC_PORT || '9000', 10),
+    publicUseSSL: toBool(process.env.MINIO_PUBLIC_USE_SSL, false),
     endPoint: process.env.MINIO_ENDPOINT || 'localhost',
     port: parseInt(process.env.MINIO_PORT || '9000', 10),
     useSSL: toBool(process.env.MINIO_USE_SSL, false),
@@ -53,7 +50,6 @@ const env = {
   uploads: {
     maxFileSizeBytes: parseInt(process.env.MAX_FILE_SIZE_MB || '1024', 10) * 1024 * 1024,
     maxFilesPerUpload: parseInt(process.env.MAX_FILES_PER_UPLOAD || '20', 10),
-    maxStoragePerUserBytes: (toIntOrNull(process.env.MAX_STORAGE_PER_USER_MB) ?? 2048) * 1024 * 1024,
   },
 
   trash: {

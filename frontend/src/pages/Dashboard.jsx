@@ -10,8 +10,11 @@ import ItemDetailModal from '../components/items/ItemDetailModal';
 import FolderPickerModal from '../components/folder/FolderPickerModal';
 import PromptModal from '../components/common/PromptModal';
 import { formatBytes } from '../utils/format';
+import { useAuth } from '../context/AuthContext';
+import { mediaUrl } from '../utils/mediaUrl';
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const { data: stats, isLoading } = useDashboardStats();
   const navigate = useNavigate();
   const actions = useItemActions();
@@ -43,6 +46,13 @@ export default function Dashboard() {
         <p className="mt-1 text-sm text-slate">Tổng quan kho lưu trữ dữ liệu cá nhân của bạn.</p>
       </div>
 
+      <div className="catalog-card flex flex-wrap items-center gap-3 p-4">
+        {user?.avatarUrl && <img src={mediaUrl(user.avatarUrl)} referrerPolicy="no-referrer" alt="Ảnh đại diện" className="h-12 w-12 rounded-full" />}
+        <div className="min-w-0 grow"><p className="font-semibold">{user?.name}</p><p className="break-all text-sm text-slate">{user?.username} · {user?.email}</p></div>
+        <button className="text-sm text-gold-deep underline" onClick={() => navigate('/app/settings')}>Sửa hồ sơ</button>
+        {user?.role === 'admin' && <button className="text-sm text-gold-deep underline" onClick={() => navigate('/app/admin/users')}>Quản trị người dùng</button>}
+      </div>
+      {stats.storageLimitBytes === 0 && <p role="alert" className="rounded-card bg-brick-soft p-3 text-sm text-brick">Chưa được cấp dung lượng. Liên hệ quản trị viên để tạo dữ liệu và tải tệp lên.</p>}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {cards.map((card) => (
           <button

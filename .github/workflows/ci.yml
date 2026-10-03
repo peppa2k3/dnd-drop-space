@@ -29,6 +29,7 @@ jobs:
       - run: docker compose --env-file backend/.env config --quiet
       - run: docker compose --env-file backend/.env up -d --build --wait --wait-timeout 180
       - run: docker compose --env-file backend/.env exec -T backend npm run test:smoke
+      - run: docker compose --env-file backend/.env exec -T backend npm run test:rbac
       - name: Failure logs
         if: failure()
         run: docker compose --env-file backend/.env logs --tail 80

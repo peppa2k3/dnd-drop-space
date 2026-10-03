@@ -49,6 +49,11 @@ async function main() {
     method: 'POST', status: 201, body: { name: 'Smoke Test', email, password },
   })).json();
   token = registered.data.accessToken;
+  assert.equal(registered.data.user.storageLimitBytes, 0);
+  await request('/api/admin/users', { status: 403 });
+  await request('/api/items/upload', { method: 'POST', status: 403 });
+  // Explicit grant to this disposable test fixture; new real users stay at zero.
+  await User.updateOne({ _id: registered.data.user.id }, { $set: { storageLimitBytes: 2 * 1024 ** 3 } });
   assert.ok(cookie, 'Registration must set a refresh cookie');
   const oldCookie = cookie;
   const refreshed = await (await request('/api/auth/refresh', { method: 'POST' })).json();

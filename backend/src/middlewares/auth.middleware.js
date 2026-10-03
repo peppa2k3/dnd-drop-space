@@ -33,11 +33,24 @@ const authenticate = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const userExists = await User.exists({ _id: payload.sub });
-  if (!userExists) throw ApiError.unauthorized('User no longer exists');
+  const user = await User.findById(payload.sub).select('+sessionVersion');
+  if (!user) throw ApiError.unauthorized('User no longer exists');
+  if (user.status !== 'active') throw ApiError.forbidden('Account disabled');
+  if ((payload.ver || 0) !== user.sessionVersion) throw ApiError.unauthorized('Session revoked');
 
+  req.user = user;
   req.userId = payload.sub;
   next();
 });
 
-module.exports = { authenticate };
+const requireAdmin = (req, res, next) => {
+  if (req.user.role !== 'admin') return next(ApiError.forbidden('Administrator access required'));
+  next();
+};
+
+const requireStorage = (req, res, next) => {
+  if (req.user.storageLimitBytes <= 0) return next(ApiError.forbidden('Chưa được cấp dung lượng. Vui lòng liên hệ quản trị viên.'));
+  next();
+};
+
+module.exports = { authenticate, requireAdmin, requireStorage };

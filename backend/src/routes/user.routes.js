@@ -1,0 +1,11 @@
+const express = require('express');
+const multer = require('multer');
+const controller = require('../controllers/user.controller');
+const validate = require('../middlewares/validate.middleware');
+const { profileSchema, idSchema } = require('../validators/user.validator');
+const router = express.Router();
+const avatarUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 ** 2, files: 1 } });
+router.patch('/me', validate(profileSchema), controller.updateProfile);
+router.post('/me/avatar', avatarUpload.single('avatar'), controller.uploadAvatar);
+router.get('/:id/avatar', validate(idSchema, 'params'), controller.avatar);
+module.exports = router;

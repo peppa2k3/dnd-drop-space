@@ -30,4 +30,6 @@ Script `scripts/deploy.sh` tự quay về release trước nếu bước `up --w
 - Đặt quota/upload phù hợp RAM; một replica API vì cron còn nằm trong process API. Thêm giám sát uptime/dung lượng và backup định kỳ.
 - Image nền Node/Nginx dùng tag dòng; pin digest cho release production sau khi kiểm chứng. Chưa có registry/image signing.
 
-Checklist thực hiện: [prompt 005](../prompts/backlog/005-production-release.md).
+Avatar cần `MINIO_PUBLIC_ENDPOINT`, `MINIO_PUBLIC_PORT`, `MINIO_PUBLIC_USE_SSL=true` cho endpoint HTTPS tới MinIO/CDN; proxy giữ Host/path để chữ ký S3 hợp lệ. URL ký có hiệu lực 5 phút, không đặt bucket public.
+
+Checklist thực hiện: [prompt 006](../prompts/backlog/006-production-release.md).
