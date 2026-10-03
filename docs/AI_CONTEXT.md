@@ -3,7 +3,7 @@
 Cập nhật: 2026-10-03. Nguồn: README và code; chi tiết ở [tiến độ prompt](../prompts/README.md).
 
 ## Sản phẩm hiện có
-Personal Knowledge Hub: kho cá nhân cho ghi chú Markdown, bookmark và tệp. Code có auth JWT, thư mục, tags, yêu thích, tìm kiếm, thùng rác, dashboard, upload/thumbnail/streaming và React PWA. Chưa có bulk actions, chia sẻ tài khoản, preview nội dung Office.
+Personal Knowledge Hub: kho cá nhân cho ghi chú Markdown, bookmark và tệp. Code có auth JWT, thư mục, tags, yêu thích, tìm kiếm, thùng rác, dashboard, upload/thumbnail/streaming, React PWA, bạn bè, nhóm và chia sẻ tệp. Chưa có bulk actions và preview nội dung Office.
 
 ## Trạng thái đã xác nhận
 - `001/002` hoàn tất: tài liệu/prompt, Docker local, cấu hình CI/CD.
@@ -11,7 +11,8 @@ Personal Knowledge Hub: kho cá nhân cho ghi chú Markdown, bookmark và tệp.
 - Đã qua: build frontend, syntax backend, smoke qua Nginx (auth/refresh, note, folder/tag, search, upload/download, trash/restore), thumbnail ảnh/video và ffprobe.
 - Prompt `003` hoàn tất: hiển thị dung lượng và tên tệp Unicode đúng; hạn mức 2 GiB lúc đó đã được thay bằng cấp phát riêng ở prompt `005`.
 - Prompt `004` hoàn tất: modal upload và nút chèn tệp trong ghi chú kiểm tra quota trước khi gửi; modal khóa nút upload khi tổng tệp vượt dung lượng còn lại hoặc giới hạn server. Backend vẫn xác nhận quota khi nhận upload.
-- Prompt `005` hoàn tất: RBAC user/admin, mặc định 0 MB, quản trị hồ sơ/quota/trạng thái/tệp và audit; hồ sơ cá nhân, username, avatar MinIO. Kiểm tra RBAC 54 request và smoke cũ qua trên MongoDB 4.0.28. Context chi tiết: [005 RBAC](../prompts/logscontext/005-rbac.md).
+- Prompt `005` hoàn tất: RBAC user/admin, mặc định 0 MB, quản trị hồ sơ/quota/trạng thái/tệp và audit; hồ sơ cá nhân, username, avatar MinIO. Kiểm tra RBAC 55 request trên MongoDB 4.0.28. Context chi tiết: [005 RBAC](../prompts/logscontext/005-rbac.md).
+- Prompt `006` hoàn tất: bạn bè/block, nhóm với vai trò riêng, chia sẻ tệp theo người/nhóm, quyền xem/tải/chia sẻ tiếp, mật khẩu/hạn dùng và quản trị. Quyền được xét lại ở backend theo block, membership và chuỗi chia sẻ; không sao chép tệp MinIO. Kiểm tra tích hợp 101 request trên MongoDB 4.0.28; xem [log kiểm tra](../prompts/logscontext/006-collaboration.md).
 - Workflow qua actionlint, deploy script qua `bash -n`; **chưa chạy trên GitHub/server thật**. Browser không có kết nối nên chưa kiểm thử giao diện tương tác.
 - Chưa có Git remote/domain/server production. Chưa audit bảo mật đầy đủ hoặc diễn tập backup/restore; dự án hiện ở mức MVP chạy local + nền tảng triển khai.
 
@@ -21,4 +22,4 @@ Personal Knowledge Hub: kho cá nhân cho ghi chú Markdown, bookmark và tệp.
 - Tính năng có code không đồng nghĩa đã kiểm thử đầy đủ. Ghi kết quả chạy thật vào prompt.
 
 ## Tiếp theo
-Không có prompt đang làm. Cấp admin đầu tiên bằng `backend/scripts/set-admin.js <email>` sau khi chọn đúng tài khoản; chưa tự cấp quyền cho tài khoản thật. `006` đưa public khi có hạ tầng và Git remote; xem `docs/DEPLOYMENT.md`. Giữ nguyên các volumes `pkh_mongo40-data` và `pkh_minio-data`.
+Không có prompt đang làm. Cấp admin đầu tiên bằng `backend/scripts/set-admin.js <email>` sau khi chọn đúng tài khoản; chưa tự cấp quyền cho tài khoản thật. Prompt `008` đưa public khi có hạ tầng và Git remote; xem `docs/DEPLOYMENT.md`. Giữ nguyên các volumes `pkh_mongo40-data` và `pkh_minio-data`.

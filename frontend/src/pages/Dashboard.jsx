@@ -52,6 +52,11 @@ export default function Dashboard() {
         <button className="text-sm text-gold-deep underline" onClick={() => navigate('/app/settings')}>Sửa hồ sơ</button>
         {user?.role === 'admin' && <button className="text-sm text-gold-deep underline" onClick={() => navigate('/app/admin/users')}>Quản trị người dùng</button>}
       </div>
+      <div className="catalog-card flex flex-wrap gap-3 p-4 text-sm">
+        <button className="text-gold-deep underline" onClick={() => navigate('/app/friends')}>Bạn bè và lời mời</button>
+        <button className="text-gold-deep underline" onClick={() => navigate('/app/groups')}>Nhóm của tôi</button>
+        <button className="text-gold-deep underline" onClick={() => navigate('/app/shared')}>Tệp được chia sẻ</button>
+      </div>
       {stats.storageLimitBytes === 0 && <p role="alert" className="rounded-card bg-brick-soft p-3 text-sm text-brick">Chưa được cấp dung lượng. Liên hệ quản trị viên để tạo dữ liệu và tải tệp lên.</p>}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {cards.map((card) => (

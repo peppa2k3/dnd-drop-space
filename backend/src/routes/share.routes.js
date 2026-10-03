@@ -1,0 +1,18 @@
+const express = require('express');
+const { z } = require('zod');
+const validate = require('../middlewares/validate.middleware');
+const schemas = require('../validators/collaboration.validator');
+const controller = require('../controllers/share.controller');
+const router = express.Router();
+const idParam = z.object({ id: schemas.id });
+router.get('/received', validate(schemas.page, 'query'), controller.received);
+router.get('/outgoing', controller.outgoing);
+router.get('/item/:itemId', validate(z.object({ itemId: schemas.id }), 'params'), controller.forItem);
+router.post('/', validate(schemas.shareCreate), controller.create);
+router.patch('/:id', validate(idParam, 'params'), validate(schemas.shareUpdate), controller.update);
+router.delete('/:id', validate(idParam, 'params'), controller.revoke);
+router.post('/:id/unlock', validate(idParam, 'params'), validate(schemas.unlock), controller.unlock);
+router.get('/:id/view', validate(idParam, 'params'), controller.view);
+router.get('/:id/thumbnail', validate(idParam, 'params'), controller.thumbnail);
+router.get('/:id/download', validate(idParam, 'params'), controller.download);
+module.exports = router;

@@ -8,6 +8,10 @@ import Search from './pages/Search';
 import Trash from './pages/Trash';
 import Settings from './pages/Settings';
 import AdminUsers from './pages/AdminUsers';
+import Friends from './pages/Friends';
+import Groups from './pages/Groups';
+import SharedFiles from './pages/SharedFiles';
+import AdminCollaboration from './pages/AdminCollaboration';
 import NotFound from './pages/NotFound';
 import AppShell from './components/layout/AppShell';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -41,6 +45,10 @@ export default function App() {
         <Route path="trash" element={<Trash />} />
         <Route path="settings" element={<Settings />} />
         <Route path="admin/users" element={<AdminUsers />} />
+        <Route path="friends" element={<Friends />} />
+        <Route path="groups" element={<Groups />} />
+        <Route path="shared" element={<SharedFiles />} />
+        <Route path="admin/collaboration" element={<AdminCollaboration />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

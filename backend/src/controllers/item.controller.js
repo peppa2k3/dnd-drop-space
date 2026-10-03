@@ -225,6 +225,8 @@ const permanentlyDelete = asyncHandler(async (req, res) => {
   const item = await Item.findOne({ _id: req.params.id, user: req.userId });
   if (!item) throw ApiError.notFound('Item not found');
 
+  if (item.type === 'file') await require('../models/FileShare').deleteMany({ item: item._id });
+
   if (item.type === 'file') {
     await minioService.removeObjects([item.fileMeta?.objectKey, item.fileMeta?.thumbnailObjectKey]);
   }

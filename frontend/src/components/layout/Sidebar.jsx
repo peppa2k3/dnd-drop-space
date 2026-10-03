@@ -45,6 +45,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
 
         <nav className="flex flex-col gap-0.5 px-2 pb-2">
           {user?.role === 'admin' && <NavLink to="/app/admin/users" onClick={onCloseMobile} className="rounded-card px-2.5 py-2 text-sm text-gold">Quản trị người dùng</NavLink>}
+          {user?.role === 'admin' && <NavLink to="/app/admin/collaboration" onClick={onCloseMobile} className="rounded-card px-2.5 py-2 text-sm text-gold">Quản trị cộng tác</NavLink>}
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.path}

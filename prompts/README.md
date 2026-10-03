@@ -9,6 +9,7 @@ Luồng: `backlog/` → `progress/` → `completed/`. Move cùng file, giữ ID;
 | [003](completed/003-fix-bug-not_show_usaged.md) | Sửa dung lượng và tên tệp tiếng Việt | Hoàn tất |
 | [004](completed/004-fix-bug-not-alert-when-upload.md) | Cảnh báo dung lượng trước khi upload | Hoàn tất |
 | [005](completed/005-build_RBAC_feature.md) | RBAC, quản trị quota/tệp, hồ sơ và avatar | Hoàn tất; xem logscontext/005-rbac.md |
-| [006](backlog/006-production-release.md) | Triển khai public, backup/restore | Chờ hạ tầng |
+| [006](completed/006-build_sharing_file_and_user_group_feature.md) | Bạn bè, nhóm, chia sẻ tệp và quản trị | Hoàn tất; xem logscontext/006-collaboration.md |
+| [008](backlog/008-production-release.md) | Triển khai public, backup/restore | Chờ hạ tầng |
 
 Code ban đầu ở commit `860f085`; không dựng lại lịch sử prompt chưa tồn tại.

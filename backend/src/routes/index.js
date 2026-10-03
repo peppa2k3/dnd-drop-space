@@ -33,6 +33,9 @@ router.get('/health', async (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/users', authenticate, require('./user.routes'));
 router.use('/admin', authenticate, require('./admin.routes'));
+router.use('/social', authenticate, require('./social.routes'));
+router.use('/groups', authenticate, require('./group.routes'));
+router.use('/shares', authenticate, require('./share.routes'));
 
 // Everything below always requires a valid access token - this is the
 // single choke point that guarantees every user only ever sees their own

@@ -9,7 +9,8 @@
     "start": "node src/server.js",
     "lint": "node scripts/check-syntax.js",
     "test:smoke": "node scripts/smoke.js",
-    "test:rbac": "node scripts/rbac-smoke.js"
+    "test:rbac": "node scripts/rbac-smoke.js",
+    "test:collaboration": "node scripts/collaboration-smoke.js"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",

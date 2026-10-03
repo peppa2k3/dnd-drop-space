@@ -1,0 +1,15 @@
+const express = require('express');
+const validate = require('../middlewares/validate.middleware');
+const schemas = require('../validators/collaboration.validator');
+const controller = require('../controllers/social.controller');
+const router = express.Router();
+router.get('/users', validate(schemas.search, 'query'), controller.search);
+router.get('/friends', controller.listFriends);
+router.get('/requests', controller.listRequests);
+router.post('/friends/requests', validate(schemas.friendRequest), controller.requestFriend);
+router.patch('/friends/requests/:id', validate(schemas.fileId, 'params'), validate(schemas.friendDecision), controller.decideRequest);
+router.delete('/friends/:userId', validate(require('zod').z.object({ userId: schemas.id }), 'params'), controller.unfriend);
+router.get('/blocks', controller.blocks);
+router.post('/blocks/:userId', validate(require('zod').z.object({ userId: schemas.id }), 'params'), controller.block);
+router.delete('/blocks/:userId', validate(require('zod').z.object({ userId: schemas.id }), 'params'), controller.unblock);
+module.exports = router;

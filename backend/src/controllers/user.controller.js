@@ -42,8 +42,12 @@ const uploadAvatar = asyncHandler(async (req, res) => {
 });
 
 const avatar = asyncHandler(async (req, res) => {
-  if (req.params.id !== req.userId && req.user.role !== 'admin') throw ApiError.forbidden();
-  const user = await User.findById(req.params.id);
+  if (req.params.id !== req.userId && req.user.role !== 'admin' &&
+      await require('../services/collaborationPolicy.service').blockedBetween(req.params.id, req.userId)) {
+    throw ApiError.notFound('Avatar not found');
+  }
+  const user = await User.findOne({ _id: req.params.id,
+    ...(req.user.role === 'admin' ? {} : { status: 'active' }) });
   if (!user?.avatarObjectKey) throw ApiError.notFound('Avatar not found');
   // Browser fetches the bytes directly from MinIO; no local file or public bucket.
   const url = await avatarClient.presignedGetObject(minio.BUCKET, user.avatarObjectKey, 300);

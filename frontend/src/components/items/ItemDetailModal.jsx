@@ -9,10 +9,12 @@ import IconButton from '../common/IconButton';
 import { getItemVisual } from '../../utils/itemVisual';
 import { formatBytes } from '../../utils/format';
 import { mediaUrl } from '../../utils/mediaUrl';
+import { useNavigate } from 'react-router-dom';
 
 const PREVIEWABLE = ['image', 'video', 'pdf'];
 
 export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavorite, onDelete, saving }) {
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState([]);
@@ -130,6 +132,7 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
           <Icon size={13} /> {label}
         </div>
         <div className="flex items-center gap-1">
+          {item.type === 'file' && !item.isTrashed && <Button size="sm" variant="secondary" onClick={() => { onClose(); navigate(`/app/shared?itemId=${item._id}`); }}>Chia sẻ</Button>}
           <IconButton
             icon={Star}
             label="Yêu thích"

@@ -22,6 +22,8 @@ Script tạo secrets ngẫu nhiên nếu `.env` chưa tồn tại; giữ nguyên
 # Trạng thái / kiểm tra tích hợp / dừng giữ dữ liệu
 docker compose --env-file backend/.env ps
 docker compose --env-file backend/.env exec -T backend npm run test:smoke
+docker compose --env-file backend/.env exec -T backend npm run test:rbac
+docker compose --env-file backend/.env exec -T backend npm run test:collaboration
 docker compose --env-file backend/.env down
 ```
 
@@ -61,7 +63,9 @@ docker compose --env-file backend/.env exec -T backend node scripts/set-admin.js
 
 Avatar: tối đa 2 MB, chuẩn hóa WebP 256×256, lưu riêng tại `avatars/<userId>/` trên MinIO; không lưu file vào backend và không trừ hạn mức tệp. Browser tải trực tiếp bằng URL ký 5 phút. `MINIO_PUBLIC_ENDPOINT/PORT/USE_SSL` phải trỏ tới MinIO/CDN mà browser truy cập được (local: `localhost:9000`; production: HTTPS và proxy giữ nguyên Host/path ký).
 
-Chưa có: bulk actions, chia sẻ giữa tài khoản, render nội dung Office. Kết quả đã kiểm tra và giới hạn hiện tại: [AI_CONTEXT](docs/AI_CONTEXT.md).
+Các trang **Bạn bè**, **Nhóm**, **Đã chia sẻ** hỗ trợ tìm người theo username/ID, lời mời, chặn; nhóm có OWNER/ADMIN/MEMBER; chia sẻ tệp cho người dùng hoặc nhóm với quyền xem/tải/chia sẻ tiếp, mật khẩu và hạn dùng. Chỉ metadata chia sẻ nằm trong MongoDB; tệp gốc vẫn nằm một lần trên MinIO. Chủ nhóm có thể chuyển quyền sở hữu rồi rời nhóm. Admin quản lý các quan hệ tại `/app/admin/collaboration`. Tài khoản cần được cấp dung lượng để tạo nhóm hoặc chia sẻ; người nhận không cần quota để xem tệp được chia sẻ.
+
+Chưa có: bulk actions, render nội dung Office. Kết quả đã kiểm tra và giới hạn hiện tại: [AI_CONTEXT](docs/AI_CONTEXT.md).
 
 | Thư mục | Vai trò |
 | --- | --- |
@@ -72,7 +76,7 @@ Chưa có: bulk actions, chia sẻ giữa tài khoản, render nội dung Office
 | `docs/` | Bối cảnh, kiến trúc, quy tắc, vận hành |
 | `prompts/` | Backlog → progress → completed |
 
-API chính: `/api/auth`, `/api/items`, `/api/folders`, `/api/tags`, `/api/search`, `/api/trash`, `/api/dashboard/stats`. `/api/health` kiểm tra kết nối MongoDB/MinIO; nghiệp vụ yêu cầu access JWT. Xem route chi tiết trong `backend/src/routes/`.
+API chính: `/api/auth`, `/api/items`, `/api/folders`, `/api/tags`, `/api/search`, `/api/trash`, `/api/dashboard/stats`, `/api/social`, `/api/groups`, `/api/shares`. `/api/health` kiểm tra kết nối MongoDB/MinIO; nghiệp vụ yêu cầu access JWT. Xem route chi tiết trong `backend/src/routes/`.
 
 ## Quy trình làm việc và CI/CD
 

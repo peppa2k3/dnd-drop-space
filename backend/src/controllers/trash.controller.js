@@ -1,4 +1,5 @@
 const Item = require('../models/Item');
+const FileShare = require('../models/FileShare');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiResponse = require('../utils/ApiResponse');
 const minioService = require('../services/minio.service');
@@ -16,7 +17,9 @@ async function permanentlyDeleteItems(filter) {
   ]);
   await minioService.removeObjects(objectKeys);
 
-  await Item.deleteMany({ _id: { $in: items.map((i) => i._id) } });
+  const itemIds = items.map((item) => item._id);
+  await FileShare.deleteMany({ item: { $in: itemIds } });
+  await Item.deleteMany({ _id: { $in: itemIds } });
   return items.length;
 }
 

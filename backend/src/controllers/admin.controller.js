@@ -82,6 +82,7 @@ const audit = asyncHandler(async (req, res) => {
 const deleteFile = asyncHandler(async (req, res) => {
   const item = await Item.findOne({ _id: req.params.itemId, user: req.params.id, type: 'file', isTrashed: true });
   if (!item) throw ApiError.notFound('File must be in Trash before permanent deletion');
+  await require('../models/FileShare').deleteMany({ item: item._id });
   const { minioClient } = require('../config/minio');
   const { BUCKET } = require('../services/minio.service');
   for (const key of [item.fileMeta.objectKey, item.fileMeta.thumbnailObjectKey].filter(Boolean)) {

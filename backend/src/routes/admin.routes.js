@@ -6,6 +6,7 @@ const { requireAdmin } = require('../middlewares/auth.middleware');
 const { adminUserSchema, pageSchema, idSchema } = require('../validators/user.validator');
 const router = express.Router();
 router.use(requireAdmin);
+router.use('/collaboration', require('./adminCollaboration.routes'));
 router.get('/users', validate(pageSchema, 'query'), controller.listUsers);
 router.patch('/users/:id', validate(idSchema, 'params'), validate(adminUserSchema), controller.updateUser);
 router.get('/users/:id/files', validate(idSchema, 'params'), validate(pageSchema, 'query'), controller.listFiles);

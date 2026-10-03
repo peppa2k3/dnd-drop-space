@@ -83,7 +83,8 @@ async function main() {
   const hugeAvatar = new FormData();
   hugeAvatar.append('avatar', new Blob([Buffer.alloc(2 * 1024 ** 2 + 1)]), 'large.png');
   await request('/users/me/avatar', { token, method: 'POST', body: hugeAvatar, status: 400 });
-  await request(`/users/${admin._id}/avatar`, { token, status: 403 });
+  await request(`/users/${id}/avatar`, { token: adminToken, status: 302 });
+  await request(`/users/${admin._id}/avatar`, { token, status: 404 });
   for (const value of [-1, 1.5, 1024 ** 5 + 1]) {
     await request(`/admin/users/${id}`, { token: adminToken, method: 'PATCH', body: { storageLimitBytes: value }, status: 400 });
   }
