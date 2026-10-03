@@ -7,6 +7,7 @@
 - Biến môi trường qua `backend/src/config/env.js`; chỉ commit mẫu. Không log token, cookie hoặc URL có token.
 - Giữ `package-lock.json`, dùng `npm ci`; đổi driver phải kiểm tra trên `mongo:4.0` thật.
 - API frontend qua `src/api`, cache qua hooks; không lưu access token vào localStorage.
+- Auth: chỉ cấp access/refresh token sau khi `User.hasVerifiedEmail()` và trạng thái tài khoản hợp lệ; không tin email/profile Google từ client. OTP không lưu/log plaintext, có hạn dùng/cooldown/số lần sai; đổi mật khẩu hoặc email phải thu hồi phiên cũ. Chạy `npm run test:auth` trong Compose MongoDB 4.0 khi sửa luồng này.
 - RBAC/quota: đọc quyền hiện tại từ User, không tin role/quota client gửi. API hồ sơ chỉ nhận trường cho phép; API quản trị phải có `requireAdmin`. Thay đổi phân quyền phải chạy `npm run test:rbac` trong backend container; không tự nâng quyền tài khoản thật khi chưa xác định email.
 - Collaboration: kiểm tra block, membership, quyền share và quyền chuỗi cha tại backend mỗi lần đọc media; không dựa vào nút ẩn ở UI. Không cấp URL MinIO trực tiếp cho người nhận, không nhân bản tệp để chia sẻ. Chạy `npm run test:collaboration` trong Compose MongoDB 4.0 khi sửa các luồng này.
 

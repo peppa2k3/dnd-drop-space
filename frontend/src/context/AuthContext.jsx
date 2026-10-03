@@ -41,21 +41,32 @@ export function AuthProvider({ children }) {
     })();
   }, []);
 
-  const login = useCallback(async (email, password) => {
-    const { user: loggedInUser, accessToken } = await authApi.login({ email, password });
+  const acceptSession = useCallback(({ user: loggedInUser, accessToken }) => {
     queryClient.clear();
     setAccessToken(accessToken);
     setUser(loggedInUser);
     return loggedInUser;
   }, [queryClient]);
 
+  const login = useCallback(async (email, password) =>
+    acceptSession(await authApi.login({ email, password })), [acceptSession]);
+
+  const loginWithOtp = useCallback(async (email, code) =>
+    acceptSession(await authApi.loginWithOtp(email, code)), [acceptSession]);
+
+  const googleLogin = useCallback(async (idToken) => {
+    const result = await authApi.googleLogin(idToken);
+    if (result.linkRequired) return result;
+    acceptSession(result);
+    return result;
+  }, [acceptSession]);
+
+  const googleLink = useCallback(async (linkToken, code) =>
+    acceptSession(await authApi.googleLink(linkToken, code)), [acceptSession]);
+
   const register = useCallback(async (name, email, password) => {
-    const { user: newUser, accessToken } = await authApi.register({ name, email, password });
-    queryClient.clear();
-    setAccessToken(accessToken);
-    setUser(newUser);
-    return newUser;
-  }, [queryClient]);
+    return authApi.register({ name, email, password });
+  }, []);
 
   const logout = useCallback(async () => {
     try {
@@ -69,7 +80,8 @@ export function AuthProvider({ children }) {
     navigate('/login', { replace: true });
   }, [navigate, queryClient]);
 
-  const value = { user, isAuthenticated: Boolean(user), isInitializing, login, register, logout, setUser };
+  const value = { user, isAuthenticated: Boolean(user), isInitializing, login, loginWithOtp,
+    googleLogin, googleLink, register, logout, setUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -39,7 +39,9 @@ function UserEditor({ target, onClose, onSaved }) {
     update.mutate(body, { onSuccess: ({ user }) => {
       if (user.id === actor.id) setUser(user);
       onSaved(user);
-      addToast('Đã cập nhật tài khoản', 'success');
+      addToast(form.email !== target.email
+        ? 'Đã đổi email. Người dùng cần xác thực email mới; các phiên cũ đã bị thu hồi.'
+        : 'Đã cập nhật tài khoản', 'success');
     }, onError: errorToast });
   };
   const changeFile = (item, permanent = false) => {
@@ -49,6 +51,7 @@ function UserEditor({ target, onClose, onSaved }) {
   return <section className="catalog-card flex flex-col gap-4 p-5">
     <div className="flex justify-between gap-3"><h2 className="text-lg font-semibold">{target.name}</h2><Button variant="ghost" onClick={onClose}>Đóng</Button></div>
     <p className="break-all text-xs text-slate">ID: {target.id}</p>
+    <p className="text-xs text-slate">Email: {target.emailVerified ? 'đã xác thực' : 'chờ xác thực'}. Đổi email sẽ thu hồi phiên cũ; dùng trang Xác thực email để gửi mã tới địa chỉ mới.</p>
     {target.avatarUrl && <img src={mediaUrl(target.avatarUrl)} referrerPolicy="no-referrer" alt="Ảnh đại diện người dùng" className="h-16 w-16 rounded-full" />}
     <form onSubmit={save} className="grid gap-3 sm:grid-cols-2">
       {['name', 'email', 'username'].map((field) => <label key={field} className="text-sm">{({ name: 'Họ tên', email: 'Email', username: 'Username' })[field]}
@@ -97,7 +100,7 @@ export default function AdminUsers() {
     <div className="grid gap-3 md:grid-cols-2">
       {users.data?.users.map((row) => <button key={row.id} onClick={() => setSelected(row)} className="catalog-card p-4 text-left">
         <p className="font-semibold">{row.name} · {row.role}</p>
-        <p className="break-all text-sm">{row.email} · {row.status === 'active' ? 'Hoạt động' : 'Đã khóa'}</p>
+        <p className="break-all text-sm">{row.email} · {row.status === 'active' ? 'Hoạt động' : 'Đã khóa'} · {row.emailVerified ? 'Email đã xác thực' : 'Chờ xác thực'}</p>
         <p className="mt-2 text-xs text-slate">{formatBytes(row.usedStorageBytes)} / {formatBytes(row.storageLimitBytes)}</p>
       </button>)}
     </div>

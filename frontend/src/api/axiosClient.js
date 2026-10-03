@@ -41,7 +41,7 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config || {};
     const status = error.response?.status;
-    const isAuthRoute = /\/auth\/(login|register|refresh)$/.test(originalRequest.url || '');
+    const isAuthRoute = /\/auth\/(login(?:\/otp\/(?:request|verify))?|register|email\/(?:verify|resend)|password\/(?:forgot|verify|reset)|google(?:\/(?:config|link))?|refresh)$/.test(originalRequest.url || '');
 
     if (status !== 401 || originalRequest._retried || isAuthRoute) {
       return Promise.reject(error);

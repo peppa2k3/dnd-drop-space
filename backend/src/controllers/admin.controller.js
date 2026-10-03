@@ -38,13 +38,20 @@ const updateUser = asyncHandler(async (req, res) => {
         throw ApiError.conflict('At least one active administrator is required');
       }
       const changes = {};
+      const emailChanged = req.body.email && req.body.email !== target.email;
       for (const [field, value] of Object.entries(req.body)) {
         if (target[field] !== value) changes[field] = { before: target[field], after: value };
         target[field] = value;
       }
-      if (req.body.status === 'disabled') target.sessionVersion += 1;
+      if (emailChanged) {
+        target.emailVerificationRequired = true;
+        target.emailVerifiedAt = null;
+      }
+      if (req.body.status === 'disabled' || emailChanged) target.sessionVersion += 1;
       await target.save();
-      if (req.body.status === 'disabled') await RefreshToken.updateMany({ user: target._id }, { $set: { revoked: true } });
+      if (req.body.status === 'disabled' || emailChanged) {
+        await RefreshToken.updateMany({ user: target._id }, { $set: { revoked: true } });
+      }
       await AdminAudit.create({ actor: req.userId, target: target._id, action: 'update-user', changes });
       return target;
     }));

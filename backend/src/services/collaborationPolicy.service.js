@@ -26,7 +26,7 @@ async function blockedBetween(a, b) {
 function publicUser(user) {
   return {
     id: user._id, username: user.username, name: user.name,
-    avatarUrl: user.avatarObjectKey ? `/api/users/${user._id}/avatar?v=${user.updatedAt.getTime()}` : null,
+    avatarUrl: user.avatarObjectKey ? `/api/users/${user._id}/avatar?v=${user.updatedAt.getTime()}` : user.avatarUrl,
   };
 }
 module.exports = { requirePermission, blockedBetween, publicUser };

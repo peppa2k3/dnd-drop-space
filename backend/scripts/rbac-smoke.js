@@ -43,8 +43,10 @@ async function main() {
   ids.push(admin._id);
   const adminAuth = await data('/auth/login', { method: 'POST', body: { email: admin.email, password } });
   const adminToken = adminAuth.accessToken;
-  const registration = await request('/auth/register', { method: 'POST', status: 201,
-    body: { name: 'RBAC User', email: `rbac-user-${run}@example.invalid`, password, role: 'admin', storageLimitBytes: 1024 } });
+  // Public registration/verification is covered by auth-smoke; keep this RBAC fixture verified.
+  const fixture = await User.create({ name: 'RBAC User', email: `rbac-user-${run}@example.invalid`,
+    passwordHash: await User.hashPassword(password) });
+  const registration = await request('/auth/login', { method: 'POST', body: { email: fixture.email, password } });
   const cookie = registration.headers.get('set-cookie').split(';')[0];
   const created = (await registration.json()).data;
   ids.push(created.user.id);

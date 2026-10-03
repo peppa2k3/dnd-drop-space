@@ -13,6 +13,7 @@ Personal Knowledge Hub: kho cá nhân cho ghi chú Markdown, bookmark và tệp.
 - Prompt `004` hoàn tất: modal upload và nút chèn tệp trong ghi chú kiểm tra quota trước khi gửi; modal khóa nút upload khi tổng tệp vượt dung lượng còn lại hoặc giới hạn server. Backend vẫn xác nhận quota khi nhận upload.
 - Prompt `005` hoàn tất: RBAC user/admin, mặc định 0 MB, quản trị hồ sơ/quota/trạng thái/tệp và audit; hồ sơ cá nhân, username, avatar MinIO. Kiểm tra RBAC 55 request trên MongoDB 4.0.28. Context chi tiết: [005 RBAC](../prompts/logscontext/005-rbac.md).
 - Prompt `006` hoàn tất: bạn bè/block, nhóm với vai trò riêng, chia sẻ tệp theo người/nhóm, quyền xem/tải/chia sẻ tiếp, mật khẩu/hạn dùng và quản trị. Quyền được xét lại ở backend theo block, membership và chuỗi chia sẻ; không sao chép tệp MinIO. Kiểm tra tích hợp 101 request trên MongoDB 4.0.28; xem [log kiểm tra](../prompts/logscontext/006-collaboration.md).
+- Prompt `007` đang làm: code email OTP (xác thực, đăng nhập, đặt lại mật khẩu) và Google Login đã có, test tích hợp với SMTP/Google mô phỏng đạt 50 request trên MongoDB 4.0.28. SMTP thật từ container trả `EAUTH`, chưa gửi email thật; chưa kiểm tra Google consent/account thật. Browser không kết nối để kiểm tra UI tương tác. Xem [log](../prompts/logscontext/007-auth.md).
 - Workflow qua actionlint, deploy script qua `bash -n`; **chưa chạy trên GitHub/server thật**. Browser không có kết nối nên chưa kiểm thử giao diện tương tác.
 - Chưa có Git remote/domain/server production. Chưa audit bảo mật đầy đủ hoặc diễn tập backup/restore; dự án hiện ở mức MVP chạy local + nền tảng triển khai.
 
@@ -22,4 +23,4 @@ Personal Knowledge Hub: kho cá nhân cho ghi chú Markdown, bookmark và tệp.
 - Tính năng có code không đồng nghĩa đã kiểm thử đầy đủ. Ghi kết quả chạy thật vào prompt.
 
 ## Tiếp theo
-Không có prompt đang làm. Cấp admin đầu tiên bằng `backend/scripts/set-admin.js <email>` sau khi chọn đúng tài khoản; chưa tự cấp quyền cho tài khoản thật. Prompt `008` đưa public khi có hạ tầng và Git remote; xem `docs/DEPLOYMENT.md`. Giữ nguyên các volumes `pkh_mongo40-data` và `pkh_minio-data`.
+Prompt `007` đang chờ SMTP credential hợp lệ và kiểm thử Google thực tế. Cấp admin đầu tiên bằng `backend/scripts/set-admin.js <email>` sau khi tài khoản đã xác thực; chưa tự cấp quyền cho tài khoản thật. Prompt `008` đưa public khi có hạ tầng và Git remote; xem `docs/DEPLOYMENT.md`. Giữ nguyên các volumes `pkh_mongo40-data` và `pkh_minio-data`.

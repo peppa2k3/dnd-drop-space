@@ -4,7 +4,7 @@ const env = require('../config/env');
 const RefreshToken = require('../models/RefreshToken');
 
 function signAccessToken(user) {
-  return jwt.sign({ sub: user._id.toString(), ver: user.sessionVersion || 0 }, env.jwt.accessSecret, {
+  return jwt.sign({ kind: 'access', sub: user._id.toString(), ver: user.sessionVersion || 0 }, env.jwt.accessSecret, {
     expiresIn: env.jwt.accessExpiresIn,
   });
 }
@@ -20,7 +20,9 @@ function hashToken(token) {
 }
 
 function verifyAccessToken(token) {
-  return jwt.verify(token, env.jwt.accessSecret);
+  const payload = jwt.verify(token, env.jwt.accessSecret);
+  if (payload.kind !== 'access') throw new Error('Invalid token kind');
+  return payload;
 }
 
 function verifyRefreshToken(token) {

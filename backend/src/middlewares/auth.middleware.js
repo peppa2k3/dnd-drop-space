@@ -37,6 +37,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
   if (!user) throw ApiError.unauthorized('User no longer exists');
   if (user.status !== 'active') throw ApiError.forbidden('Account disabled');
   if ((payload.ver || 0) !== user.sessionVersion) throw ApiError.unauthorized('Session revoked');
+  if (!user.hasVerifiedEmail()) throw ApiError.forbidden('Email verification required');
 
   req.user = user;
   req.userId = payload.sub;

@@ -6,6 +6,9 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     status: { type: String, enum: ['active', 'disabled'], default: 'active' },
     sessionVersion: { type: Number, default: 0, select: false },
+    emailVerificationRequired: { type: Boolean, default: false },
+    emailVerifiedAt: { type: Date, default: null },
+    googleSub: { type: String, unique: true, sparse: true },
     storageLimitBytes: { type: Number, default: 0, min: 0 },
     username: { type: String, trim: true, lowercase: true, unique: true, sparse: true,
       default: function () { return `user_${this._id}`; } },
@@ -27,7 +30,6 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: {
       type: String,
-      required: true,
       select: false,
     },
     avatarUrl: {
@@ -39,7 +41,12 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.methods.comparePassword = function comparePassword(plainPassword) {
+  if (!this.passwordHash) return false;
   return bcrypt.compare(plainPassword, this.passwordHash);
+};
+
+userSchema.methods.hasVerifiedEmail = function hasVerifiedEmail() {
+  return !this.emailVerificationRequired || Boolean(this.emailVerifiedAt);
 };
 
 userSchema.methods.toSafeJSON = function toSafeJSON() {
@@ -51,8 +58,9 @@ userSchema.methods.toSafeJSON = function toSafeJSON() {
     bio: this.bio || '',
     role: this.role,
     status: this.status,
+    emailVerified: this.hasVerifiedEmail(),
     storageLimitBytes: this.storageLimitBytes,
-    avatarUrl: this.avatarObjectKey ? `/api/users/${this._id}/avatar?v=${this.updatedAt.getTime()}` : null,
+    avatarUrl: this.avatarObjectKey ? `/api/users/${this._id}/avatar?v=${this.updatedAt.getTime()}` : this.avatarUrl,
     createdAt: this.createdAt,
   };
 };

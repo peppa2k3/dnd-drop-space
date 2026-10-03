@@ -11,7 +11,7 @@ node scripts/init-env.cjs
 docker compose --env-file backend/.env up -d --build --wait --wait-timeout 180
 ```
 
-Script tạo secrets ngẫu nhiên nếu `.env` chưa tồn tại; giữ nguyên file đã có. Với file cũ, kiểm tra `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, JWT secrets và đặt `CLIENT_ORIGIN=http://localhost:8080`, `NODE_ENV=development` cho local HTTP.
+Script tạo secrets ngẫu nhiên nếu `.env` chưa tồn tại; giữ nguyên file đã có. Với file cũ, kiểm tra `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, JWT secrets và đặt `CLIENT_ORIGIN=http://localhost:8080`, `NODE_ENV=development` cho local HTTP. **Cần cấu hình SMTP hợp lệ** (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_SECURE`, `EMAIL_USER`, `EMAIL_PASSWORD`; `EMAIL_FROM` tùy chọn) trước khi đăng ký tài khoản mới: email xác thực là bắt buộc. Cổng 587 dùng STARTTLS (`EMAIL_SECURE=false`); cổng 465 dùng TLS ngay (`EMAIL_SECURE=true`). Nếu dùng Gmail và nhận `EAUTH`, kiểm tra `EMAIL_USER` và [App Password](https://support.google.com/accounts/answer/185833) của tài khoản có xác minh hai bước. Không ghi credential thật vào Git.
 
 - Website: http://localhost:8080 — chọn **Tạo tài khoản mới** để bắt đầu.
 - MinIO Console: http://localhost:9001 — dùng credentials trong `backend/.env`.
@@ -24,6 +24,7 @@ docker compose --env-file backend/.env ps
 docker compose --env-file backend/.env exec -T backend npm run test:smoke
 docker compose --env-file backend/.env exec -T backend npm run test:rbac
 docker compose --env-file backend/.env exec -T backend npm run test:collaboration
+docker compose --env-file backend/.env exec -T backend npm run test:auth
 docker compose --env-file backend/.env down
 ```
 
@@ -49,11 +50,13 @@ Mở http://localhost:5173. Nếu chạy backend ngoài Docker, tự cung cấp 
 
 ## Chức năng và code
 
-Đã có code: đăng ký/login/refresh JWT; ghi chú Markdown/autosave; bookmark preview; upload/download/thumbnail/stream; thư mục, tags, yêu thích, tìm kiếm; trash/restore/purge; dashboard, grid/list, PWA.
+Đã có code: đăng ký email/password với OTP xác thực, đăng nhập bằng mật khẩu hoặc OTP, đặt lại mật khẩu bằng OTP, đăng nhập Google, refresh JWT; ghi chú Markdown/autosave; bookmark preview; upload/download/thumbnail/stream; thư mục, tags, yêu thích, tìm kiếm; trash/restore/purge; dashboard, grid/list, PWA. Tài khoản cũ được giữ trạng thái đã xác thực để không bị khóa hàng loạt. Đổi mật khẩu hoặc đổi email qua admin thu hồi các phiên cũ.
+
+Đăng nhập Google dùng Google Identity Services và ID token xác minh tại backend. Đặt `GOOGLE_CLIENT_ID` của OAuth **Web application** trong `backend/.env`, đồng thời thêm origin web đang dùng (ví dụ `http://localhost:18080`) vào **Authorized JavaScript origins** trong Google Cloud. Luồng này không dùng `GOOGLE_CLIENT_SECRET` hay `GOOGLE_CALLBACK_URL`. Nếu một email ngoài Gmail/Workspace đã có tài khoản, hệ thống gửi OTP đến email đó trước khi liên kết Google. Xem [hướng dẫn Google](https://developers.google.com/identity/gsi/web/guides/display-button) và [xác minh ID token](https://developers.google.com/identity/sign-in/web/backend-auth).
 
 Tài khoản mới có vai trò `user`, hạn mức **0 MB**. Admin cấp/thu hồi hạn mức tại `/app/admin/users`; người chưa được cấp vẫn đăng nhập và sửa hồ sơ tại `/app/settings`, nhưng chưa tạo dữ liệu/upload. Tài khoản cũ chưa có trường hạn mức cũng nhận 0 MB; dữ liệu giữ nguyên. Dung lượng tính cả Thùng rác; giảm hạn mức không tự xóa tệp. `MAX_STORAGE_PER_USER_MB` không còn được sử dụng.
 
-Quản trị viên đầu tiên: đăng ký tài khoản, sau đó người vận hành chạy lệnh với email chính xác (không tự nâng quyền người đăng ký đầu tiên):
+Quản trị viên đầu tiên: đăng ký và xác thực email, sau đó người vận hành chạy lệnh với email chính xác (không tự nâng quyền người đăng ký đầu tiên):
 
 ```sh
 docker compose --env-file backend/.env exec -T backend node scripts/set-admin.js admin@example.com

@@ -31,6 +31,7 @@ jobs:
       - run: docker compose --env-file backend/.env exec -T backend npm run test:smoke
       - run: docker compose --env-file backend/.env exec -T backend npm run test:rbac
       - run: docker compose --env-file backend/.env exec -T backend npm run test:collaboration
+      - run: docker compose --env-file backend/.env exec -T backend npm run test:auth
       - name: Failure logs
         if: failure()
         run: docker compose --env-file backend/.env logs --tail 80

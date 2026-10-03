@@ -23,7 +23,7 @@ export default function Register() {
     setServerError(null);
     try {
       await registerUser(values.name, values.email, values.password);
-      navigate('/app', { replace: true });
+      navigate(`/verify-email?email=${encodeURIComponent(values.email)}`, { replace: true });
     } catch (err) {
       setServerError(err?.response?.data?.message || 'Tạo tài khoản thất bại. Vui lòng thử lại.');
     }
@@ -40,7 +40,7 @@ export default function Register() {
         {serverError && <p className="rounded-card bg-brick-soft px-3 py-2 text-sm text-brick">{serverError}</p>}
 
         <Button type="submit" size="lg" loading={isSubmitting} className="mt-1 w-full">
-          Tạo tài khoản
+          Tạo tài khoản và gửi mã
         </Button>
       </form>
 

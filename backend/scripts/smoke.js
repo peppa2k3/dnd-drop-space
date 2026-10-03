@@ -45,16 +45,19 @@ async function main() {
   await request('/api/health', { auth: false });
   await request('/api/items', { auth: false, status: 401 });
 
-  const registered = await (await request('/api/auth/register', {
-    method: 'POST', status: 201, body: { name: 'Smoke Test', email, password },
+  // The dedicated auth test covers email verification. This fixture starts verified.
+  const fixture = await User.create({ name: 'Smoke Test', email,
+    passwordHash: await User.hashPassword(password) });
+  const registered = await (await request('/api/auth/login', {
+    method: 'POST', body: { email, password },
   })).json();
   token = registered.data.accessToken;
   assert.equal(registered.data.user.storageLimitBytes, 0);
   await request('/api/admin/users', { status: 403 });
   await request('/api/items/upload', { method: 'POST', status: 403 });
   // Explicit grant to this disposable test fixture; new real users stay at zero.
-  await User.updateOne({ _id: registered.data.user.id }, { $set: { storageLimitBytes: 2 * 1024 ** 3 } });
-  assert.ok(cookie, 'Registration must set a refresh cookie');
+  await User.updateOne({ _id: fixture._id }, { $set: { storageLimitBytes: 2 * 1024 ** 3 } });
+  assert.ok(cookie, 'Login must set a refresh cookie');
   const oldCookie = cookie;
   const refreshed = await (await request('/api/auth/refresh', { method: 'POST' })).json();
   token = refreshed.data.accessToken;
