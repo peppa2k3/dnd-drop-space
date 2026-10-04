@@ -30,7 +30,7 @@ export default function Modal({ open, onClose, title, size = 'md', children, foo
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-      <div className="absolute inset-0 bg-ink/40 backdrop-blur-[2px]" onClick={onClose} />
+      <div className="absolute inset-0 bg-overlay/70 backdrop-blur-[3px]" onClick={onClose} />
       <div
         className={clsx(
           'relative w-full rounded-card border border-line bg-paper-card shadow-popover animate-slide-up max-h-[90vh] flex flex-col',

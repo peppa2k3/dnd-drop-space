@@ -165,13 +165,13 @@ export default function NoteEditorPage() {
       <div className="flex gap-1 lg:hidden">
         <button
           onClick={() => setMobilePane('edit')}
-          className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs ${mobilePane === 'edit' ? 'bg-ink text-paper' : 'bg-paper-dim text-slate'}`}
+          className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs transition-colors duration-200 ${mobilePane === 'edit' ? 'bg-gold-soft text-gold-deep' : 'bg-paper-dim text-slate'}`}
         >
           <Pencil size={13} /> Soạn thảo
         </button>
         <button
           onClick={() => setMobilePane('preview')}
-          className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs ${mobilePane === 'preview' ? 'bg-ink text-paper' : 'bg-paper-dim text-slate'}`}
+          className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs transition-colors duration-200 ${mobilePane === 'preview' ? 'bg-gold-soft text-gold-deep' : 'bg-paper-dim text-slate'}`}
         >
           <Eye size={13} /> Xem trước
         </button>

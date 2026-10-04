@@ -63,7 +63,7 @@ export default function Dashboard() {
           <button
             key={card.label}
             onClick={card.onClick}
-            className="catalog-card flex flex-col items-start gap-2 p-4 text-left shadow-card transition-shadow hover:shadow-popover"
+            className="catalog-card flex flex-col items-start gap-2 p-4 text-left"
           >
             <card.icon size={18} className="text-gold-deep" />
             <span className="font-display text-2xl font-semibold text-ink">{card.value}</span>

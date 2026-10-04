@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 const VARIANTS = {
   default: 'text-slate hover:text-ink hover:bg-paper-dim',
-  onDark: 'text-paper/70 hover:text-paper hover:bg-white/10',
+  onDark: 'text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-hover',
   gold: 'text-gold-deep hover:bg-gold-soft',
   danger: 'text-slate hover:text-brick hover:bg-brick-soft',
 };

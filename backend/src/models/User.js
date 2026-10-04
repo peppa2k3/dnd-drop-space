@@ -13,6 +13,13 @@ const userSchema = new mongoose.Schema(
     username: { type: String, trim: true, lowercase: true, unique: true, sparse: true,
       default: function () { return `user_${this._id}`; } },
     bio: { type: String, default: '', maxlength: 500 },
+    appearance: {
+      type: new mongoose.Schema({
+        theme: { type: String, enum: ['cyber-blue', 'neon-storage', 'deep-purple', 'space-terminal', 'ice-data'], required: true },
+        mode: { type: String, enum: ['dark', 'light'], required: true },
+      }, { _id: false }),
+      default: undefined,
+    },
     avatarObjectKey: { type: String, default: null },
     name: {
       type: String,
@@ -56,6 +63,7 @@ userSchema.methods.toSafeJSON = function toSafeJSON() {
     email: this.email,
     username: this.username || '',
     bio: this.bio || '',
+    appearance: this.appearance || { theme: 'cyber-blue', mode: 'dark' },
     role: this.role,
     status: this.status,
     emailVerified: this.hasVerifiedEmail(),

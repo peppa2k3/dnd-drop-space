@@ -1,53 +1,68 @@
 /** @type {import('tailwindcss').Config} */
+const token = (name) => `rgb(var(--${name}) / <alpha-value>)`;
+
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
         ink: {
-          DEFAULT: '#14213D',
-          soft: '#233252',
-          light: '#3C4A63',
+          DEFAULT: token('ink'),
+          soft: token('ink-soft'),
+          light: token('ink-light'),
         },
         paper: {
-          DEFAULT: '#FAF9F6',
-          dim: '#F1EEE7',
-          card: '#FFFFFF',
+          DEFAULT: token('paper'),
+          dim: token('paper-dim'),
+          card: token('paper-card'),
         },
-        line: '#E4E0D8',
+        line: token('line'),
         slate: {
-          DEFAULT: '#5B6472',
-          light: '#8891A0',
+          DEFAULT: token('slate'),
+          light: token('slate-light'),
         },
         gold: {
-          DEFAULT: '#C89B3C',
-          soft: '#EFE2C0',
-          deep: '#9C7726',
+          DEFAULT: token('gold'),
+          soft: token('gold-soft'),
+          deep: token('gold-deep'),
         },
         brick: {
-          DEFAULT: '#B3492B',
-          soft: '#F3DED6',
+          DEFAULT: token('brick'),
+          soft: token('brick-soft'),
         },
+        sidebar: {
+          DEFAULT: token('sidebar'),
+          text: token('sidebar-text'),
+          muted: token('sidebar-muted'),
+          hover: token('sidebar-hover'),
+          active: token('sidebar-active'),
+        },
+        secondary: token('secondary'),
+        accent: token('accent'),
+        success: token('success'),
+        overlay: token('overlay'),
+        'primary-contrast': token('primary-contrast'),
       },
       fontFamily: {
-        display: ['"Fraunces"', 'ui-serif', 'Georgia', 'serif'],
+        display: ['"Inter"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         sans: ['"Inter"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       borderRadius: {
-        card: '6px',
+        card: '12px',
       },
       boxShadow: {
-        card: '0 1px 2px rgba(20, 33, 61, 0.06), 0 1px 1px rgba(20, 33, 61, 0.04)',
-        popover: '0 8px 24px rgba(20, 33, 61, 0.16)',
+        card: '0 8px 28px rgb(var(--shadow-color) / 0.12)',
+        popover: '0 20px 48px rgb(var(--shadow-color) / 0.26)',
+        glow: '0 0 0 1px rgb(var(--gold) / 0.35), 0 12px 32px rgb(var(--gold) / 0.13)',
       },
       keyframes: {
         'fade-in': { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
         'slide-up': { '0%': { opacity: 0, transform: 'translateY(6px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
       },
       animation: {
-        'fade-in': 'fade-in 0.15s ease-out',
-        'slide-up': 'slide-up 0.18s ease-out',
+        'fade-in': 'fade-in 0.18s ease-out',
+        'slide-up': 'slide-up 0.2s ease-out',
       },
     },
   },

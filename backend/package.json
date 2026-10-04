@@ -1,7 +1,7 @@
 {
   "name": "pkh-backend",
   "version": "1.0.0",
-  "description": "Personal Knowledge Hub - REST API backend (Express + MongoDB + MinIO)",
+  "description": "DND Drop Space - REST API backend (Express + MongoDB + MinIO)",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {

@@ -44,7 +44,7 @@ export default function ResetPassword() {
         {step === 'reset' && <><label className="text-sm">Mật khẩu mới<input type="password" required minLength={8} maxLength={128} value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 w-full rounded-card border border-line p-2" /></label>
           <label className="text-sm">Nhập lại mật khẩu<input type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)} className="mt-1 w-full rounded-card border border-line p-2" /></label></>}
         {error && <p role="alert" className="text-sm text-brick">{error}</p>}
-        {message && <p role="status" className="text-sm text-emerald-700">{message}</p>}
+        {message && <p role="status" className="text-sm text-success">{message}</p>}
         <Button type="submit" loading={busy}>{step === 'request' ? 'Gửi mã' : step === 'verify' ? 'Xác thực mã' : 'Đổi mật khẩu'}</Button>
       </form>}
     <p className="mt-5 text-center text-sm"><Link to="/login" className="text-gold-deep hover:underline">Quay lại đăng nhập</Link></p>

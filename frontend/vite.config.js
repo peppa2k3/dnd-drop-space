@@ -10,11 +10,11 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/favicon.svg'],
       manifest: {
-        name: 'Personal Knowledge Hub',
-        short_name: 'PKHub',
+        name: 'DND Drop Space',
+        short_name: 'DND Space',
         description: 'Kho lưu trữ và quản lý dữ liệu cá nhân tập trung',
-        theme_color: '#14213D',
-        background_color: '#FAF9F6',
+        theme_color: '#070B14',
+        background_color: '#070B14',
         display: 'standalone',
         start_url: '/',
         icons: [

@@ -41,9 +41,9 @@ export default function UploadDropzone({ onFilesSelected, disabled = false }) {
       onDrop={onDrop}
       onPaste={onPaste}
       className={clsx(
-        'flex flex-col items-center justify-center gap-2 rounded-card border-2 border-dashed px-6 py-10 text-center transition-colors',
+        'flex flex-col items-center justify-center gap-2 rounded-card border-2 border-dashed px-6 py-10 text-center transition-all duration-200 focus-visible:border-gold',
         disabled ? 'cursor-not-allowed border-line bg-paper-dim opacity-50' : 'cursor-pointer',
-        isDragging && !disabled ? 'border-gold bg-gold-soft/40' : 'border-line bg-paper-dim hover:border-slate-light'
+        isDragging && !disabled ? 'border-gold bg-gold-soft/50 shadow-glow' : 'border-line bg-paper-dim hover:-translate-y-0.5 hover:border-gold/60 hover:bg-gold-soft/25'
       )}
     >
       <UploadCloud size={28} className="text-slate-light" strokeWidth={1.5} />

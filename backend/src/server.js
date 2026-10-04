@@ -11,7 +11,7 @@ async function bootstrap() {
   scheduleTrashAutoPurge();
 
   const server = app.listen(env.port, () => {
-    logger.info(`Personal Knowledge Hub API listening on port ${env.port} [${env.nodeEnv}]`);
+    logger.info(`DND Drop Space API listening on port ${env.port} [${env.nodeEnv}]`);
   });
 
   const shutdown = (signal) => {

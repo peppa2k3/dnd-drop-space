@@ -8,6 +8,7 @@ import { useFolders } from '../../hooks/useFolders';
 import { useDashboardStats } from '../../hooks/useDashboard';
 import { formatBytes } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
+import BrandMark from '../common/BrandMark';
 
 export default function Sidebar({ mobileOpen, onCloseMobile }) {
   const { user } = useAuth();
@@ -24,20 +25,20 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
 
   return (
     <>
-      {mobileOpen && <div className="fixed inset-0 z-30 bg-black/40 lg:hidden" onClick={onCloseMobile} />}
+      {mobileOpen && <div className="fixed inset-0 z-30 bg-overlay/70 lg:hidden" onClick={onCloseMobile} />}
 
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col bg-ink transition-transform lg:static lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col border-r border-line/40 bg-sidebar text-sidebar-text transition-transform duration-200 lg:static lg:translate-x-0',
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         <div className="flex items-center justify-between px-4 py-4">
           <div className="flex items-center gap-2">
-            <LogoMark />
+            <BrandMark />
             <div className="leading-tight">
-              <p className="font-display text-sm font-semibold text-paper">Knowledge Hub</p>
-              <p className="font-mono text-[10px] uppercase tracking-wider text-paper/40">Cá nhân</p>
+              <p className="font-display text-sm font-semibold text-sidebar-text">DND Drop Space</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-sidebar-muted">CLOUD WORKSPACE</p>
             </div>
           </div>
           <IconButton icon={X} label="Đóng menu" variant="onDark" className="lg:hidden" onClick={onCloseMobile} />
@@ -54,8 +55,8 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
               onClick={onCloseMobile}
               className={({ isActive }) =>
                 clsx(
-                  'flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm transition-colors',
-                  isActive ? 'bg-white/10 text-paper' : 'text-paper/75 hover:bg-white/5 hover:text-paper'
+                  'flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm transition-all duration-200 hover:translate-x-0.5',
+                  isActive ? 'bg-sidebar-active text-sidebar-text shadow-glow' : 'text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text'
                 )
               }
             >
@@ -65,7 +66,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
           ))}
         </nav>
 
-        <div className="mx-2 mb-2 border-t border-white/10" />
+        <div className="mx-2 mb-2 border-t border-sidebar-muted/20" />
 
         <div className="min-h-0 grow overflow-y-auto px-2">
           <FolderTree
@@ -78,15 +79,15 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
           />
         </div>
 
-        <div className="mx-2 border-t border-white/10" />
+        <div className="mx-2 border-t border-sidebar-muted/20" />
 
         <NavLink
           to={TRASH_NAV_ITEM.path}
           onClick={onCloseMobile}
           className={({ isActive }) =>
             clsx(
-              'mx-2 my-2 flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm transition-colors',
-              isActive ? 'bg-white/10 text-paper' : 'text-paper/75 hover:bg-white/5 hover:text-paper'
+              'mx-2 my-2 flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm transition-all duration-200 hover:translate-x-0.5',
+              isActive ? 'bg-sidebar-active text-sidebar-text shadow-glow' : 'text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text'
             )
           }
         >
@@ -95,24 +96,14 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
         </NavLink>
 
         <div className="px-4 pb-4 pt-1">
-          <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-sidebar-muted/20">
             <div className="h-full rounded-full bg-gold" style={{ width: `${usedPercent}%` }} />
           </div>
-          <p className="mt-1.5 font-mono text-[10px] text-paper/60">
+          <p className="mt-1.5 font-mono text-[10px] text-sidebar-muted">
             {stats ? `${formatBytes(usedBytes)} / ${formatBytes(storageLimitBytes)} đã dùng` : 'Đang tải dung lượng...'}
           </p>
         </div>
       </aside>
     </>
-  );
-}
-
-function LogoMark() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="1" y="1" width="30" height="30" rx="7" fill="#233252" stroke="#C89B3C" strokeWidth="1.2" />
-      <path d="M9 10.5H23M9 16H23M9 21.5H17" stroke="#FAF9F6" strokeWidth="1.6" strokeLinecap="round" />
-      <circle cx="23.5" cy="21.5" r="2.2" stroke="#C89B3C" strokeWidth="1.4" />
-    </svg>
   );
 }

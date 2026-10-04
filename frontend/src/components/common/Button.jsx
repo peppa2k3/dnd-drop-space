@@ -2,12 +2,12 @@ import clsx from 'clsx';
 import { Loader2 } from 'lucide-react';
 
 const VARIANTS = {
-  primary: 'bg-ink text-paper hover:bg-ink-soft active:bg-ink-light',
-  gold: 'bg-gold text-ink hover:bg-gold-deep hover:text-paper',
-  secondary: 'bg-transparent text-ink border border-line hover:border-ink hover:bg-paper-dim',
+  primary: 'bg-gold text-primary-contrast hover:bg-gold-deep active:brightness-90',
+  gold: 'bg-gold-soft text-gold-deep border border-gold/35 hover:bg-gold/25 active:bg-gold/35',
+  secondary: 'bg-paper-card text-ink border border-line hover:border-gold/65 hover:bg-paper-dim active:bg-gold-soft',
   ghost: 'bg-transparent text-slate hover:text-ink hover:bg-paper-dim',
   danger: 'bg-transparent text-brick border border-brick/40 hover:bg-brick-soft',
-  dangerSolid: 'bg-brick text-paper hover:bg-brick/90',
+  dangerSolid: 'bg-brick text-paper-card hover:bg-brick/90',
 };
 
 const SIZES = {
@@ -29,7 +29,7 @@ export default function Button({
   return (
     <Component
       className={clsx(
-        'inline-flex items-center justify-center rounded-card font-medium transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap',
+        'inline-flex items-center justify-center rounded-card font-medium transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 whitespace-nowrap',
         VARIANTS[variant],
         SIZES[size],
         className

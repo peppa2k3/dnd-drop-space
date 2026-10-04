@@ -32,4 +32,4 @@ Script `scripts/deploy.sh` tự quay về release trước nếu bước `up --w
 
 Avatar cần `MINIO_PUBLIC_ENDPOINT`, `MINIO_PUBLIC_PORT`, `MINIO_PUBLIC_USE_SSL=true` cho endpoint HTTPS tới MinIO/CDN; proxy giữ Host/path để chữ ký S3 hợp lệ. URL ký có hiệu lực 5 phút, không đặt bucket public.
 
-Checklist thực hiện: [prompt 008](../prompts/backlog/008-production-release.md).
+Checklist thực hiện: [prompt 009](../prompts/backlog/009-production-release.md).

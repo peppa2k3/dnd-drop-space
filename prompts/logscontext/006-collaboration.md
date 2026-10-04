@@ -4,4 +4,4 @@
 
 Đã chạy `npm run lint --prefix backend`, `npm run build --prefix frontend`; Compose bốn service healthy với MongoDB 4.0.28. `test:smoke` đạt; `test:rbac` đạt 55 request; `test:collaboration` đạt 101 request, gồm block cao hơn share, chuỗi chia sẻ tiếp, thu hồi quyền, mật khẩu/hạn dùng, nhóm và purge metadata. Fixture test được xóa. CI đã thêm test collaboration; chưa chạy trên GitHub. UI chưa được thao tác thủ công trong browser.
 
-Lưu ý vận hành: MongoDB 4.0 standalone không có transaction đa document; backup MongoDB và MinIO cùng thời điểm trước release có dữ liệu thật. Production thuộc [prompt 008](../backlog/008-production-release.md).
+Lưu ý vận hành: MongoDB 4.0 standalone không có transaction đa document; backup MongoDB và MinIO cùng thời điểm trước release có dữ liệu thật. Production thuộc [prompt 009](../backlog/009-production-release.md).

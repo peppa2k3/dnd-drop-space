@@ -6,6 +6,7 @@ import { userApi } from '../api/user.api';
 import Button from '../components/common/Button';
 import { formatBytes } from '../utils/format';
 import { mediaUrl } from '../utils/mediaUrl';
+import ThemeControls from '../components/theme/ThemeControls';
 
 export default function Settings() {
   const { user, setUser, logout } = useAuth();
@@ -39,6 +40,7 @@ export default function Settings() {
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-5">
       <h1 className="font-display text-2xl font-semibold">Hồ sơ cá nhân</h1>
+      <ThemeControls />
       <div className="catalog-card flex flex-col gap-3 p-5">
         {user?.avatarUrl && <img src={mediaUrl(user.avatarUrl)} referrerPolicy="no-referrer" alt="Ảnh đại diện" className="h-20 w-20 rounded-full object-cover" />}
         <label className="text-sm">Ảnh đại diện (tối đa 2 MB)

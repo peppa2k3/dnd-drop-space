@@ -2,56 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ink: 233 243 251;
+  --ink-soft: 205 222 233;
+  --ink-light: 172 198 214;
+  --paper: 7 11 20;
+  --paper-dim: 11 19 32;
+  --paper-card: 16 24 39;
+  --line: 49 69 86;
+  --slate: 171 193 207;
+  --slate-light: 141 168 185;
+  --gold: 0 217 255;
+  --gold-deep: 85 231 255;
+  --gold-soft: 13 54 70;
+  --secondary: 99 102 241;
+  --accent: 34 211 238;
+  --brick: 255 138 138;
+  --brick-soft: 65 30 41;
+  --success: 103 232 177;
+  --sidebar: 7 16 30;
+  --sidebar-text: 237 249 255;
+  --sidebar-muted: 178 201 214;
+  --sidebar-hover: 18 37 53;
+  --sidebar-active: 19 56 74;
+  --overlay: 0 4 12;
+  --shadow-color: 0 0 0;
+  --primary-contrast: 4 17 24;
+  color-scheme: dark;
+}
+
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-
-  ::selection {
-    background-color: theme('colors.gold.soft');
-    color: theme('colors.ink.DEFAULT');
-  }
-
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: theme('colors.line') transparent;
-  }
-
-  *::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  *::-webkit-scrollbar-thumb {
-    background-color: theme('colors.line');
-    border-radius: 999px;
-  }
-  *::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  :focus-visible {
-    outline: 2px solid theme('colors.gold.DEFAULT');
-    outline-offset: 2px;
-  }
+  html { scroll-behavior: smooth; }
+  body { @apply bg-paper text-ink font-sans antialiased; }
+  ::selection { background: rgb(var(--gold-soft)); color: rgb(var(--ink)); }
+  * { scrollbar-width: thin; scrollbar-color: rgb(var(--line)) transparent; }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-thumb { background: rgb(var(--line)); border-radius: 999px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  :focus-visible { outline: 2px solid rgb(var(--gold)); outline-offset: 2px; }
+  input, textarea, select { @apply bg-paper-card text-ink; }
 }
 
 @layer components {
-  /* The signature "index card" look shared by every item card in the library. */
   .catalog-card {
-    @apply relative bg-paper-card border border-line rounded-card;
-    background-image: radial-gradient(circle at 16px 16px, theme('colors.paper.dim') 3px, transparent 3.5px);
+    @apply relative rounded-card border border-line bg-paper-card/90;
+    box-shadow: 0 8px 28px rgb(var(--shadow-color) / 0.11);
+    backdrop-filter: blur(12px);
+    transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+  }
+  .catalog-card:hover {
+    transform: translateY(-2px);
+    border-color: rgb(var(--gold) / 0.48);
+    box-shadow: 0 0 0 1px rgb(var(--gold) / 0.12), 0 16px 36px rgb(var(--shadow-color) / 0.22);
+  }
+  .catalog-card:focus-within { border-color: rgb(var(--gold) / 0.7); }
+  .auth-orbit {
+    background-image: radial-gradient(circle, rgb(var(--sidebar-text) / 0.16) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .status-led {
+    @apply inline-block h-2 w-2 rounded-full bg-success;
+    box-shadow: 0 0 9px rgb(var(--success) / 0.7);
+    animation: status-pulse 2s ease-in-out infinite;
   }
 }
 
-/* Markdown note preview typography */
-.note-prose {
-  @apply text-ink leading-relaxed;
+@keyframes status-pulse {
+  50% { opacity: 0.55; box-shadow: 0 0 3px rgb(var(--success) / 0.45); }
 }
-.note-prose h1,
-.note-prose h2,
-.note-prose h3 {
-  @apply font-display font-semibold text-ink mt-5 mb-2;
-}
+
+.note-prose { @apply text-ink leading-relaxed; }
+.note-prose h1, .note-prose h2, .note-prose h3 { @apply font-display font-semibold text-ink mt-5 mb-2; }
 .note-prose h1 { @apply text-2xl; }
 .note-prose h2 { @apply text-xl; }
 .note-prose h3 { @apply text-lg; }
@@ -60,7 +81,16 @@
 .note-prose ol { @apply list-decimal pl-5 mb-3; }
 .note-prose a { @apply text-gold-deep underline underline-offset-2; }
 .note-prose code { @apply font-mono text-sm bg-paper-dim px-1 py-0.5 rounded; }
-.note-prose pre { @apply font-mono text-sm bg-ink text-paper p-3 rounded-card overflow-x-auto mb-3; }
+.note-prose pre { @apply font-mono text-sm bg-paper-dim border border-line p-3 rounded-card overflow-x-auto mb-3; }
 .note-prose pre code { @apply bg-transparent p-0; }
 .note-prose blockquote { @apply border-l-2 border-gold pl-3 italic text-slate mb-3; }
 .note-prose input[type='checkbox'] { @apply accent-gold-deep mr-2; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

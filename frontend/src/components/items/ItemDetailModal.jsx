@@ -84,7 +84,7 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
 
     if (item.type === 'file' && category === 'video') {
       return (
-        // eslint-disable-next-line jsx-a11y/media-has-caption
+        // Uploaded videos may not have a separate caption track.
         <video controls className="max-h-[60vh] w-full rounded-card border border-line bg-black" src={mediaUrl(item.urls.stream)} />
       );
     }

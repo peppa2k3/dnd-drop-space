@@ -17,8 +17,8 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
           type="button"
           onClick={() => onTagChange(null)}
           className={clsx(
-            'shrink-0 rounded-full border px-2.5 py-1 font-mono text-[11px]',
-            !activeTag ? 'border-ink bg-ink text-paper' : 'border-line text-slate hover:border-slate-light'
+            'shrink-0 rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors duration-200',
+            !activeTag ? 'border-gold bg-gold-soft text-gold-deep' : 'border-line text-slate hover:border-gold/60'
           )}
         >
           Tất cả thẻ
@@ -29,8 +29,8 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
             type="button"
             onClick={() => onTagChange(tag._id)}
             className={clsx(
-              'shrink-0 rounded-full border px-2.5 py-1 font-mono text-[11px]',
-              activeTag === tag._id ? 'border-gold-deep bg-gold-soft text-ink-soft' : 'border-line text-slate hover:border-slate-light'
+              'shrink-0 rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors duration-200',
+              activeTag === tag._id ? 'border-gold bg-gold-soft text-gold-deep' : 'border-line text-slate hover:border-gold/60'
             )}
           >
             #{tag.name}
@@ -56,7 +56,7 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
           <button
             type="button"
             onClick={() => onViewModeChange('grid')}
-            className={clsx('rounded-[4px] p-1.5', viewMode === 'grid' ? 'bg-ink text-paper' : 'text-slate-light hover:text-ink')}
+            className={clsx('rounded-[8px] p-1.5 transition-colors duration-200', viewMode === 'grid' ? 'bg-gold-soft text-gold-deep' : 'text-slate-light hover:text-ink')}
             aria-label="Xem dạng lưới"
           >
             <LayoutGrid size={15} />
@@ -64,7 +64,7 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
           <button
             type="button"
             onClick={() => onViewModeChange('list')}
-            className={clsx('rounded-[4px] p-1.5', viewMode === 'list' ? 'bg-ink text-paper' : 'text-slate-light hover:text-ink')}
+            className={clsx('rounded-[8px] p-1.5 transition-colors duration-200', viewMode === 'list' ? 'bg-gold-soft text-gold-deep' : 'text-slate-light hover:text-ink')}
             aria-label="Xem dạng danh sách"
           >
             <List size={15} />

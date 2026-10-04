@@ -32,6 +32,10 @@ function codeFor(email, purpose) {
   assert.ok(code, `Missing ${purpose} code for fixture`);
   return code;
 }
+function wrongCodeFor(email, purpose) {
+  const nines = '9'.repeat(env.otp.length);
+  return codeFor(email, purpose) === nines ? '8'.repeat(env.otp.length) : nines;
+}
 async function request(path, { method = 'GET', body, status = 200, token, cookie } = {}) {
   const headers = {};
   if (body !== undefined) headers['Content-Type'] = 'application/json';
@@ -82,7 +86,7 @@ async function main() {
   await request('/auth/email/resend', { method: 'POST', body: { email }, status: 429 });
   const firstCode = codeFor(email, 'verify');
   for (let i = 0; i < env.otp.maxAttempts; i++) {
-    await request('/auth/email/verify', { method: 'POST', body: { email, code: '99999999' }, status: 400 });
+    await request('/auth/email/verify', { method: 'POST', body: { email, code: wrongCodeFor(email, 'verify') }, status: 400 });
   }
   await request('/auth/email/verify', { method: 'POST', body: { email, code: firstCode }, status: 400 });
   await EmailOtp.updateOne({ user: user._id, purpose: 'verify' }, { $set: { sentAt: new Date(0) } });
@@ -96,12 +100,19 @@ async function main() {
   const oldCookie = loginResponse.headers.get('set-cookie').split(';')[0];
   assert.equal(login.user.emailVerified, true);
   await request('/auth/me', { token: login.accessToken });
+  const appearance = { theme: 'deep-purple', mode: 'light' };
+  const savedAppearance = await data('/users/me', { method: 'PATCH', token: login.accessToken,
+    body: { appearance } });
+  assert.deepEqual(savedAppearance.user.appearance, appearance);
+  assert.deepEqual((await data('/auth/me', { token: login.accessToken })).user.appearance, appearance);
+  await request('/users/me', { method: 'PATCH', token: login.accessToken, status: 400,
+    body: { appearance: { theme: 'invalid', mode: 'dark' } } });
   const unlockProof = jwt.sign({ kind: 'share-unlock', sub: String(user._id) },
     env.jwt.accessSecret, { expiresIn: '5m' });
   await request('/auth/me', { token: unlockProof, status: 401 });
 
   await post('/auth/login/otp/request', { email });
-  await request('/auth/login/otp/verify', { method: 'POST', body: { email, code: '99999999' }, status: 400 });
+  await request('/auth/login/otp/verify', { method: 'POST', body: { email, code: wrongCodeFor(email, 'login') }, status: 400 });
   const otpSession = await post('/auth/login/otp/verify', { email, code: codeFor(email, 'login') });
   assert.ok(otpSession.accessToken);
   await request('/auth/login/otp/verify', { method: 'POST', body: { email, code: codeFor(email, 'login') }, status: 400 });
@@ -164,7 +175,7 @@ async function main() {
   const pending = await post('/auth/google', { idToken: tokenExternal }, 202);
   assert.equal(pending.linkRequired, true);
   assert.equal((await User.findById(external._id)).googleSub, undefined);
-  await request('/auth/google/link', { method: 'POST', body: { linkToken: pending.linkToken, code: '99999999' }, status: 400 });
+  await request('/auth/google/link', { method: 'POST', body: { linkToken: pending.linkToken, code: wrongCodeFor(externalEmail, 'google_link') }, status: 400 });
   const externalSession = await post('/auth/google/link', { linkToken: pending.linkToken,
     code: codeFor(externalEmail, 'google_link') });
   assert.equal(externalSession.user.id, String(external._id));

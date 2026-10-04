@@ -60,7 +60,7 @@ export default function FolderTree({ folders, activeFolderId, onSelectFolder }) 
   return (
     <div className="flex flex-col gap-0.5">
       <div className="flex items-center justify-between px-2 py-1">
-        <span className="font-mono text-[11px] uppercase tracking-wider text-paper/50">Thư mục</span>
+        <span className="font-mono text-[11px] uppercase tracking-wider text-sidebar-muted">Thư mục</span>
         <IconButton icon={Plus} label="Thêm thư mục gốc" variant="onDark" onClick={() => setCreatingUnder(null)} />
       </div>
 
@@ -120,7 +120,7 @@ function FolderNode({ folder, depth, activeFolderId, onSelectFolder, onAddChild,
       <div
         className={clsx(
           'group flex cursor-pointer items-center gap-1 rounded-card py-1.5 pr-1 text-sm transition-colors',
-          isActive ? 'bg-white/10 text-paper' : 'text-paper/75 hover:bg-white/5 hover:text-paper'
+          isActive ? 'bg-sidebar-active text-sidebar-text' : 'text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text'
         )}
         style={{ paddingLeft: `${8 + depth * 14}px` }}
         onClick={() => onSelectFolder(folder._id)}

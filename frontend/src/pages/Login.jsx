@@ -83,7 +83,7 @@ export default function Login() {
         {otpSent && <><p className="text-sm text-slate">Nếu tài khoản hợp lệ, mã đăng nhập đã được gửi đến email.</p>
           <label className="text-sm">Mã OTP<input inputMode="numeric" autoComplete="one-time-code" required minLength={6} maxLength={8} value={otpCode} onChange={(e) => setOtpCode(e.target.value)} className="mt-1 w-full rounded-card border border-line p-2" /></label></>}
         {serverError && <p role="alert" className="text-sm text-brick">{serverError}</p>}
-        {info && <p role="status" className="text-sm text-emerald-700">{info}</p>}
+        {info && <p role="status" className="text-sm text-success">{info}</p>}
         <Button type="submit" loading={otpBusy}>{otpSent ? 'Đăng nhập bằng mã' : 'Gửi mã đăng nhập'}</Button>
         {otpSent && <Button type="button" variant="secondary" disabled={otpBusy} onClick={async () => {
           try { await authApi.requestLoginOtp(otpEmail); setInfo('Đã yêu cầu gửi lại mã.'); setServerError(null); }

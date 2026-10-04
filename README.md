@@ -1,10 +1,12 @@
-# Personal Knowledge Hub
+# DND Drop Space
 
 Kho cá nhân cho ghi chú Markdown, bookmark, ảnh/video và tệp. React/Vite PWA + Express + MongoDB **4.0** + MinIO; Nginx phục vụ web và proxy `/api`.
 
+Trong **Cài đặt → Giao diện**, chọn một trong năm theme và chế độ Tối/Sáng. Thanh trên cùng có bộ chọn nhanh; thay đổi hiện ngay. Khi đăng nhập, lựa chọn được lưu trong hồ sơ và khôi phục ở lần đăng nhập sau; khi chưa đăng nhập, lựa chọn lưu trên trình duyệt. Nếu không có preference, ứng dụng dùng Cyber Space Blue ở chế độ tối.
+
 ## Chạy nhanh
 
-Yêu cầu: Docker với Linux containers, Docker Compose v2+; Node.js 22+ để tạo `.env` và phát triển local.
+Yêu cầu: Docker với Linux containers, Docker Compose v2+; Node.js 22.13+ để tạo `.env`, phát triển và chạy frontend lint local.
 
 ```bash
 node scripts/init-env.cjs

@@ -7,7 +7,7 @@ export default function AppShell() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-paper">
+    <div className="flex h-screen overflow-hidden bg-paper transition-colors duration-200">
       <Sidebar mobileOpen={mobileSidebarOpen} onCloseMobile={() => setMobileSidebarOpen(false)} />
 
       <div className="flex min-w-0 grow flex-col">

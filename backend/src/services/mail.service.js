@@ -18,10 +18,10 @@ async function sendOtp(email, purpose, code) {
     });
   }
   const subjects = {
-    verify: 'Xác thực email Personal Knowledge Hub',
-    login: 'Mã đăng nhập Personal Knowledge Hub',
-    reset: 'Đặt lại mật khẩu Personal Knowledge Hub',
-    google_link: 'Liên kết Google với Personal Knowledge Hub',
+    verify: 'Xác thực email DND Drop Space',
+    login: 'Mã đăng nhập DND Drop Space',
+    reset: 'Đặt lại mật khẩu DND Drop Space',
+    google_link: 'Liên kết Google với DND Drop Space',
   };
   await transporter.sendMail({
     from: env.email.from, to: email, subject: subjects[purpose],

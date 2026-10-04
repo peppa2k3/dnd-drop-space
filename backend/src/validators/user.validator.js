@@ -5,7 +5,11 @@ const profileFields = {
   username: z.string().trim().toLowerCase().regex(/^[a-z0-9_]{3,32}$/).optional(),
   bio: z.string().trim().max(500).optional(),
 };
-const profileSchema = z.object(profileFields).strict();
+const appearanceSchema = z.object({
+  theme: z.enum(['cyber-blue', 'neon-storage', 'deep-purple', 'space-terminal', 'ice-data']),
+  mode: z.enum(['dark', 'light']),
+}).strict();
+const profileSchema = z.object({ ...profileFields, appearance: appearanceSchema.optional() }).strict();
 const adminUserSchema = z.object({
   ...profileFields,
   email: z.string().trim().toLowerCase().email().optional(),

@@ -10,6 +10,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useCreateNote } from '../../hooks/useItems';
 import { useToast } from '../../context/ToastContext';
 import { useDashboardStats } from '../../hooks/useDashboard';
+import ThemeQuickSwitch from '../theme/ThemeQuickSwitch';
 
 export default function Topbar({ onOpenMobileSidebar }) {
   const [search, setSearch] = useState('');
@@ -37,10 +38,10 @@ export default function Topbar({ onOpenMobileSidebar }) {
   };
 
   return (
-    <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-line bg-paper/95 px-4 py-3 backdrop-blur">
+    <header className="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-line bg-paper/90 px-4 py-3 backdrop-blur-xl sm:flex-nowrap">
       <IconButton icon={MenuIcon} label="Mở menu" className="lg:hidden" onClick={onOpenMobileSidebar} />
 
-      <form onSubmit={handleSearchSubmit} className="relative max-w-md grow">
+      <form onSubmit={handleSearchSubmit} className="relative order-2 w-full min-w-0 sm:order-none sm:max-w-md sm:grow">
         <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-light" />
         <input
           value={search}
@@ -50,7 +51,8 @@ export default function Topbar({ onOpenMobileSidebar }) {
         />
       </form>
 
-      <div className="ml-auto flex items-center gap-2">
+      <div className="order-1 ml-auto flex items-center gap-2 sm:order-none">
+        <ThemeQuickSwitch />
         <Menu
           trigger={
             <Button variant="gold" size="md" disabled={!stats || stats.storageLimitBytes <= 0} title={stats?.storageLimitBytes === 0 ? 'Chưa được cấp dung lượng' : 'Tạo mới'}>
@@ -66,7 +68,7 @@ export default function Topbar({ onOpenMobileSidebar }) {
 
         <Menu
           trigger={
-            <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-paper">
+            <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-gold text-primary-contrast transition-all duration-200 hover:shadow-glow">
               <UserIcon size={16} />
             </button>
           }
