@@ -10,7 +10,7 @@ Luồng: `backlog/` → `progress/` → `completed/`. Move cùng file, giữ ID;
 | [004](completed/004-fix-bug-not-alert-when-upload.md) | Cảnh báo dung lượng trước khi upload | Hoàn tất |
 | [005](completed/005-build_RBAC_feature.md) | RBAC, quản trị quota/tệp, hồ sơ và avatar | Hoàn tất; xem logscontext/005-rbac.md |
 | [006](completed/006-build_sharing_file_and_user_group_feature.md) | Bạn bè, nhóm, chia sẻ tệp và quản trị | Hoàn tất; xem logscontext/006-collaboration.md |
-| [007](progress/007-build_GOOGLE_auth_feature.md) | Google Login, xác thực email và OTP | Đang kiểm tra SMTP/Google thực tế |
+| [007](progress/007-build_GOOGLE_auth_feature.md) | Google Login, xác thực email và OTP | Code đã chuẩn bị; chờ SMTP/Google và UI thực tế |
 | [008](backlog/008-production-release.md) | Triển khai public, backup/restore | Chờ hạ tầng |
 
 Code ban đầu ở commit `860f085`; không dựng lại lịch sử prompt chưa tồn tại.

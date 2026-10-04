@@ -21,6 +21,8 @@ Hoàn thiện hệ thống xác thực tài khoản:
 - Cập nhật đầy đủ biến cần thiết vào `.env.example`.
 - Không hard-code secret hoặc credential.
 
+File liên quan: auth backend/frontend, `backend/.env.example`, README và tài liệu trạng thái/triển khai. Ngoài phạm vi: thay credential thật, chạy test local theo yêu cầu ngày 2026-10-04, hoặc triển khai production. Rủi ro dữ liệu: không có migration/xóa dữ liệu; bản production sẽ không khởi động nếu thiếu cấu hình auth bắt buộc. Có thể quay lại bằng commit trước, giữ nguyên volumes MongoDB/MinIO.
+
 ## Logic chính
 
 ### Email/Password
@@ -83,3 +85,5 @@ Admin/Super Admin được bootstrap/setup thủ công theo cơ chế hiện t�
 Biến cần thiết: `EMAIL_HOST/PORT/SECURE/USER/PASSWORD` (`EMAIL_FROM` tùy chọn), `OTP_EXPIRES_MINUTES/LENGTH/MAX_ATTEMPTS/RESEND_COOLDOWN_SECONDS`, `GOOGLE_CLIENT_ID`. `GOOGLE_CLIENT_SECRET` và `GOOGLE_CALLBACK_URL` trong `.env` cũ không được dùng bởi luồng GIS ID token. Không commit `.env`.
 
 Kiểm tra hiện tại: backend syntax và frontend build đạt; `test:auth` đạt 50 HTTP request với SMTP và Google verifier mô phỏng trên MongoDB 4.0.28; smoke/RBAC/collaboration cũ đạt. API thật từ chối Google ID token giả với HTTP 401. SMTP xác thực trực tiếp từ backend container trả `EAUTH` kể cả khi bỏ khoảng trắng định dạng trong app password, nên chưa thể gửi email thật; Google consent chưa thử với tài khoản thật. Browser không kết nối để kiểm tra UI tương tác. Cần cập nhật SMTP credential trong `.env` (không gửi qua chat), sau đó kiểm thử email/Google thật và đưa prompt vào `completed/`.
+
+Lượt 2026-10-04: kiểm tra tĩnh và hoàn thiện cấu hình production. Backend nay từ chối cấu hình production thiếu JWT secret đủ dài/khác nhau, Google Web client ID, SMTP hoặc HTTPS origin; cổng SMTP/OTP được xác thực lúc khởi động. Validator nhận đúng độ dài OTP đã cấu hình. Mật khẩu mới được hash trước khi tiêu thụ reset token. Nút Google dùng một lần tải script dùng chung và hiện lỗi rõ nếu thiếu client ID. `.env.example` và tài liệu triển khai liệt kê toàn bộ key ứng dụng; `IMAGE_TAG`/`PKH_ENV_FILE` do script deploy cấp. Theo yêu cầu người dùng, **không chạy test local/build/Compose ở lượt này**; tiêu chí SMTP/Google thật và UI browser vẫn chưa được xác nhận. Prompt tiếp tục ở `progress/`.

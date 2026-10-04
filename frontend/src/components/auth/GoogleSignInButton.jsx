@@ -1,35 +1,45 @@
 import { useEffect, useRef, useState } from 'react';
 import { authApi } from '../../api/auth.api';
 
+let googleScriptPromise;
+
+function loadGoogleScript() {
+  if (window.google?.accounts?.id) return Promise.resolve();
+  if (!googleScriptPromise) {
+    googleScriptPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.dataset.googleSignin = 'true';
+      script.onload = () => window.google?.accounts?.id
+        ? resolve() : reject(new Error('Google Identity Services unavailable'));
+      script.onerror = () => reject(new Error('Google Identity Services failed to load'));
+      document.head.appendChild(script);
+    }).catch((error) => {
+      document.querySelector('script[data-google-signin]')?.remove();
+      googleScriptPromise = null;
+      throw error;
+    });
+  }
+  return googleScriptPromise;
+}
+
 export default function GoogleSignInButton({ onCredential }) {
   const container = useRef(null);
+  const onCredentialRef = useRef(onCredential);
   const [error, setError] = useState('');
+  useEffect(() => { onCredentialRef.current = onCredential; }, [onCredential]);
   useEffect(() => {
     let active = true;
     async function setup() {
       try {
         const { clientId } = await authApi.googleConfig();
-        if (!active || !clientId) return;
-        if (!window.google?.accounts?.id) {
-          await new Promise((resolve, reject) => {
-            const existing = document.querySelector('script[data-google-signin]');
-            if (existing) {
-              existing.addEventListener('load', resolve, { once: true });
-              existing.addEventListener('error', reject, { once: true });
-              return;
-            }
-            const script = document.createElement('script');
-            script.src = 'https://accounts.google.com/gsi/client';
-            script.async = true;
-            script.dataset.googleSignin = 'true';
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
-          });
-        }
+        if (!active) return;
+        if (!clientId) { setError('Đăng nhập Google chưa được cấu hình.'); return; }
+        await loadGoogleScript();
         if (!active || !container.current) return;
         window.google.accounts.id.initialize({ client_id: clientId,
-          callback: (response) => onCredential(response.credential) });
+          callback: (response) => onCredentialRef.current(response.credential) });
         container.current.replaceChildren();
         window.google.accounts.id.renderButton(container.current,
           { theme: 'outline', size: 'large', width: 320, text: 'continue_with' });
@@ -37,8 +47,8 @@ export default function GoogleSignInButton({ onCredential }) {
     }
     setup();
     return () => { active = false; };
-  }, [onCredential]);
+  }, []);
   return <div className="flex flex-col items-center gap-2">
-    <div ref={container} /><p role="alert" className="text-sm text-brick">{error}</p>
+    <div ref={container} />{error && <p role="alert" className="text-sm text-brick">{error}</p>}
   </div>;
 }

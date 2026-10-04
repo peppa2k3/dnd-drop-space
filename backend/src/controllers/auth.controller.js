@@ -107,8 +107,9 @@ const verifyResetOtp = asyncHandler(async (req, res) => {
 const resetPassword = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: req.body.email, status: 'active' }).select('+sessionVersion');
   if (!user?.hasVerifiedEmail()) throw ApiError.badRequest('Reset token expired or used');
+  const passwordHash = await User.hashPassword(req.body.password);
   await otp.consumeReset(user, req.body.resetToken);
-  user.passwordHash = await User.hashPassword(req.body.password);
+  user.passwordHash = passwordHash;
   user.sessionVersion = (user.sessionVersion || 0) + 1;
   await user.save();
   await RefreshToken.updateMany({ user: user._id }, { $set: { revoked: true } });

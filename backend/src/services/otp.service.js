@@ -13,14 +13,7 @@ function codeHash(userId, purpose, code) {
 function checkHash(left, right) {
   return crypto.timingSafeEqual(Buffer.from(left, 'hex'), Buffer.from(right, 'hex'));
 }
-function configured() {
-  if (env.otp.length < 6 || env.otp.length > 8 || env.otp.expiresMinutes < 1 ||
-      env.otp.maxAttempts < 1 || env.otp.resendCooldownSeconds < 1) {
-    throw new Error('Invalid OTP configuration');
-  }
-}
 async function issue(user, purpose) {
-  configured();
   const now = new Date();
   const code = String(crypto.randomInt(0, 10 ** env.otp.length)).padStart(env.otp.length, '0');
   const update = { codeHash: codeHash(user._id, purpose, code), attempts: 0,

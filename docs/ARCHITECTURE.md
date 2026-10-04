@@ -23,6 +23,7 @@ Browser → Nginx (:8080 local, HTTPS ở production)
 - Access JWT trong bộ nhớ frontend; refresh token trong cookie httpOnly, xoay vòng. Production dùng HTTPS với cookie Secure.
 - Email/password mới bắt buộc OTP xác thực trước khi nhận phiên; tài khoản cũ không có cờ xác thực được giữ quyền truy cập. `EmailOtp` lưu HMAC của mã, hạn dùng, số lần sai và cooldown; reset mật khẩu thu hồi refresh token, tăng `sessionVersion`. Access JWT có `kind=access` để bằng chứng mở khóa share không dùng được làm access token.
 - Google Identity Services trả ID token cho frontend; backend dùng Google Auth Library xác minh chữ ký, issuer, audience và hạn dùng, kiểm tra `email_verified`, liên kết bằng Google `sub` và email đã có. Email ngoài Gmail/Workspace trùng tài khoản hiện có cần OTP trước khi liên kết. SMTP gửi mã qua TLS; secret chỉ ở `.env`.
+- Cấu hình production phải có HTTPS origin, hai JWT secret khác nhau, dài ít nhất 32 ký tự và không dùng giá trị mẫu, Google Web client ID và SMTP; backend từ chối khởi động nếu thiếu. OTP và cổng SMTP được kiểm tra khi nạp cấu hình.
 - Media hiện nhận token qua query; không ghi query vào access log. Presigned URL là cải tiến sau.
 - Tìm kiếm `$lookup` + regex; không dùng operator chỉ có từ MongoDB 4.2 trở lên.
 - Thumbnail chạy trong request; cron purge trong API. Chạy một replica API trước khi tách worker/cron.

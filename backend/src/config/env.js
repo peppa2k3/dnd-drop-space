@@ -40,17 +40,17 @@ const env = {
   },
   email: {
     host: process.env.EMAIL_HOST || '',
-    port: parseInt(process.env.EMAIL_PORT || '587', 10),
+    port: Number(process.env.EMAIL_PORT || '587'),
     secure: toBool(process.env.EMAIL_SECURE),
     user: process.env.EMAIL_USER || '',
     password: process.env.EMAIL_PASSWORD || '',
     from: process.env.EMAIL_FROM || process.env.EMAIL_USER || '',
   },
   otp: {
-    expiresMinutes: parseInt(process.env.OTP_EXPIRES_MINUTES || '5', 10),
-    length: parseInt(process.env.OTP_LENGTH || '6', 10),
-    maxAttempts: parseInt(process.env.OTP_MAX_ATTEMPTS || '5', 10),
-    resendCooldownSeconds: parseInt(process.env.OTP_RESEND_COOLDOWN_SECONDS || '60', 10),
+    expiresMinutes: Number(process.env.OTP_EXPIRES_MINUTES || '5'),
+    length: Number(process.env.OTP_LENGTH || '6'),
+    maxAttempts: Number(process.env.OTP_MAX_ATTEMPTS || '5'),
+    resendCooldownSeconds: Number(process.env.OTP_RESEND_COOLDOWN_SECONDS || '60'),
   },
 
   minio: {
@@ -76,5 +76,44 @@ const env = {
 
   urlFetchTimeoutMs: parseInt(process.env.URL_FETCH_TIMEOUT_MS || '8000', 10),
 };
+
+// A production deployment must not silently use development signing keys or
+// start without the providers required by the public authentication flows.
+if (env.isProduction) {
+  const requiredProductionValues = {
+    JWT_ACCESS_SECRET: env.jwt.accessSecret,
+    JWT_REFRESH_SECRET: env.jwt.refreshSecret,
+    GOOGLE_CLIENT_ID: env.google.clientId,
+    EMAIL_HOST: env.email.host,
+    EMAIL_USER: env.email.user,
+    EMAIL_PASSWORD: env.email.password,
+    EMAIL_FROM: env.email.from,
+  };
+  const missing = Object.entries(requiredProductionValues)
+    .filter(([, value]) => !value)
+    .map(([name]) => name);
+  if (missing.length) throw new Error(`Missing production environment variables: ${missing.join(', ')}`);
+  if ([env.jwt.accessSecret, env.jwt.refreshSecret].some((secret) =>
+    secret.length < 32 || secret.startsWith('change_this') || secret.startsWith('dev_')) ||
+    env.jwt.accessSecret === env.jwt.refreshSecret) {
+    throw new Error('Production JWT secrets must be distinct, non-placeholder, and at least 32 characters');
+  }
+  let origin;
+  try { origin = new URL(env.clientOrigin); }
+  catch { throw new Error('CLIENT_ORIGIN must be a valid HTTPS origin in production'); }
+  if (origin.protocol !== 'https:' || origin.origin !== env.clientOrigin) {
+    throw new Error('CLIENT_ORIGIN must be a valid HTTPS origin in production');
+  }
+}
+
+if (!Number.isInteger(env.email.port) || env.email.port < 1 || env.email.port > 65535) {
+  throw new Error('EMAIL_PORT must be a valid TCP port');
+}
+if (!Number.isInteger(env.otp.expiresMinutes) || env.otp.expiresMinutes < 1 ||
+    !Number.isInteger(env.otp.length) || env.otp.length < 6 || env.otp.length > 8 ||
+    !Number.isInteger(env.otp.maxAttempts) || env.otp.maxAttempts < 1 ||
+    !Number.isInteger(env.otp.resendCooldownSeconds) || env.otp.resendCooldownSeconds < 1) {
+  throw new Error('Invalid OTP configuration');
+}
 
 module.exports = env;
