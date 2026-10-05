@@ -6,6 +6,7 @@ import {
   useUpdateItem,
 } from './useItems';
 import { useToast } from '../context/ToastContext';
+import i18n from '../i18n/config';
 
 export function useItemActions() {
   const toggleFavoriteMutation = useToggleFavorite();
@@ -18,38 +19,38 @@ export function useItemActions() {
   return {
     toggleFavorite: (id) =>
       toggleFavoriteMutation.mutate(id, {
-        onError: () => addToast('Không thể cập nhật mục yêu thích', 'error'),
+        onError: () => addToast(i18n.t('notifications:favoriteUpdateFailed'), 'error'),
       }),
     moveToTrash: (id, onDone) =>
       moveToTrashMutation.mutate(id, {
         onSuccess: () => {
-          addToast('Đã chuyển vào Thùng rác');
+          addToast(i18n.t('notifications:movedToTrash'));
           onDone?.();
         },
-        onError: () => addToast('Xóa thất bại, vui lòng thử lại', 'error'),
+        onError: () => addToast(i18n.t('notifications:deleteFailed'), 'error'),
       }),
     restore: (id) =>
       restoreMutation.mutate(id, {
-        onSuccess: () => addToast('Đã khôi phục mục đã chọn'),
-        onError: () => addToast('Khôi phục thất bại', 'error'),
+        onSuccess: () => addToast(i18n.t('notifications:itemRestored')),
+        onError: () => addToast(i18n.t('notifications:restoreFailed'), 'error'),
       }),
     permanentlyDelete: (id, onDone) =>
       permanentlyDeleteMutation.mutate(id, {
         onSuccess: () => {
-          addToast('Đã xóa vĩnh viễn');
+          addToast(i18n.t('notifications:itemPermanentlyDeleted'));
           onDone?.();
         },
-        onError: () => addToast('Xóa thất bại, vui lòng thử lại', 'error'),
+        onError: () => addToast(i18n.t('notifications:deleteFailed'), 'error'),
       }),
     rename: (id, title, onDone) =>
       updateMutation.mutate(
         { id, payload: { title } },
         {
           onSuccess: () => {
-            addToast('Đã đổi tên');
+            addToast(i18n.t('notifications:itemRenamed'));
             onDone?.();
           },
-          onError: () => addToast('Đổi tên thất bại', 'error'),
+          onError: () => addToast(i18n.t('notifications:renameFailed'), 'error'),
         }
       ),
     moveToFolder: (id, folder, onDone) =>
@@ -57,10 +58,10 @@ export function useItemActions() {
         { id, payload: { folder } },
         {
           onSuccess: () => {
-            addToast('Đã di chuyển');
+            addToast(i18n.t('notifications:itemMoved'));
             onDone?.();
           },
-          onError: () => addToast('Di chuyển thất bại', 'error'),
+          onError: () => addToast(i18n.t('notifications:moveFailed'), 'error'),
         }
       ),
     updateItem: (id, payload, onDone) =>
@@ -68,10 +69,10 @@ export function useItemActions() {
         { id, payload },
         {
           onSuccess: () => {
-            addToast('Đã lưu thay đổi');
+            addToast(i18n.t('notifications:changesSaved'));
             onDone?.();
           },
-          onError: () => addToast('Lưu thất bại', 'error'),
+          onError: () => addToast(i18n.t('notifications:saveFailed'), 'error'),
         }
       ),
     isLoading:

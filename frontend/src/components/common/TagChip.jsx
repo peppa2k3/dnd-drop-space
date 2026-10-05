@@ -1,7 +1,10 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function TagChip({ name, onRemove, className, size = 'sm' }) {
+  useTranslation();
   return (
     <span
       className={clsx(
@@ -12,7 +15,7 @@ export default function TagChip({ name, onRemove, className, size = 'sm' }) {
     >
       #{name}
       {onRemove && (
-        <button type="button" onClick={onRemove} className="ml-0.5 rounded-full hover:bg-primary/30" aria-label={`Xóa thẻ ${name}`}>
+        <button type="button" onClick={onRemove} className="ml-0.5 rounded-full hover:bg-primary/30" aria-label={i18n.t('common:deleteTagName', { name: name })}>
           <X size={11} />
         </button>
       )}

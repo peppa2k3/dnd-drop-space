@@ -1,3 +1,5 @@
+import i18n from '../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, Link2, Image, Video, FolderOpen, Star, HardDrive } from 'lucide-react';
@@ -9,11 +11,12 @@ import ItemGrid from '../components/items/ItemGrid';
 import ItemDetailModal from '../components/items/ItemDetailModal';
 import FolderPickerModal from '../components/folder/FolderPickerModal';
 import PromptModal from '../components/common/PromptModal';
-import { formatBytes } from '../utils/format';
+import { formatBytes, formatNumber } from '../utils/format';
 import { useAuth } from '../context/AuthContext';
 import { mediaUrl } from '../utils/mediaUrl';
 
 export default function Dashboard() {
+  useTranslation();
   const { user } = useAuth();
   const { data: stats, isLoading } = useDashboardStats();
   const navigate = useNavigate();
@@ -23,15 +26,15 @@ export default function Dashboard() {
   const [renamingItem, setRenamingItem] = useState(null);
   const [movingItem, setMovingItem] = useState(null);
 
-  if (isLoading || !stats) return <FullPageSpinner label="Đang tải bảng điều khiển" />;
+  if (isLoading || !stats) return <FullPageSpinner label={i18n.t('dashboard:loadingDashboard')} />;
 
   const cards = [
-    { label: 'Ghi chú', value: stats.totalNotes, icon: FileText, onClick: () => navigate('/app/notes') },
-    { label: 'Liên kết', value: stats.totalUrls, icon: Link2, onClick: () => navigate('/app/urls') },
-    { label: 'Ảnh', value: stats.totalImages, icon: Image, onClick: () => navigate('/app/images') },
-    { label: 'Video', value: stats.totalVideos, icon: Video, onClick: () => navigate('/app/videos') },
-    { label: 'Tệp tin', value: stats.totalFiles, icon: FolderOpen, onClick: () => navigate('/app/files') },
-    { label: 'Yêu thích', value: stats.totalFavorites, icon: Star, onClick: () => navigate('/app/favorites') },
+    { label: i18n.t('dashboard:notes'), value: stats.totalNotes, icon: FileText, onClick: () => navigate('/app/notes') },
+    { label: i18n.t('dashboard:link'), value: stats.totalUrls, icon: Link2, onClick: () => navigate('/app/urls') },
+    { label: i18n.t('dashboard:photo'), value: stats.totalImages, icon: Image, onClick: () => navigate('/app/images') },
+    { label: i18n.t('navigation:videos'), value: stats.totalVideos, icon: Video, onClick: () => navigate('/app/videos') },
+    { label: i18n.t('dashboard:file'), value: stats.totalFiles, icon: FolderOpen, onClick: () => navigate('/app/files') },
+    { label: i18n.t('common:favorite'), value: stats.totalFavorites, icon: Star, onClick: () => navigate('/app/favorites') },
   ];
 
   const handleOpen = (item) => {
@@ -42,22 +45,22 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="font-display text-2xl font-semibold text-text-primary">Bảng điều khiển</h1>
-        <p className="mt-1 text-sm text-text-secondary">Tổng quan kho lưu trữ dữ liệu cá nhân của bạn.</p>
+        <h1 className="font-display text-2xl font-semibold text-text-primary">{i18n.t('dashboard:dashboard')}</h1>
+        <p className="mt-1 text-sm text-text-secondary">{i18n.t('dashboard:overviewOfYourPersonalDataStorage')}</p>
       </div>
 
       <div className="catalog-card flex flex-wrap items-center gap-3 p-4">
-        {user?.avatarUrl && <img src={mediaUrl(user.avatarUrl)} referrerPolicy="no-referrer" alt="Ảnh đại diện" className="h-12 w-12 rounded-full" />}
+        {user?.avatarUrl && <img src={mediaUrl(user.avatarUrl)} referrerPolicy="no-referrer" alt={i18n.t('common:representativePhoto')} className="h-12 w-12 rounded-full" />}
         <div className="min-w-0 grow"><p className="font-semibold">{user?.name}</p><p className="break-all text-sm text-text-secondary">{user?.username} · {user?.email}</p></div>
-        <button className="text-sm text-primary-hover underline" onClick={() => navigate('/app/settings')}>Sửa hồ sơ</button>
-        {user?.role === 'admin' && <button className="text-sm text-primary-hover underline" onClick={() => navigate('/app/admin/users')}>Quản trị người dùng</button>}
+        <button className="text-sm text-primary-hover underline" onClick={() => navigate('/app/settings')}>{i18n.t('dashboard:editProfile')}</button>
+        {user?.role === 'admin' && <button className="text-sm text-primary-hover underline" onClick={() => navigate('/app/admin/users')}>{i18n.t('common:userAdministration')}</button>}
       </div>
       <div className="catalog-card flex flex-wrap gap-3 p-4 text-sm">
-        <button className="text-primary-hover underline" onClick={() => navigate('/app/friends')}>Bạn bè và lời mời</button>
-        <button className="text-primary-hover underline" onClick={() => navigate('/app/groups')}>Nhóm của tôi</button>
-        <button className="text-primary-hover underline" onClick={() => navigate('/app/shared')}>Tệp được chia sẻ</button>
+        <button className="text-primary-hover underline" onClick={() => navigate('/app/friends')}>{i18n.t('dashboard:friendsAndInvitations')}</button>
+        <button className="text-primary-hover underline" onClick={() => navigate('/app/groups')}>{i18n.t('common:myGroup')}</button>
+        <button className="text-primary-hover underline" onClick={() => navigate('/app/shared')}>{i18n.t('common:filesAreShared')}</button>
       </div>
-      {stats.storageLimitBytes === 0 && <p role="alert" className="rounded-card bg-danger/10 p-3 text-sm text-danger">Chưa được cấp dung lượng. Liên hệ quản trị viên để tạo dữ liệu và tải tệp lên.</p>}
+      {stats.storageLimitBytes === 0 && <p role="alert" className="rounded-card bg-danger/10 p-3 text-sm text-danger">{i18n.t('dashboard:capacityHasNotBeenGrantedContactTheAdministratorToCreateDataAndUploadFiles')}</p>}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {cards.map((card) => (
           <button
@@ -66,7 +69,7 @@ export default function Dashboard() {
             className="catalog-card flex flex-col items-start gap-2 p-4 text-left"
           >
             <card.icon size={18} className="text-primary-hover" />
-            <span className="font-display text-2xl font-semibold text-text-primary">{card.value}</span>
+            <span className="font-display text-2xl font-semibold text-text-primary">{formatNumber(card.value)}</span>
             <span className="text-xs font-medium text-text-secondary">{card.label}</span>
           </button>
         ))}
@@ -75,7 +78,7 @@ export default function Dashboard() {
       <div className="catalog-card flex items-center gap-4 p-4 shadow-card">
         <HardDrive size={20} className="shrink-0 text-primary-hover" />
         <div className="min-w-0 grow">
-          <p className="text-sm font-medium text-text-primary">Dung lượng đã sử dụng</p>
+          <p className="text-sm font-medium text-text-primary">{i18n.t('storage:used')}</p>
           <p className="font-mono text-xs text-text-muted">
             {formatBytes(stats.usedStorageBytes)} / {formatBytes(stats.storageLimitBytes)}
           </p>
@@ -84,17 +87,17 @@ export default function Dashboard() {
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-lg font-semibold text-text-primary">Hoạt động gần đây</h2>
+          <h2 className="font-display text-lg font-semibold text-text-primary">{i18n.t('dashboard:recentActivity')}</h2>
           <button onClick={() => navigate('/app/library')} className="text-sm text-primary-hover hover:underline">
-            Xem tất cả
+            {i18n.t('dashboard:seeAll')}
           </button>
         </div>
 
         {stats.recentItems.length === 0 ? (
           <EmptyState
             icon={FolderOpen}
-            title="Chưa có dữ liệu nào"
-            description="Bắt đầu bằng cách tạo ghi chú, lưu liên kết, hoặc tải tệp lên bằng nút “Mới” ở góc trên."
+            title={i18n.t('dashboard:noDataYet')}
+            description={i18n.t('dashboard:startByCreatingANoteSavingALinkOrUploadingAFileUsingTheNewButtonInTheUpperCorner')}
           />
         ) : (
           <ItemGrid
@@ -125,8 +128,8 @@ export default function Dashboard() {
         open={Boolean(renamingItem)}
         onClose={() => setRenamingItem(null)}
         onSubmit={(title) => actions.rename(renamingItem._id, title, () => setRenamingItem(null))}
-        title="Đổi tên"
-        label="Tên"
+        title={i18n.t('common:rename')}
+        label={i18n.t('common:name')}
         initialValue={renamingItem?.title}
       />
 

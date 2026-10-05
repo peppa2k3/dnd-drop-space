@@ -1,3 +1,5 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { authApi } from '../../api/auth.api';
 
@@ -25,6 +27,7 @@ function loadGoogleScript() {
 }
 
 export default function GoogleSignInButton({ onCredential }) {
+  useTranslation();
   const container = useRef(null);
   const onCredentialRef = useRef(onCredential);
   const [error, setError] = useState('');
@@ -35,7 +38,7 @@ export default function GoogleSignInButton({ onCredential }) {
       try {
         const { clientId } = await authApi.googleConfig();
         if (!active) return;
-        if (!clientId) { setError('Đăng nhập Google chưa được cấu hình.'); return; }
+        if (!clientId) { setError(i18n.t('auth:googleSignInIsNotConfigured')); return; }
         await loadGoogleScript();
         if (!active || !container.current) return;
         window.google.accounts.id.initialize({ client_id: clientId,
@@ -43,7 +46,7 @@ export default function GoogleSignInButton({ onCredential }) {
         container.current.replaceChildren();
         window.google.accounts.id.renderButton(container.current,
           { theme: 'outline', size: 'large', width: 320, text: 'continue_with' });
-      } catch { if (active) setError('Không thể tải đăng nhập Google.'); }
+      } catch { if (active) setError(i18n.t('auth:unableToLoadGoogleSignIn')); }
     }
     setup();
     return () => { active = false; };

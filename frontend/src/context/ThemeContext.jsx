@@ -1,3 +1,5 @@
+import i18n from '../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { userApi } from '../api/user.api';
 import { useAuth } from './AuthContext';
@@ -10,6 +12,7 @@ const GUEST_KEY = 'dnd-drop-space:appearance:guest';
 const same = (a, b) => a.theme === b.theme && a.mode === b.mode;
 
 export function ThemeProvider({ children }) {
+  useTranslation();
   const { user, isInitializing, setUser } = useAuth();
   const { addToast } = useToast();
   const [appearance, setAppearanceState] = useState(() =>
@@ -81,7 +84,7 @@ export function ThemeProvider({ children }) {
       const restored = confirmedAppearance.current;
       currentAppearance.current = restored;
       setAppearanceState(restored);
-      addToast('Không thể lưu giao diện. Đã khôi phục lựa chọn trước.', 'error');
+      addToast(i18n.t('notifications:unableToSaveInterfacePreviousSelectionRestored'), 'error');
     }).finally(() => {
       if (currentUserId.current === id && version === changeVersion.current) setIsSaving(false);
     });

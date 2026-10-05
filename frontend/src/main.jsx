@@ -6,6 +6,8 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
 import { applyAppearance, DEFAULT_APPEARANCE, readAppearance } from './config/themes.js';
+import { LanguageProvider } from './context/LanguageContext.jsx';
+import i18n, { i18nReady } from './i18n/config.js';
 import App from './App.jsx';
 import './styles/index.css';
 
@@ -21,16 +23,19 @@ const queryClient = new QueryClient({
 
 applyAppearance(readAppearance('dnd-drop-space:appearance:last') || DEFAULT_APPEARANCE);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+i18nReady.then(() => {
+  document.documentElement.lang = i18n.language;
+  ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <ToastProvider>
           <AuthProvider>
-            <ThemeProvider><App /></ThemeProvider>
+            <LanguageProvider><ThemeProvider><App /></ThemeProvider></LanguageProvider>
           </AuthProvider>
         </ToastProvider>
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>
-);
+  );
+});

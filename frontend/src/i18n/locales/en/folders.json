@@ -1,0 +1,22 @@
+{
+  "addRootDirectory": "Add root directory",
+  "allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures": "All data inside \"{{name}}\" (and subfolders) will be moved to the Trash. This action cannot be undone for folder structures.",
+  "confirmDeleteFolder": "Delete folder?",
+  "create": "Create",
+  "createANewFolder": "Create a new folder",
+  "createSubfolders": "Create subfolders",
+  "deleteFolder": "Delete folder",
+  "directoryName": "Directory name",
+  "folderCreated": "Folder created",
+  "folderCreationFailed": "Folder creation failed",
+  "folderDeletedDataInsideMovedToTrash": "Folder deleted, data inside moved to Trash",
+  "folderDeletionFailed": "Folder deletion failed",
+  "folderOptions": "Folder options",
+  "forExampleWork": "For example: Work",
+  "move": "Move",
+  "moveToFolder": "Move to folder",
+  "openFolderName": "Open folder {{name}}",
+  "renamedFolder": "Renamed folder",
+  "renameFailed": "Rename failed",
+  "renameTheFolder": "Rename the folder"
+}

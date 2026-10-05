@@ -1,0 +1,11 @@
+{
+  "enterKeywordsInTheSearchBarAbove": "Nhập từ khóa ở thanh tìm kiếm phía trên.",
+  "giveKeywords": "Cho từ khóa",
+  "noResultsFoundForQ": "Không tìm thấy kết quả cho “{{q}}”",
+  "resultCount_one": "— {{formattedCount}} kết quả",
+  "resultCount_other": "— {{formattedCount}} kết quả",
+  "searchByTitleTagFolderNoteContentOrFileName": "Tìm theo tiêu đề, thẻ, thư mục, nội dung ghi chú hoặc tên tệp.",
+  "searching": "Đang tìm kiếm",
+  "startSearching": "Bắt đầu tìm kiếm",
+  "tryADifferentKeywordOrCheckTheSpellingAgain": "Thử một từ khóa khác, hoặc kiểm tra lại chính tả."
+}

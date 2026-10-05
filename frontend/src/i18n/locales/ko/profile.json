@@ -1,0 +1,11 @@
+{
+  "capacityHasNotBeenGrantedContactTheAdministratorToUseTheRepository": "용량이 부여되지 않았습니다. 저장소를 사용하려면 관리자에게 문의하세요.",
+  "choosePhotosUpTo2Mb": "최대 2MB의 사진을 선택하세요.",
+  "personalProfile": "개인 프로필",
+  "profilePhotoMaximum2Mb": "프로필 사진(최대 2MB)",
+  "profileUpdated": "프로필이 업데이트되었습니다.",
+  "saveProfile": "프로필 저장",
+  "unableToSaveProfile": "프로필을 저장할 수 없습니다.",
+  "usedValue1Value2": "{{value1}} / {{value2}} 사용됨",
+  "usernameRequirements": "3~32자의 소문자, 숫자, 밑줄"
+}

@@ -1,0 +1,22 @@
+{
+  "addRootDirectory": "Aggiungi la directory principale",
+  "allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures": "Tutti i dati all'interno di \"{{name}}\" (e sottocartelle) verranno spostati nel Cestino. Questa azione non può essere annullata per le strutture di cartelle.",
+  "confirmDeleteFolder": "Eliminare la cartella?",
+  "create": "Crea",
+  "createANewFolder": "Crea una nuova cartella",
+  "createSubfolders": "Crea sottocartelle",
+  "deleteFolder": "Elimina cartella",
+  "directoryName": "Nome della directory",
+  "folderCreated": "Cartella creata",
+  "folderCreationFailed": "Creazione della cartella non riuscita",
+  "folderDeletedDataInsideMovedToTrash": "Cartella eliminata, dati all'interno spostati nel Cestino",
+  "folderDeletionFailed": "Eliminazione della cartella non riuscita",
+  "folderOptions": "Opzioni della cartella",
+  "forExampleWork": "Ad esempio: Lavoro",
+  "move": "Muoviti",
+  "moveToFolder": "Sposta nella cartella",
+  "openFolderName": "Apri cartella {{name}}",
+  "renamedFolder": "Cartella rinominata",
+  "renameFailed": "Rinomina non riuscita",
+  "renameTheFolder": "Rinominare la cartella"
+}

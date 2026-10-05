@@ -1,3 +1,5 @@
+import i18n from '../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Star, Trash2, Eye, Pencil } from 'lucide-react';
@@ -14,6 +16,7 @@ import { buildFolderTree, flattenForSelect } from '../utils/folderTree';
 const AUTOSAVE_DELAY_MS = 1200;
 
 export default function NoteEditorPage() {
+  useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: item, isLoading } = useItem(id);
@@ -88,7 +91,7 @@ export default function NoteEditorPage() {
     saveMeta({ tags: next });
   };
 
-  if (isLoading || !item) return <FullPageSpinner label="Đang tải ghi chú" />;
+  if (isLoading || !item) return <FullPageSpinner label={i18n.t('files:loadingNotes')} />;
 
   const folderOptions = flattenForSelect(buildFolderTree(folders));
 
@@ -96,22 +99,22 @@ export default function NoteEditorPage() {
     <div className="mx-auto flex max-w-4xl flex-col gap-4">
       <div className="flex items-center justify-between">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary">
-          <ArrowLeft size={15} /> Quay lại
+          <ArrowLeft size={15} /> {i18n.t('files:comeBack')}
         </button>
 
         <div className="flex items-center gap-2">
           <span className="font-mono text-[11px] text-text-muted">
-            {saveStatus === 'saving' ? 'Đang lưu...' : saveStatus === 'saved' ? 'Đã lưu' : ''}
+            {saveStatus === 'saving' ? i18n.t('files:savingPlaceholder') : saveStatus === 'saved' ? i18n.t('files:saved') : ''}
           </span>
           <IconButton
             icon={Star}
-            label="Yêu thích"
+            label={i18n.t('common:favorite')}
             variant={item.favorite ? 'accent' : 'default'}
             onClick={() => actions.toggleFavorite(id)}
           />
           <IconButton
             icon={Trash2}
-            label="Chuyển vào Thùng rác"
+            label={i18n.t('files:moveToTrash')}
             variant="danger"
             onClick={() => actions.moveToTrash(id, () => navigate('/app/notes'))}
           />
@@ -122,7 +125,7 @@ export default function NoteEditorPage() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onBlur={() => saveMeta()}
-        placeholder="Tiêu đề ghi chú..."
+        placeholder={i18n.t('files:noteTitlePlaceholder')}
         className="w-full bg-transparent font-display text-3xl font-semibold text-text-primary placeholder:text-text-muted focus:outline-none"
       />
 
@@ -135,7 +138,7 @@ export default function NoteEditorPage() {
           }}
           className="rounded-card border border-border bg-surface px-2.5 py-1.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
-          <option value="">— Không có thư mục (gốc) —</option>
+          <option value="">{i18n.t('common:noDirectoryRoot')}</option>
           {folderOptions.map((opt) => (
             <option key={opt.id} value={opt.id}>
               {opt.label}
@@ -156,7 +159,7 @@ export default function NoteEditorPage() {
                 addTag();
               }
             }}
-            placeholder="Thêm thẻ..."
+            placeholder={i18n.t('common:addTagsPlaceholder')}
             className="w-24 rounded-card border border-border bg-surface px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
         </div>
@@ -167,13 +170,13 @@ export default function NoteEditorPage() {
           onClick={() => setMobilePane('edit')}
           className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs transition-colors duration-200 ${mobilePane === 'edit' ? 'bg-primary/10 text-primary-hover' : 'bg-background-secondary text-text-secondary'}`}
         >
-          <Pencil size={13} /> Soạn thảo
+          <Pencil size={13} /> {i18n.t('files:drafting')}
         </button>
         <button
           onClick={() => setMobilePane('preview')}
           className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs transition-colors duration-200 ${mobilePane === 'preview' ? 'bg-primary/10 text-primary-hover' : 'bg-background-secondary text-text-secondary'}`}
         >
-          <Eye size={13} /> Xem trước
+          <Eye size={13} /> {i18n.t('common:preview')}
         </button>
       </div>
 
@@ -184,7 +187,7 @@ export default function NoteEditorPage() {
             ref={textareaRef}
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Viết nội dung ghi chú bằng Markdown..."
+            placeholder={i18n.t('files:writeNoteContentUsingMarkdownPlaceholder')}
             className="h-[60vh] w-full resize-none bg-surface p-4 font-sans text-sm text-text-primary focus:outline-none"
           />
         </div>

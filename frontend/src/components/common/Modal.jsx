@@ -1,3 +1,5 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
@@ -13,6 +15,7 @@ const SIZES = {
 };
 
 export default function Modal({ open, onClose, title, size = 'md', children, footer }) {
+  useTranslation();
   const titleId = useId();
   const dialogRef = useRef(null);
   const onCloseRef = useRef(onClose);
@@ -51,7 +54,7 @@ export default function Modal({ open, onClose, title, size = 'md', children, foo
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
-        aria-label={title ? undefined : 'Hộp thoại'}
+        aria-label={title ? undefined : i18n.t('common:dialogBox')}
         tabIndex={-1}
         className={clsx(
           'relative w-full rounded-card border border-border bg-surface shadow-popover animate-slide-up max-h-[90vh] flex flex-col',
@@ -61,7 +64,7 @@ export default function Modal({ open, onClose, title, size = 'md', children, foo
         {title && (
           <div className="flex items-center justify-between border-b border-border px-5 py-4 shrink-0">
             <h2 id={titleId} className="font-display text-lg font-semibold text-text-primary">{title}</h2>
-            <IconButton icon={X} label="Đóng" onClick={onClose} />
+            <IconButton icon={X} label={i18n.t('common:close')} onClick={onClose} />
           </div>
         )}
         <div className="overflow-y-auto px-5 py-4 grow">{children}</div>

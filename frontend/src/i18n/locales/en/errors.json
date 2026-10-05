@@ -1,0 +1,22 @@
+{
+  "authRequired": "Please log in again.",
+  "confirmPasswordRequired": "Please re-enter your password",
+  "conflict": "The data has changed. Please try again.",
+  "emailRequired": "Please enter email",
+  "fileTooLarge": "The file exceeds the allowed limit.",
+  "folderNameRequired": "Please enter a folder name",
+  "invalidEmail": "Invalid email",
+  "invalidUrl": "Invalid URL",
+  "nameTooShort": "The name must have at least 2 characters",
+  "network": "Connection error. Please try again.",
+  "notFound": "No data found.",
+  "passwordMismatch": "The re-entered password does not match",
+  "passwordRequired": "Please enter your password",
+  "passwordTooShort": "Password must have at least 8 characters",
+  "permissionDenied": "You do not have permission to perform this operation.",
+  "serviceUnavailable": "Service is temporarily unavailable.",
+  "titleRequired": "Please enter a title",
+  "tooManyRequests": "Too many requests. Please try again later.",
+  "urlRequired": "Please enter a URL",
+  "validationFailed": "Invalid data."
+}

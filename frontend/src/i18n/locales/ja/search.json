@@ -1,0 +1,11 @@
+{
+  "enterKeywordsInTheSearchBarAbove": "上の検索バーにキーワードを入力します。",
+  "giveKeywords": "キーワードを与える",
+  "noResultsFoundForQ": "「{{q}}」に一致する結果はありませんでした",
+  "resultCount_one": "— {{formattedCount}} の結果",
+  "resultCount_other": "— {{formattedCount}} の結果",
+  "searchByTitleTagFolderNoteContentOrFileName": "タイトル、タグ、フォルダー、メモの内容、またはファイル名で検索します。",
+  "searching": "検索中",
+  "startSearching": "検索を開始する",
+  "tryADifferentKeywordOrCheckTheSpellingAgain": "別のキーワードを試すか、スペルをもう一度確認してください。"
+}

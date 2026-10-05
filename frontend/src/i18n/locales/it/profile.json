@@ -1,0 +1,11 @@
+{
+  "capacityHasNotBeenGrantedContactTheAdministratorToUseTheRepository": "La capacità non è stata concessa. Contatta l'amministratore per utilizzare il repository.",
+  "choosePhotosUpTo2Mb": "Scegli foto fino a 2 MB",
+  "personalProfile": "Profilo personale",
+  "profilePhotoMaximum2Mb": "Foto del profilo (massimo 2 MB)",
+  "profileUpdated": "Profilo aggiornato",
+  "saveProfile": "Salva profilo",
+  "unableToSaveProfile": "Impossibile salvare il profilo",
+  "usedValue1Value2": "Usato {{value1}} / {{value2}}",
+  "usernameRequirements": "Da 3 a 32 lettere minuscole, numeri o trattini bassi"
+}

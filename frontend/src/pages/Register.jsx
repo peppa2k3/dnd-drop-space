@@ -1,3 +1,6 @@
+import { apiErrorMessage } from '../utils/apiErrorMessage';
+import i18n from '../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -9,6 +12,7 @@ import Button from '../components/common/Button';
 import AuthLayout from '../components/layout/AuthLayout';
 
 export default function Register() {
+  useTranslation();
   const [serverError, setServerError] = useState(null);
   const { register: registerUser } = useAuth();
   const navigate = useNavigate();
@@ -17,7 +21,7 @@ export default function Register() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({ resolver: zodResolver(registerSchema) });
+  } = useForm({ resolver: zodResolver(registerSchema()) });
 
   const onSubmit = async (values) => {
     setServerError(null);
@@ -25,29 +29,29 @@ export default function Register() {
       await registerUser(values.name, values.email, values.password);
       navigate(`/verify-email?email=${encodeURIComponent(values.email)}`, { replace: true });
     } catch (err) {
-      setServerError(err?.response?.data?.message || 'Tạo tài khoản thất bại. Vui lòng thử lại.');
+      setServerError(apiErrorMessage(err, i18n.t('auth:accountCreationFailedPleaseTryAgain')));
     }
   };
 
   return (
-    <AuthLayout title="Tạo kho lưu trữ của riêng bạn" subtitle="Chỉ mất một phút để bắt đầu lưu trữ mọi dữ liệu cá nhân của bạn.">
+    <AuthLayout title={i18n.t('auth:createYourOwnRepository')} subtitle={i18n.t('auth:itOnlyTakesAMinuteToStartStoringAllYourPersonalData')}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <Input label="Họ và tên" placeholder="Nguyễn Văn A" autoFocus {...register('name')} error={errors.name?.message} />
-        <Input label="Email" type="email" placeholder="ban@example.com" {...register('email')} error={errors.email?.message} />
-        <Input label="Mật khẩu" type="password" placeholder="Tối thiểu 8 ký tự" {...register('password')} error={errors.password?.message} />
-        <Input label="Nhập lại mật khẩu" type="password" {...register('confirmPassword')} error={errors.confirmPassword?.message} />
+        <Input label={i18n.t('auth:fullName')} placeholder={i18n.t('auth:nameExample')} autoFocus {...register('name')} error={errors.name?.message} />
+        <Input label={i18n.t('common:email')} type="email" placeholder="ban@example.com" {...register('email')} error={errors.email?.message} />
+        <Input label={i18n.t('auth:password')} type="password" placeholder={i18n.t('auth:minimum8Characters')} {...register('password')} error={errors.password?.message} />
+        <Input label={i18n.t('auth:reEnterThePassword')} type="password" {...register('confirmPassword')} error={errors.confirmPassword?.message} />
 
         {serverError && <p className="rounded-card bg-danger/10 px-3 py-2 text-sm text-danger">{serverError}</p>}
 
         <Button type="submit" size="lg" loading={isSubmitting} className="mt-1 w-full">
-          Tạo tài khoản và gửi mã
+          {i18n.t('auth:createAnAccountAndSubmitTheCode')}
         </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-text-secondary">
-        Đã có tài khoản?{' '}
+        {i18n.t('auth:alreadyHaveAccountPrompt')}{' '}
         <Link to="/login" className="font-medium text-primary-hover hover:underline">
-          Đăng nhập
+          {i18n.t('auth:signIn')}
         </Link>
       </p>
     </AuthLayout>

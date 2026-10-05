@@ -10,7 +10,7 @@ const lightNeutral = {
 
 const definitions = [
   {
-    id: 'cyber-blue', name: 'Cyber Space Blue', description: 'Cloud storage · cyan',
+    id: 'cyber-blue', name: 'Cyber Space Blue', descriptionKey: 'settings:cyberBlueDescription',
     dark: { background: '#070814', 'background-secondary': '#0B1320', surface: '#101827',
       'surface-hover': '#18283B', primary: '#00D9FF', 'primary-hover': '#55E7FF',
       secondary: '#6366F1', accent: '#22D3EE', success: '#22C55E', warning: '#F59E0B', danger: '#EF4444' },
@@ -18,7 +18,7 @@ const definitions = [
       success: '#167454', warning: '#925700', danger: '#B12A36' },
   },
   {
-    id: 'neon-storage', name: 'Neon Storage', description: 'Neon · lưu trữ',
+    id: 'neon-storage', name: 'Neon Storage', descriptionKey: 'settings:neonStorageDescription',
     dark: { background: '#050505', 'background-secondary': '#0A0E10', surface: '#101419',
       'surface-hover': '#1A292A', primary: '#00FFB2', 'primary-hover': '#63FFD0',
       secondary: '#00B8FF', accent: '#A855F7', success: '#00E676', warning: '#FFD600', danger: '#FF3D71' },
@@ -26,7 +26,7 @@ const definitions = [
       success: '#167454', warning: '#925700', danger: '#B12A36' },
   },
   {
-    id: 'deep-purple', name: 'Deep Cloud Purple', description: 'Cloud · tím sâu',
+    id: 'deep-purple', name: 'Deep Cloud Purple', descriptionKey: 'settings:deepPurpleDescription',
     dark: { background: '#09090F', 'background-secondary': '#0F0F1A', surface: '#151522',
       'surface-hover': '#23223A', primary: '#885CF6', 'primary-hover': '#BEA5FF',
       secondary: '#06B6D4', accent: '#EC4899', success: '#10B981', warning: '#F59E0B', danger: '#F43F5E' },
@@ -34,7 +34,7 @@ const definitions = [
       success: '#167454', warning: '#925700', danger: '#B12A36' },
   },
   {
-    id: 'space-terminal', name: 'Space Terminal', description: 'Server · terminal',
+    id: 'space-terminal', name: 'Space Terminal', descriptionKey: 'settings:spaceTerminalDescription',
     dark: { background: '#020604', 'background-secondary': '#050D08', surface: '#09140E',
       'surface-hover': '#133522', primary: '#39FF88', 'primary-hover': '#7DFFB0',
       secondary: '#00E5FF', accent: '#69E296', success: '#39FF88', warning: '#FFD166', danger: '#FF4D6D',
@@ -43,7 +43,7 @@ const definitions = [
       success: '#167454', warning: '#925700', danger: '#B12A36' },
   },
   {
-    id: 'ice-datacenter', name: 'Ice Data Center', description: 'Cloud · data center',
+    id: 'ice-datacenter', name: 'Ice Data Center', descriptionKey: 'settings:iceDatacenterDescription',
     dark: { background: '#071018', 'background-secondary': '#0B1922', surface: '#10212D',
       'surface-hover': '#1B3644', primary: '#38BDF8', 'primary-hover': '#7ED7FF',
       secondary: '#2DD4BF', accent: '#818CF8', success: '#2DD4BF', warning: '#FBBF24', danger: '#FB7185' },

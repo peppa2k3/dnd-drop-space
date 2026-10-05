@@ -1,3 +1,5 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { X, Star, Download, Trash2, ExternalLink, Plus, File as FileIcon } from 'lucide-react';
 import Modal from '../common/Modal';
@@ -14,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 const PREVIEWABLE = ['image', 'video', 'pdf'];
 
 export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavorite, onDelete, saving }) {
+  useTranslation();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -65,7 +68,7 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
               <p className="truncate text-sm text-text-primary">{item.urlMeta?.url}</p>
             </div>
             <Button as="a" href={item.urlMeta?.url} target="_blank" rel="noreferrer" variant="secondary" size="sm">
-              Mở liên kết <ExternalLink size={13} className="ml-1" />
+              {i18n.t('files:openTheLink')} <ExternalLink size={13} className="ml-1" />
             </Button>
           </div>
         </div>
@@ -102,7 +105,7 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
         </div>
         {item.type === 'file' && (
           <Button as="a" href={mediaUrl(item.urls.download)} variant="secondary" size="sm">
-            <Download size={14} className="mr-1.5" /> Tải xuống
+            <Download size={14} className="mr-1.5" /> {i18n.t('common:download')}
           </Button>
         )}
       </div>
@@ -117,11 +120,11 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
-            Đóng
+            {i18n.t('common:close')}
           </Button>
           {hasChanges && (
             <Button onClick={handleSave} loading={saving}>
-              Lưu thay đổi
+              {i18n.t('common:saveChanges')}
             </Button>
           )}
         </>
@@ -132,26 +135,26 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
           <Icon size={13} /> {label}
         </div>
         <div className="flex items-center gap-1">
-          {item.type === 'file' && !item.isTrashed && <Button size="sm" variant="secondary" onClick={() => { onClose(); navigate(`/app/shared?itemId=${item._id}`); }}>Chia sẻ</Button>}
+          {item.type === 'file' && !item.isTrashed && <Button size="sm" variant="secondary" onClick={() => { onClose(); navigate(`/app/shared?itemId=${item._id}`); }}>{i18n.t('files:share')}</Button>}
           <IconButton
             icon={Star}
-            label="Yêu thích"
+            label={i18n.t('common:favorite')}
             variant={item.favorite ? 'accent' : 'default'}
             onClick={() => onToggleFavorite(item._id)}
           />
-          <IconButton icon={Trash2} label="Chuyển vào Thùng rác" variant="danger" onClick={() => onDelete(item._id)} />
-          <IconButton icon={X} label="Đóng" onClick={onClose} />
+          <IconButton icon={Trash2} label={i18n.t('files:moveToTrash')} variant="danger" onClick={() => onDelete(item._id)} />
+          <IconButton icon={X} label={i18n.t('common:close')} onClick={onClose} />
         </div>
       </div>
 
       <div className="flex flex-col gap-4 pt-4">
         {renderPreview()}
 
-        <Input label="Tiêu đề" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <Textarea label="Mô tả" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Thêm mô tả..." />
+        <Input label={i18n.t('files:title')} value={title} onChange={(e) => setTitle(e.target.value)} />
+        <Textarea label={i18n.t('common:description')} rows={3} value={description} onChange={(e) => setDescription(e.target.value)} placeholder={i18n.t('files:addDescriptionPlaceholder')} />
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-text-primary">Thẻ</label>
+          <label className="text-sm font-medium text-text-primary">{i18n.t('common:tags')}</label>
           <div className="flex flex-wrap items-center gap-1.5">
             {tags.map((t) => (
               <TagChip key={t} name={t} onRemove={() => setTags(tags.filter((x) => x !== t))} size="md" />
@@ -166,10 +169,10 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
                     addTag();
                   }
                 }}
-                placeholder="Thêm thẻ..."
+                placeholder={i18n.t('common:addTagsPlaceholder')}
                 className="w-24 rounded-card border border-border bg-surface px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
               />
-              <IconButton icon={Plus} label="Thêm thẻ" onClick={addTag} />
+              <IconButton icon={Plus} label={i18n.t('files:addTag')} onClick={addTag} />
             </div>
           </div>
         </div>

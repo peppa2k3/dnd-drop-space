@@ -1,0 +1,22 @@
+{
+  "addRootDirectory": "Agregar directorio raíz",
+  "allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures": "Todos los datos dentro de \"{{name}}\" (y las subcarpetas) se moverán a la Papelera. Esta acción no se puede deshacer para las estructuras de carpetas.",
+  "confirmDeleteFolder": "¿Eliminar carpeta?",
+  "create": "crear",
+  "createANewFolder": "Crear una nueva carpeta",
+  "createSubfolders": "Crear subcarpetas",
+  "deleteFolder": "Eliminar carpeta",
+  "directoryName": "Nombre del directorio",
+  "folderCreated": "Carpeta creada",
+  "folderCreationFailed": "Error al crear la carpeta",
+  "folderDeletedDataInsideMovedToTrash": "Carpeta eliminada, los datos contenidos se movieron a la Papelera",
+  "folderDeletionFailed": "Error al eliminar la carpeta",
+  "folderOptions": "Opciones de carpeta",
+  "forExampleWork": "Por ejemplo: trabajo",
+  "move": "Mover",
+  "moveToFolder": "Mover a la carpeta",
+  "openFolderName": "Abrir carpeta {{name}}",
+  "renamedFolder": "Carpeta renombrada",
+  "renameFailed": "Error al cambiar el nombre",
+  "renameTheFolder": "Cambiar el nombre de la carpeta"
+}

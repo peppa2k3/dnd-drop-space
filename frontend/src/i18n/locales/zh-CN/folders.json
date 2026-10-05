@@ -1,0 +1,22 @@
+{
+  "addRootDirectory": "添加根目录",
+  "allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures": "All data inside \"{{name}}\" (and subfolders) will be moved to the Trash. This action cannot be undone for folder structures.",
+  "confirmDeleteFolder": "删除文件夹？",
+  "create": "创建",
+  "createANewFolder": "创建一个新文件夹",
+  "createSubfolders": "创建子文件夹",
+  "deleteFolder": "删除文件夹",
+  "directoryName": "目录名称",
+  "folderCreated": "文件夹已创建",
+  "folderCreationFailed": "文件夹创建失败",
+  "folderDeletedDataInsideMovedToTrash": "文件夹已删除，其中的数据已移至废纸篓",
+  "folderDeletionFailed": "文件夹删除失败",
+  "folderOptions": "文件夹选项",
+  "forExampleWork": "例如：工作",
+  "move": "移动",
+  "moveToFolder": "移至文件夹",
+  "openFolderName": "打开文件夹 {{name}}",
+  "renamedFolder": "重命名的文件夹",
+  "renameFailed": "重命名失败",
+  "renameTheFolder": "重命名文件夹"
+}

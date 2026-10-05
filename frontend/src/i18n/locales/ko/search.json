@@ -1,0 +1,11 @@
+{
+  "enterKeywordsInTheSearchBarAbove": "위 검색창에 키워드를 입력하세요.",
+  "giveKeywords": "키워드 제공",
+  "noResultsFoundForQ": "“{{q}}”에 대한 검색 결과가 없습니다.",
+  "resultCount_one": "— {{formattedCount}} 결과",
+  "resultCount_other": "— {{formattedCount}} 결과",
+  "searchByTitleTagFolderNoteContentOrFileName": "제목, 태그, 폴더, 메모 내용 또는 파일 이름으로 검색하세요.",
+  "searching": "검색 중",
+  "startSearching": "검색 시작",
+  "tryADifferentKeywordOrCheckTheSpellingAgain": "다른 키워드를 사용하거나 철자를 다시 확인하세요."
+}

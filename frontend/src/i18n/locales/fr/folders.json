@@ -1,0 +1,22 @@
+{
+  "addRootDirectory": "Ajouter le répertoire racine",
+  "allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures": "Toutes les données contenues dans « {{name}} » (et les sous-dossiers) seront déplacées vers la corbeille. Cette action ne peut pas être annulée pour les structures de dossiers.",
+  "confirmDeleteFolder": "Supprimer le dossier ?",
+  "create": "Créer",
+  "createANewFolder": "Créer un nouveau dossier",
+  "createSubfolders": "Créer des sous-dossiers",
+  "deleteFolder": "Supprimer le dossier",
+  "directoryName": "Nom du répertoire",
+  "folderCreated": "Dossier créé",
+  "folderCreationFailed": "La création du dossier a échoué",
+  "folderDeletedDataInsideMovedToTrash": "Dossier supprimé, les données qu'il contient sont déplacées vers la corbeille",
+  "folderDeletionFailed": "La suppression du dossier a échoué",
+  "folderOptions": "Options des dossiers",
+  "forExampleWork": "Par exemple : Travail",
+  "move": "Déplacer",
+  "moveToFolder": "Déplacer vers le dossier",
+  "openFolderName": "Ouvrir le dossier {{name}}",
+  "renamedFolder": "Dossier renommé",
+  "renameFailed": "Échec du changement de nom",
+  "renameTheFolder": "Renommer le dossier"
+}

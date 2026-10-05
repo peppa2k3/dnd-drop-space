@@ -1,3 +1,5 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { NavLink, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import clsx from 'clsx';
@@ -12,6 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import BrandMark from '../common/BrandMark';
 
 export default function Sidebar({ mobileOpen, onCloseMobile }) {
+  useTranslation();
   const { user } = useAuth();
   const { data: folders = [] } = useFolders();
   const { data: stats } = useDashboardStats();
@@ -47,21 +50,21 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
             <BrandMark />
             <div className="leading-tight md:hidden lg:block">
               <p className="font-display text-sm font-semibold text-text-primary">DND Drop Space</p>
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">CLOUD WORKSPACE</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">{i18n.t('navigation:cloudWorkspace')}</p>
             </div>
           </div>
-          <IconButton icon={X} label="Đóng menu" variant="onDark" className="md:hidden" onClick={onCloseMobile} />
+          <IconButton icon={X} label={i18n.t('navigation:closeTheMenu')} variant="onDark" className="md:hidden" onClick={onCloseMobile} />
         </div>
 
         <nav className="flex flex-col gap-0.5 px-2 pb-2">
-          {user?.role === 'admin' && <NavLink to="/app/admin/users" title="Quản trị người dùng" onClick={onCloseMobile} className="flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm text-primary-hover hover:bg-surface-hover"><Users size={16} /><span className="md:hidden lg:inline">Quản trị người dùng</span></NavLink>}
-          {user?.role === 'admin' && <NavLink to="/app/admin/collaboration" title="Quản trị cộng tác" onClick={onCloseMobile} className="flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm text-primary-hover hover:bg-surface-hover"><Shield size={16} /><span className="md:hidden lg:inline">Quản trị cộng tác</span></NavLink>}
+          {user?.role === 'admin' && <NavLink to="/app/admin/users" title={i18n.t('common:userAdministration')} onClick={onCloseMobile} className="flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm text-primary-hover hover:bg-surface-hover"><Users size={16} /><span className="md:hidden lg:inline">{i18n.t('common:userAdministration')}</span></NavLink>}
+          {user?.role === 'admin' && <NavLink to="/app/admin/collaboration" title={i18n.t('common:collaborativeGovernance')} onClick={onCloseMobile} className="flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm text-primary-hover hover:bg-surface-hover"><Shield size={16} /><span className="md:hidden lg:inline">{i18n.t('common:collaborativeGovernance')}</span></NavLink>}
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
-              title={item.label}
-              aria-label={item.label}
+              title={i18n.t(item.labelKey)}
+              aria-label={i18n.t(item.labelKey)}
               end={item.end}
               onClick={onCloseMobile}
               className={({ isActive }) =>
@@ -72,7 +75,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
               }
             >
               <item.icon size={15} />
-              <span className="md:hidden lg:inline">{item.label}</span>
+              <span className="md:hidden lg:inline">{i18n.t(item.labelKey)}</span>
             </NavLink>
           ))}
         </nav>
@@ -94,8 +97,8 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
 
         <NavLink
           to={TRASH_NAV_ITEM.path}
-          title={TRASH_NAV_ITEM.label}
-          aria-label={TRASH_NAV_ITEM.label}
+          title={i18n.t(TRASH_NAV_ITEM.labelKey)}
+          aria-label={i18n.t(TRASH_NAV_ITEM.labelKey)}
           onClick={onCloseMobile}
           className={({ isActive }) =>
             clsx(
@@ -105,7 +108,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
           }
         >
           <TRASH_NAV_ITEM.icon size={15} />
-          <span className="md:hidden lg:inline">{TRASH_NAV_ITEM.label}</span>
+          <span className="md:hidden lg:inline">{i18n.t(TRASH_NAV_ITEM.labelKey)}</span>
         </NavLink>
 
         <div className="px-4 pb-4 pt-1 md:px-2 lg:px-4">
@@ -113,7 +116,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
             <div className="h-full rounded-full bg-primary" style={{ width: `${usedPercent}%` }} />
           </div>
           <p className="mt-1.5 font-mono text-[10px] text-text-muted md:hidden lg:block">
-            {stats ? `${formatBytes(usedBytes)} / ${formatBytes(storageLimitBytes)} đã dùng` : 'Đang tải dung lượng...'}
+            {stats ? i18n.t('storage:usedOfLimit', { used: formatBytes(usedBytes), limit: formatBytes(storageLimitBytes) }) : i18n.t('common:loadingCapacityPlaceholder')}
           </p>
         </div>
       </aside>

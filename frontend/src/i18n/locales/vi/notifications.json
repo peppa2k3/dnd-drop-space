@@ -1,0 +1,17 @@
+{
+  "changesSaved": "Đã lưu thay đổi",
+  "closeNotification": "Đóng thông báo",
+  "deleteFailed": "Xóa thất bại, vui lòng thử lại",
+  "favoriteUpdateFailed": "Không thể cập nhật mục yêu thích",
+  "itemMoved": "Đã di chuyển",
+  "itemPermanentlyDeleted": "Đã xóa vĩnh viễn",
+  "itemRenamed": "Đã đổi tên",
+  "itemRestored": "Đã khôi phục mục đã chọn",
+  "languageSaveFailed": "Không thể lưu ngôn ngữ. Đã khôi phục lựa chọn trước.",
+  "moveFailed": "Di chuyển thất bại",
+  "movedToTrash": "Đã chuyển vào Thùng rác",
+  "renameFailed": "Đổi tên thất bại",
+  "restoreFailed": "Khôi phục thất bại",
+  "saveFailed": "Lưu thất bại",
+  "unableToSaveInterfacePreviousSelectionRestored": "Không thể lưu giao diện. Đã khôi phục lựa chọn trước."
+}

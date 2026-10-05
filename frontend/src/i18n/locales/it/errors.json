@@ -1,0 +1,22 @@
+{
+  "authRequired": "Effettua nuovamente l'accesso.",
+  "confirmPasswordRequired": "Per favore inserisci nuovamente la tua password",
+  "conflict": "I dati sono cambiati. Per favore riprova.",
+  "emailRequired": "Inserisci l'e-mail",
+  "fileTooLarge": "Il file supera il limite consentito.",
+  "folderNameRequired": "Inserisci il nome di una cartella",
+  "invalidEmail": "E-mail non valida",
+  "invalidUrl": "Percorso non valido",
+  "nameTooShort": "Il nome deve contenere almeno 2 caratteri",
+  "network": "Errore di connessione. Per favore riprova.",
+  "notFound": "Nessun dato trovato.",
+  "passwordMismatch": "La password reinserita non corrisponde",
+  "passwordRequired": "Inserisci la tua password",
+  "passwordTooShort": "La password deve contenere almeno 8 caratteri",
+  "permissionDenied": "Non hai l'autorizzazione per eseguire questa operazione.",
+  "serviceUnavailable": "Il servizio è temporaneamente non disponibile.",
+  "titleRequired": "Inserisci un titolo",
+  "tooManyRequests": "Operazione troppe volte. Per favore riprova più tardi.",
+  "urlRequired": "Inserisci il percorso",
+  "validationFailed": "Dati non validi."
+}

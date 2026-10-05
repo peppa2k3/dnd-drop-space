@@ -1,0 +1,17 @@
+{
+  "changesSaved": "변경사항이 저장되었습니다.",
+  "closeNotification": "알림 닫기",
+  "deleteFailed": "삭제하지 못했습니다. 다시 시도해 주세요.",
+  "favoriteUpdateFailed": "즐겨찾기를 업데이트할 수 없습니다",
+  "itemMoved": "움직이는",
+  "itemPermanentlyDeleted": "영구적으로 삭제됨",
+  "itemRenamed": "이름이 변경됨",
+  "itemRestored": "선택한 항목이 복원되었습니다.",
+  "languageSaveFailed": "언어를 저장하지 못했습니다. 이전 선택으로 복원했습니다.",
+  "moveFailed": "마이그레이션 실패",
+  "movedToTrash": "휴지통으로 이동됨",
+  "renameFailed": "이름 바꾸기 실패",
+  "restoreFailed": "복원 실패",
+  "saveFailed": "저장 실패",
+  "unableToSaveInterfacePreviousSelectionRestored": "인터페이스를 저장할 수 없습니다. 이전 선택이 복원되었습니다."
+}

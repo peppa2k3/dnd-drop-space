@@ -1,0 +1,22 @@
+{
+  "addRootDirectory": "Stammverzeichnis hinzufügen",
+  "allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures": "Alle Daten in „{{name}}“ (und Unterordnern) werden in den Papierkorb verschoben. Diese Aktion kann für Ordnerstrukturen nicht rückgängig gemacht werden.",
+  "confirmDeleteFolder": "Ordner löschen?",
+  "create": "Erstellen",
+  "createANewFolder": "Erstellen Sie einen neuen Ordner",
+  "createSubfolders": "Unterordner erstellen",
+  "deleteFolder": "Ordner löschen",
+  "directoryName": "Verzeichnisname",
+  "folderCreated": "Ordner erstellt",
+  "folderCreationFailed": "Die Ordnererstellung ist fehlgeschlagen",
+  "folderDeletedDataInsideMovedToTrash": "Ordner gelöscht, Daten darin in den Papierkorb verschoben",
+  "folderDeletionFailed": "Das Löschen des Ordners ist fehlgeschlagen",
+  "folderOptions": "Ordneroptionen",
+  "forExampleWork": "Zum Beispiel: Arbeit",
+  "move": "Bewegen",
+  "moveToFolder": "In Ordner verschieben",
+  "openFolderName": "Ordner {{name}} öffnen",
+  "renamedFolder": "Ordner umbenannt",
+  "renameFailed": "Umbenennen fehlgeschlagen",
+  "renameTheFolder": "Benennen Sie den Ordner um"
+}

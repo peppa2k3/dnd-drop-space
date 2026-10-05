@@ -1,0 +1,4 @@
+{
+  "used": "사용 용량",
+  "usedOfLimit": "{{used}} / {{limit}} 사용됨"
+}

@@ -1,3 +1,6 @@
+import { apiErrorMessage } from '../../utils/apiErrorMessage';
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { X, File as FileIcon, CheckCircle2 } from 'lucide-react';
 import Modal from '../common/Modal';
@@ -11,10 +14,11 @@ import { useUploadFiles } from '../../hooks/useItems';
 import { useDashboardStats } from '../../hooks/useDashboard';
 import { useToast } from '../../context/ToastContext';
 import { buildFolderTree, flattenForSelect } from '../../utils/folderTree';
-import { formatBytes } from '../../utils/format';
+import { formatBytes, formatNumber } from '../../utils/format';
 import { getUploadIssue } from '../../utils/uploadCapacity';
 
 export default function UploadModal({ open, onClose, defaultFolder = null }) {
+  useTranslation();
   const [files, setFiles] = useState([]); // { file, progress, done }
   const [folder, setFolder] = useState(defaultFolder || '');
   const [description, setDescription] = useState('');
@@ -85,7 +89,7 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
       }
       setUploadError('');
     } catch {
-      const message = 'Không thể kiểm tra dung lượng lưu trữ. Vui lòng thử lại.';
+      const message = i18n.t('common:unableToCheckStorageCapacityPleaseTryAgain');
       setUploadError(message);
       addToast(message, 'error');
       return;
@@ -109,14 +113,14 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
       },
       {
         onSuccess: (items) => {
-          addToast(`Đã tải lên ${items.length} tệp`, 'success');
+          addToast(i18n.t('upload:uploadedFiles', { count: items.length, formattedCount: formatNumber(items.length) }), 'success');
           reset();
           onClose();
         },
         onError: (err) => {
           const message = err?.response?.status === 413
-            ? 'Không đủ dung lượng lưu trữ hoặc tệp vượt giới hạn. Hãy kiểm tra lại các tệp đã chọn.'
-            : err?.response?.data?.message || 'Tải lên thất bại';
+            ? i18n.t('upload:notEnoughStorageSpaceOrFilesExceedTheLimitPleaseCheckTheSelectedFilesAgain')
+            : apiErrorMessage(err, i18n.t('upload:uploadFailed'));
           setUploadError(message);
           addToast(message, 'error');
           refetch();
@@ -129,15 +133,15 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
     <Modal
       open={open}
       onClose={handleClose}
-      title="Tải tệp lên"
+      title={i18n.t('common:uploadFiles')}
       size="lg"
       footer={
         <>
           <Button variant="ghost" onClick={handleClose} disabled={uploadMutation.isPending || checkingCapacity}>
-            Hủy
+            {i18n.t('common:cancel')}
           </Button>
           <Button onClick={handleUpload} loading={uploadMutation.isPending || checkingCapacity} disabled={uploadDisabled}>
-            Tải lên {files.length > 0 && `(${files.length})`}
+            {i18n.t('upload:upload')} {files.length > 0 && `(${formatNumber(files.length)})`}
           </Button>
         </>
       }
@@ -146,11 +150,11 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
         <UploadDropzone onFilesSelected={addFiles} disabled={uploadMutation.isPending || checkingCapacity ||
           (stats && stats.usedStorageBytes >= stats.storageLimitBytes)} />
         <p className="text-xs text-text-muted" aria-live="polite">
-          {stats ? `${formatBytes(stats.usedStorageBytes)} / ${formatBytes(stats.storageLimitBytes)} đã dùng; còn ${formatBytes(Math.max(0, stats.storageLimitBytes - stats.usedStorageBytes))}` : 'Đang kiểm tra dung lượng...'}
+          {stats ? i18n.t('upload:storageUsedRemaining', { value1: formatBytes(stats.usedStorageBytes), value2: formatBytes(stats.storageLimitBytes), value3: formatBytes(Math.max(0, stats.storageLimitBytes - stats.usedStorageBytes)) }) : i18n.t('upload:checkingCapacityPlaceholder')}
         </p>
         {(capacityIssue || uploadError || isError) && (
           <p role="alert" className="rounded-card bg-danger/10 px-3 py-2 text-sm text-danger">
-            {isError ? 'Không thể kiểm tra dung lượng lưu trữ. Vui lòng thử lại.' : capacityIssue || uploadError}
+            {isError ? i18n.t('common:unableToCheckStorageCapacityPleaseTryAgain') : capacityIssue || uploadError}
           </p>
         )}
 
@@ -175,7 +179,7 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
                   <CheckCircle2 size={15} className="shrink-0 text-primary-hover" />
                 ) : (
                   !uploadMutation.isPending && (
-                    <IconButton icon={X} label="Bỏ tệp" onClick={() => removeFile(i)} />
+                    <IconButton icon={X} label={i18n.t('upload:dropFiles')} onClick={() => removeFile(i)} />
                   )
                 )}
               </div>
@@ -185,13 +189,13 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-text-primary">Thư mục</label>
+            <label className="text-sm font-medium text-text-primary">{i18n.t('common:directory')}</label>
             <select
               value={folder}
               onChange={(e) => setFolder(e.target.value)}
               className="w-full rounded-card border border-border bg-surface px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
             >
-              <option value="">— Không có thư mục (gốc) —</option>
+              <option value="">{i18n.t('common:noDirectoryRoot')}</option>
               {folderOptions.map((opt) => (
                 <option key={opt.id} value={opt.id}>
                   {opt.label}
@@ -201,7 +205,7 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-text-primary">Thẻ</label>
+            <label className="text-sm font-medium text-text-primary">{i18n.t('common:tags')}</label>
             <div className="flex flex-wrap items-center gap-1.5 rounded-card border border-border bg-surface px-2.5 py-2">
               {tags.map((t) => (
                 <TagChip key={t} name={t} onRemove={() => setTags(tags.filter((x) => x !== t))} />
@@ -215,7 +219,7 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
                     addTag();
                   }
                 }}
-                placeholder="Thêm thẻ..."
+                placeholder={i18n.t('common:addTagsPlaceholder')}
                 className="min-w-[80px] grow bg-transparent text-xs focus:outline-none"
               />
             </div>
@@ -223,11 +227,11 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
         </div>
 
         <Textarea
-          label="Mô tả (áp dụng cho tất cả tệp)"
+          label={i18n.t('upload:descriptionAppliesToAllFiles')}
           rows={2}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Không bắt buộc..."
+          placeholder={i18n.t('upload:notRequiredPlaceholder')}
         />
       </div>
     </Modal>

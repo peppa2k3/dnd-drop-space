@@ -1,0 +1,22 @@
+{
+  "authRequired": "Vui lòng đăng nhập lại.",
+  "confirmPasswordRequired": "Vui lòng nhập lại mật khẩu",
+  "conflict": "Dữ liệu đã thay đổi. Vui lòng thử lại.",
+  "emailRequired": "Vui lòng nhập email",
+  "fileTooLarge": "Tệp vượt quá giới hạn cho phép.",
+  "folderNameRequired": "Vui lòng nhập tên thư mục",
+  "invalidEmail": "Email không hợp lệ",
+  "invalidUrl": "Đường dẫn không hợp lệ",
+  "nameTooShort": "Tên phải có ít nhất 2 ký tự",
+  "network": "Lỗi kết nối. Vui lòng thử lại.",
+  "notFound": "Không tìm thấy dữ liệu.",
+  "passwordMismatch": "Mật khẩu nhập lại không khớp",
+  "passwordRequired": "Vui lòng nhập mật khẩu",
+  "passwordTooShort": "Mật khẩu phải có ít nhất 8 ký tự",
+  "permissionDenied": "Bạn không có quyền thực hiện thao tác này.",
+  "serviceUnavailable": "Dịch vụ tạm thời không khả dụng.",
+  "titleRequired": "Vui lòng nhập tiêu đề",
+  "tooManyRequests": "Thao tác quá nhiều lần. Vui lòng thử lại sau.",
+  "urlRequired": "Vui lòng nhập đường dẫn",
+  "validationFailed": "Dữ liệu không hợp lệ."
+}

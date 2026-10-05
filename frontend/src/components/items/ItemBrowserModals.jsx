@@ -1,8 +1,11 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import ItemDetailModal from './ItemDetailModal';
 import FolderPickerModal from '../folder/FolderPickerModal';
 import PromptModal from '../common/PromptModal';
 
 export default function ItemBrowserModals({ detailItem, setDetailItem, renamingItem, setRenamingItem, movingItem, setMovingItem, actions }) {
+  useTranslation();
   return (
     <>
       <ItemDetailModal
@@ -21,8 +24,8 @@ export default function ItemBrowserModals({ detailItem, setDetailItem, renamingI
         open={Boolean(renamingItem)}
         onClose={() => setRenamingItem(null)}
         onSubmit={(title) => actions.rename(renamingItem._id, title, () => setRenamingItem(null))}
-        title="Đổi tên"
-        label="Tên"
+        title={i18n.t('common:rename')}
+        label={i18n.t('common:name')}
         initialValue={renamingItem?.title}
       />
 

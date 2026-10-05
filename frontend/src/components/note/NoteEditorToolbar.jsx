@@ -1,3 +1,6 @@
+import { apiErrorMessage } from '../../utils/apiErrorMessage';
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Bold, Italic, Heading2, List, ListOrdered, CheckSquare, Code, Link2, Image as ImageIcon, Loader2 } from 'lucide-react';
@@ -10,17 +13,18 @@ import { useDashboardStats } from '../../hooks/useDashboard';
 import { getUploadIssue } from '../../utils/uploadCapacity';
 
 const BUTTONS = [
-  { key: 'bold', icon: Bold, label: 'In đậm' },
-  { key: 'italic', icon: Italic, label: 'In nghiêng' },
-  { key: 'heading', icon: Heading2, label: 'Tiêu đề' },
-  { key: 'bulletList', icon: List, label: 'Danh sách' },
-  { key: 'numberedList', icon: ListOrdered, label: 'Danh sách số' },
-  { key: 'checklist', icon: CheckSquare, label: 'Việc cần làm' },
-  { key: 'code', icon: Code, label: 'Mã code' },
-  { key: 'link', icon: Link2, label: 'Liên kết' },
+  { key: 'bold', icon: Bold, labelKey: 'files:formatBold' },
+  { key: 'italic', icon: Italic, labelKey: 'files:formatItalic' },
+  { key: 'heading', icon: Heading2, labelKey: 'files:formatHeading' },
+  { key: 'bulletList', icon: List, labelKey: 'files:formatBulletList' },
+  { key: 'numberedList', icon: ListOrdered, labelKey: 'files:formatNumberedList' },
+  { key: 'checklist', icon: CheckSquare, labelKey: 'files:formatChecklist' },
+  { key: 'code', icon: Code, labelKey: 'files:formatCode' },
+  { key: 'link', icon: Link2, labelKey: 'files:formatLink' },
 ];
 
 export default function NoteEditorToolbar({ textareaRef, value, onChange, folderId }) {
+  useTranslation();
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const { addToast } = useToast();
@@ -49,7 +53,7 @@ export default function NoteEditorToolbar({ textareaRef, value, onChange, folder
     try {
       const capacity = await refetch();
       if (capacity.error || !capacity.data) {
-        addToast('Không thể kiểm tra dung lượng lưu trữ. Vui lòng thử lại.', 'error');
+        addToast(i18n.t('common:unableToCheckStorageCapacityPleaseTryAgain'), 'error');
         return;
       }
       const issue = getUploadIssue([file], capacity.data);
@@ -73,8 +77,8 @@ export default function NoteEditorToolbar({ textareaRef, value, onChange, folder
       onChange(result.value);
     } catch (err) {
       addToast(err?.response?.status === 413
-        ? 'Không đủ dung lượng lưu trữ hoặc tệp vượt giới hạn.'
-        : err?.response?.data?.message || 'Không thể tải tệp lên', 'error');
+        ? i18n.t('files:notEnoughStorageSpaceOrFilesExceedTheLimit')
+        : apiErrorMessage(err, i18n.t('files:unableToUploadFile')), 'error');
       refetch();
     } finally {
       setUploading(false);
@@ -84,12 +88,12 @@ export default function NoteEditorToolbar({ textareaRef, value, onChange, folder
   return (
     <div className="flex flex-wrap items-center gap-0.5 border-b border-border bg-background-secondary px-2 py-1.5">
       {BUTTONS.map((btn) => (
-        <IconButton key={btn.key} icon={btn.icon} label={btn.label} onClick={() => runAction(btn.key)} />
+        <IconButton key={btn.key} icon={btn.icon} label={i18n.t(btn.labelKey)} onClick={() => runAction(btn.key)} />
       ))}
       <div className="mx-1 h-4 w-px bg-border" />
       <IconButton
         icon={uploading ? Loader2 : ImageIcon}
-        label={storageFull ? 'Bộ lưu trữ đã đầy' : 'Chèn ảnh/tệp'}
+        label={storageFull ? i18n.t('files:storageIsFull') : i18n.t('files:insertImageFile')}
         onClick={() => fileInputRef.current?.click()}
         disabled={uploading || storageFull}
         className={uploading ? 'animate-spin' : ''}

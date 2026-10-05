@@ -1,0 +1,16 @@
+{
+  "capacityHasNotBeenGrantedContactTheAdministratorToCreateDataAndUploadFiles": "La capacité n'a pas été accordée. Contactez l'administrateur pour créer des données et télécharger des fichiers.",
+  "dashboard": "Panneau de contrôle",
+  "editProfile": "Modifier le profil",
+  "file": "Fichier",
+  "friendsAndInvitations": "Amis et invitations",
+  "link": "Lien",
+  "loadingDashboard": "Chargement du tableau de bord",
+  "noDataYet": "Aucune donnée pour l'instant",
+  "notes": "Remarques",
+  "overviewOfYourPersonalDataStorage": "Aperçu du stockage de vos données personnelles.",
+  "photo": "Photos",
+  "recentActivity": "Activité récente",
+  "seeAll": "Voir tout",
+  "startByCreatingANoteSavingALinkOrUploadingAFileUsingTheNewButtonInTheUpperCorner": "Commencez par créer une note, enregistrer un lien ou télécharger un fichier à l'aide du bouton « Nouveau » dans le coin supérieur."
+}

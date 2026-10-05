@@ -1,3 +1,5 @@
+import i18n from '../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { useTrashList, useEmptyTrash } from '../hooks/useTrash';
@@ -10,6 +12,7 @@ import ConfirmDialog from '../components/common/ConfirmDialog';
 import { FullPageSpinner } from '../components/common/Spinner';
 
 export default function Trash() {
+  useTranslation();
   const [page, setPage] = useState(1);
   const [confirmEmpty, setConfirmEmpty] = useState(false);
   const { data, isLoading } = useTrashList({ page, limit: 24 });
@@ -23,14 +26,14 @@ export default function Trash() {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-text-primary">Thùng rác</h1>
+          <h1 className="font-display text-2xl font-semibold text-text-primary">{i18n.t('files:trash')}</h1>
           <p className="mt-1 text-sm text-text-secondary">
-            Dữ liệu đã xóa được giữ tại đây 30 ngày trước khi bị xóa vĩnh viễn tự động.
+            {i18n.t('files:deletedDataIsKeptHereFor30DaysBeforeBeingAutomaticallyPermanentlyDeleted')}
           </p>
         </div>
         {items.length > 0 && (
           <Button variant="danger" onClick={() => setConfirmEmpty(true)}>
-            <Trash2 size={14} className="mr-1.5" /> Dọn sạch Thùng rác
+            <Trash2 size={14} className="mr-1.5" /> {i18n.t('files:emptyTheTrash')}
           </Button>
         )}
       </div>
@@ -38,7 +41,7 @@ export default function Trash() {
       {isLoading ? (
         <FullPageSpinner />
       ) : items.length === 0 ? (
-        <EmptyState icon={Trash2} title="Thùng rác trống" description="Các mục bạn xóa sẽ xuất hiện ở đây trước khi bị xóa vĩnh viễn." />
+        <EmptyState icon={Trash2} title={i18n.t('files:emptyTrashCan')} description={i18n.t('files:itemsYouDeleteWillAppearHereBeforeBeingPermanentlyDeleted')} />
       ) : (
         <>
           <ItemGrid
@@ -57,9 +60,9 @@ export default function Trash() {
         open={confirmEmpty}
         onClose={() => setConfirmEmpty(false)}
         onConfirm={() => emptyTrash.mutate(undefined, { onSuccess: () => setConfirmEmpty(false) })}
-        title="Dọn sạch Thùng rác?"
-        message="Toàn bộ dữ liệu trong Thùng rác sẽ bị xóa vĩnh viễn và không thể khôi phục."
-        confirmLabel="Xóa vĩnh viễn tất cả"
+        title={i18n.t('files:confirmEmptyTrash')}
+        message={i18n.t('files:allDataInTheRecycleBinWillBePermanentlyDeletedAndCannotBeRestored')}
+        confirmLabel={i18n.t('files:permanentlyDeleteEverything')}
         loading={emptyTrash.isPending}
       />
     </div>

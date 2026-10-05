@@ -1,0 +1,11 @@
+{
+  "enterKeywordsInTheSearchBarAbove": "Ingrese palabras clave en la barra de búsqueda de arriba.",
+  "giveKeywords": "Dar palabras clave",
+  "noResultsFoundForQ": "No se encontraron resultados para “{{q}}”",
+  "resultCount_one": "— {{formattedCount}} resultados",
+  "resultCount_other": "— {{formattedCount}} resultados",
+  "searchByTitleTagFolderNoteContentOrFileName": "Busque por título, etiqueta, carpeta, contenido de la nota o nombre de archivo.",
+  "searching": "Buscando",
+  "startSearching": "Empezar a buscar",
+  "tryADifferentKeywordOrCheckTheSpellingAgain": "Pruebe con una palabra clave diferente o revise la ortografía nuevamente."
+}

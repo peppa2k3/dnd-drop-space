@@ -1,17 +1,17 @@
 import { LayoutDashboard, LayoutGrid, FileText, Image, Video, FolderOpen, Link2, Star, Trash2, Users, UsersRound, Share2 } from 'lucide-react';
 
 export const NAV_ITEMS = [
-  { path: '/app', label: 'Bảng điều khiển', icon: LayoutDashboard, end: true },
-  { path: '/app/library', label: 'Tất cả dữ liệu', icon: LayoutGrid },
-  { path: '/app/notes', label: 'Ghi chú', icon: FileText },
-  { path: '/app/images', label: 'Ảnh', icon: Image },
-  { path: '/app/videos', label: 'Video', icon: Video },
-  { path: '/app/files', label: 'Tệp tin', icon: FolderOpen },
-  { path: '/app/urls', label: 'Liên kết đã lưu', icon: Link2 },
-  { path: '/app/favorites', label: 'Yêu thích', icon: Star },
-  { path: '/app/friends', label: 'Bạn bè', icon: Users },
-  { path: '/app/groups', label: 'Nhóm', icon: UsersRound },
-  { path: '/app/shared', label: 'Tệp được chia sẻ', icon: Share2 },
+  { path: '/app', labelKey: 'navigation:dashboard', icon: LayoutDashboard, end: true },
+  { path: '/app/library', labelKey: 'navigation:library', icon: LayoutGrid },
+  { path: '/app/notes', labelKey: 'navigation:notes', icon: FileText },
+  { path: '/app/images', labelKey: 'navigation:images', icon: Image },
+  { path: '/app/videos', labelKey: 'navigation:videos', icon: Video },
+  { path: '/app/files', labelKey: 'navigation:files', icon: FolderOpen },
+  { path: '/app/urls', labelKey: 'navigation:urls', icon: Link2 },
+  { path: '/app/favorites', labelKey: 'navigation:favorites', icon: Star },
+  { path: '/app/friends', labelKey: 'navigation:friends', icon: Users },
+  { path: '/app/groups', labelKey: 'navigation:groups', icon: UsersRound },
+  { path: '/app/shared', labelKey: 'navigation:shared', icon: Share2 },
 ];
 
-export const TRASH_NAV_ITEM = { path: '/app/trash', label: 'Thùng rác', icon: Trash2 };
+export const TRASH_NAV_ITEM = { path: '/app/trash', labelKey: 'navigation:trash', icon: Trash2 };

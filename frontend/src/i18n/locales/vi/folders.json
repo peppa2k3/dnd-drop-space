@@ -1,0 +1,22 @@
+{
+  "addRootDirectory": "Thêm thư mục gốc",
+  "allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures": "Toàn bộ dữ liệu bên trong \"{{name}}\" (và các thư mục con) sẽ được chuyển vào Thùng rác. Hành động này không thể hoàn tác đối với cấu trúc thư mục.",
+  "confirmDeleteFolder": "Xóa thư mục?",
+  "create": "Tạo",
+  "createANewFolder": "Tạo thư mục mới",
+  "createSubfolders": "Tạo thư mục con",
+  "deleteFolder": "Xóa thư mục",
+  "directoryName": "Tên thư mục",
+  "folderCreated": "Đã tạo thư mục",
+  "folderCreationFailed": "Tạo thư mục thất bại",
+  "folderDeletedDataInsideMovedToTrash": "Đã xóa thư mục, dữ liệu bên trong đã chuyển vào Thùng rác",
+  "folderDeletionFailed": "Xóa thư mục thất bại",
+  "folderOptions": "Tùy chọn thư mục",
+  "forExampleWork": "Ví dụ: Công việc",
+  "move": "Di chuyển",
+  "moveToFolder": "Di chuyển đến thư mục",
+  "openFolderName": "Mở thư mục {{name}}",
+  "renamedFolder": "Đã đổi tên thư mục",
+  "renameFailed": "Đổi tên thất bại",
+  "renameTheFolder": "Đổi tên thư mục"
+}

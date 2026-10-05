@@ -1,7 +1,10 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import BrandMark from '../common/BrandMark';
 import ThemeQuickSwitch from '../theme/ThemeQuickSwitch';
 
 export default function AuthLayout({ title, subtitle, children }) {
+  useTranslation();
   return (
     <div className="flex min-h-screen bg-background transition-colors duration-200">
       <div className="relative hidden w-[42%] flex-col justify-between overflow-hidden border-r border-border/40 bg-background-secondary p-10 text-text-primary lg:flex">
@@ -14,11 +17,11 @@ export default function AuthLayout({ title, subtitle, children }) {
         </div>
 
         <div className="relative z-10 max-w-sm">
-          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-primary-hover">YOUR CLOUD, YOUR SPACE</p>
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-primary-hover">{i18n.t('navigation:yourCloudYourSpace')}</p>
           <p className="font-display text-3xl font-medium leading-snug">
-            Mọi ghi chú, liên kết, ảnh và tệp tin — lưu ở một nơi, tìm thấy trong vài giây.
+            {i18n.t('navigation:allYourNotesLinksPhotosAndFilesInOnePlaceFoundInSeconds')}
           </p>
-          <p className="mt-4 text-sm text-text-secondary">Kho lưu trữ dữ liệu cá nhân tập trung, truy cập từ mọi thiết bị.</p>
+          <p className="mt-4 text-sm text-text-secondary">{i18n.t('navigation:centralizedPersonalDataRepositoryAccessibleFromAnyDevice')}</p>
         </div>
 
         <p className="relative z-10 text-xs text-text-muted">DND Drop Space</p>

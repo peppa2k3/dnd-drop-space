@@ -1,0 +1,11 @@
+{
+  "capacityHasNotBeenGrantedContactTheAdministratorToUseTheRepository": "容量が付与されていません。リポジトリを使用するには管理者に問い合わせてください。",
+  "choosePhotosUpTo2Mb": "最大 2 MB の写真を選択してください",
+  "personalProfile": "個人プロフィール",
+  "profilePhotoMaximum2Mb": "プロフィール写真（最大2MB）",
+  "profileUpdated": "プロフィールを更新しました",
+  "saveProfile": "プロファイルの保存",
+  "unableToSaveProfile": "プロフィールを保存できません",
+  "usedValue1Value2": "中古 {{value1}} / {{value2}}",
+  "usernameRequirements": "3 ～ 32 個の小文字、数字、またはアンダースコア"
+}

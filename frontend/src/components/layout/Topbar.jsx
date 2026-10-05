@@ -1,3 +1,5 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu as MenuIcon, Search, Plus, FileText, Link2, UploadCloud, LogOut, User as UserIcon } from 'lucide-react';
@@ -13,6 +15,7 @@ import { useDashboardStats } from '../../hooks/useDashboard';
 import ThemeQuickSwitch from '../theme/ThemeQuickSwitch';
 
 export default function Topbar({ mobileSidebarOpen, onOpenMobileSidebar }) {
+  useTranslation();
   const [search, setSearch] = useState('');
   const [uploadOpen, setUploadOpen] = useState(false);
   const [urlModalOpen, setUrlModalOpen] = useState(false);
@@ -29,24 +32,24 @@ export default function Topbar({ mobileSidebarOpen, onOpenMobileSidebar }) {
 
   const handleNewNote = () => {
     createNote.mutate(
-      { title: 'Ghi chú chưa có tiêu đề', content: '' },
+      { title: i18n.t('navigation:untitledNote'), content: '' },
       {
         onSuccess: (note) => navigate(`/app/notes/${note._id}`),
-        onError: () => addToast('Không thể tạo ghi chú mới', 'error'),
+        onError: () => addToast(i18n.t('navigation:cannotCreateNewNote'), 'error'),
       }
     );
   };
 
   return (
     <header className="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-border bg-background/90 px-4 py-3 backdrop-blur-xl sm:flex-nowrap">
-      <IconButton icon={MenuIcon} label="Mở menu" className="md:hidden" aria-controls="app-sidebar" aria-expanded={mobileSidebarOpen} onClick={onOpenMobileSidebar} />
+      <IconButton icon={MenuIcon} label={i18n.t('navigation:openTheMenu')} className="md:hidden" aria-controls="app-sidebar" aria-expanded={mobileSidebarOpen} onClick={onOpenMobileSidebar} />
 
       <form onSubmit={handleSearchSubmit} className="relative order-2 w-full min-w-0 sm:order-none sm:max-w-md sm:grow">
         <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Tìm theo tiêu đề, thẻ, thư mục, nội dung..."
+          placeholder={i18n.t('navigation:searchByTitleTagsFoldersContentPlaceholder')}
           className="w-full rounded-card border border-border bg-surface py-2 pl-9 pr-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
         />
       </form>
@@ -55,14 +58,14 @@ export default function Topbar({ mobileSidebarOpen, onOpenMobileSidebar }) {
         <ThemeQuickSwitch />
         <Menu
           trigger={
-            <Button variant="primary" size="md" disabled={!stats || stats.storageLimitBytes <= 0} title={stats?.storageLimitBytes === 0 ? 'Chưa được cấp dung lượng' : 'Tạo mới'}>
-              <Plus size={15} /> Mới
+            <Button variant="primary" size="md" disabled={!stats || stats.storageLimitBytes <= 0} title={stats?.storageLimitBytes === 0 ? i18n.t('navigation:capacityHasNotBeenGranted') : i18n.t('navigation:createNew')}>
+              <Plus size={15} /> {i18n.t('navigation:new')}
             </Button>
           }
           items={[
-            { label: 'Ghi chú mới', icon: FileText, onClick: handleNewNote },
-            { label: 'Lưu liên kết (URL)', icon: Link2, onClick: () => setUrlModalOpen(true) },
-            { label: 'Tải tệp lên', icon: UploadCloud, onClick: () => setUploadOpen(true) },
+            { label: i18n.t('navigation:newNote'), icon: FileText, onClick: handleNewNote },
+            { label: i18n.t('common:saveLinkUrl'), icon: Link2, onClick: () => setUrlModalOpen(true) },
+            { label: i18n.t('common:uploadFiles'), icon: UploadCloud, onClick: () => setUploadOpen(true) },
           ]}
         />
 
@@ -73,9 +76,9 @@ export default function Topbar({ mobileSidebarOpen, onOpenMobileSidebar }) {
             </button>
           }
           items={[
-            { label: user?.name || user?.email || 'Tài khoản', icon: UserIcon, onClick: () => navigate('/app/settings') },
+            { label: user?.name || user?.email || i18n.t('navigation:account'), icon: UserIcon, onClick: () => navigate('/app/settings') },
             { divider: true },
-            { label: 'Đăng xuất', icon: LogOut, danger: true, onClick: logout },
+            { label: i18n.t('common:signOut'), icon: LogOut, danger: true, onClick: logout },
           ]}
         />
       </div>

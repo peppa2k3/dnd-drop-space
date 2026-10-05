@@ -1,0 +1,11 @@
+{
+  "capacityHasNotBeenGrantedContactTheAdministratorToUseTheRepository": "尚未授予容量。请联系管理员以使用存储库。",
+  "choosePhotosUpTo2Mb": "选择最大 2 MB 的照片",
+  "personalProfile": "个人简介",
+  "profilePhotoMaximum2Mb": "个人资料照片（最大 2 MB）",
+  "profileUpdated": "个人资料已更新",
+  "saveProfile": "保存个人资料",
+  "unableToSaveProfile": "无法保存个人资料",
+  "usedValue1Value2": "使用过 {{value1}} / {{value2}}",
+  "usernameRequirements": "3–32 个小写字母、数字或下划线"
+}

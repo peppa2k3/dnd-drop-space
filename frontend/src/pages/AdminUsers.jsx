@@ -1,3 +1,7 @@
+import { apiErrorMessage } from '../utils/apiErrorMessage';
+import { systemRoleLabel } from '../i18n/labels';
+import i18n from '../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -5,18 +9,20 @@ import { useToast } from '../context/ToastContext';
 import { useUsers, useUserFiles, useUserAudit, useAdminMutation } from '../hooks/useUsers';
 import { userApi } from '../api/user.api';
 import { mediaUrl } from '../utils/mediaUrl';
-import { formatBytes } from '../utils/format';
+import { formatBytes, formatDateTime, formatNumber } from '../utils/format';
 import Button from '../components/common/Button';
 
 function Pager({ page, total = 0, setPage }) {
+  useTranslation();
   return <div className="flex items-center gap-3 text-sm">
-    <Button size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Trước</Button>
-    <span>Trang {page} · {total} kết quả</span>
-    <Button size="sm" disabled={page * 20 >= total} onClick={() => setPage(page + 1)}>Sau</Button>
+    <Button size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>{i18n.t('admin:before')}</Button>
+    <span>{i18n.t('common:pagination', { count: total, page: formatNumber(page), pages: formatNumber(Math.max(1, Math.ceil(total / 20))), total: formatNumber(total) })}</span>
+    <Button size="sm" disabled={page * 20 >= total} onClick={() => setPage(page + 1)}>{i18n.t('admin:after')}</Button>
   </div>;
 }
 
 function UserEditor({ target, onClose, onSaved }) {
+  useTranslation();
   const { user: actor, setUser } = useAuth();
   const { addToast } = useToast();
   const [form, setForm] = useState({
@@ -31,7 +37,7 @@ function UserEditor({ target, onClose, onSaved }) {
   const fileMutation = useAdminMutation(({ item, permanent }) => permanent
     ? userApi.deleteFile(target.id, item._id)
     : userApi.fileAction(target.id, item._id, !item.isTrashed));
-  const errorToast = (error) => addToast(error.response?.data?.errors?.[0]?.message || error.response?.data?.message || 'Thao tác thất bại', 'error');
+  const errorToast = (error) => addToast(apiErrorMessage(error, i18n.t('admin:operationFailed')), 'error');
   const save = (e) => {
     e.preventDefault();
     const { quotaMB, ...body } = form;
@@ -40,45 +46,45 @@ function UserEditor({ target, onClose, onSaved }) {
       if (user.id === actor.id) setUser(user);
       onSaved(user);
       addToast(form.email !== target.email
-        ? 'Đã đổi email. Người dùng cần xác thực email mới; các phiên cũ đã bị thu hồi.'
-        : 'Đã cập nhật tài khoản', 'success');
+        ? i18n.t('admin:emailChangedUserNeedsToAuthenticateNewEmailOldSessionsHaveBeenRevoked')
+        : i18n.t('admin:accountUpdated'), 'success');
     }, onError: errorToast });
   };
   const changeFile = (item, permanent = false) => {
-    if (permanent && !window.confirm(`Xóa vĩnh viễn "${item.title}"? Không thể khôi phục.`)) return;
+    if (permanent && !window.confirm(i18n.t('admin:permanentlyDeleteTitleCannotRestore', { title: item.title }))) return;
     fileMutation.mutate({ item, permanent }, { onError: errorToast });
   };
   return <section className="catalog-card flex flex-col gap-4 p-5">
-    <div className="flex justify-between gap-3"><h2 className="text-lg font-semibold">{target.name}</h2><Button variant="ghost" onClick={onClose}>Đóng</Button></div>
-    <p className="break-all text-xs text-text-secondary">ID: {target.id}</p>
-    <p className="text-xs text-text-secondary">Email: {target.emailVerified ? 'đã xác thực' : 'chờ xác thực'}. Đổi email sẽ thu hồi phiên cũ; dùng trang Xác thực email để gửi mã tới địa chỉ mới.</p>
-    {target.avatarUrl && <img src={mediaUrl(target.avatarUrl)} referrerPolicy="no-referrer" alt="Ảnh đại diện người dùng" className="h-16 w-16 rounded-full" />}
+    <div className="flex justify-between gap-3"><h2 className="text-lg font-semibold">{target.name}</h2><Button variant="ghost" onClick={onClose}>{i18n.t('common:close')}</Button></div>
+    <p className="break-all text-xs text-text-secondary">{i18n.t('common:id')} {target.id}</p>
+    <p className="text-xs text-text-secondary">{i18n.t('admin:email')} {target.emailVerified ? i18n.t('admin:authenticated') : i18n.t('admin:waitForConfirmation')}{i18n.t('admin:changingTheEmailWillRevokeTheOldSessionUseTheEmailVerificationPageToSendTheCodeToTheNewAddress')}</p>
+    {target.avatarUrl && <img src={mediaUrl(target.avatarUrl)} referrerPolicy="no-referrer" alt={i18n.t('admin:userAvatar')} className="h-16 w-16 rounded-full" />}
     <form onSubmit={save} className="grid gap-3 sm:grid-cols-2">
-      {['name', 'email', 'username'].map((field) => <label key={field} className="text-sm">{({ name: 'Họ tên', email: 'Email', username: 'Username' })[field]}
+      {['name', 'email', 'username'].map((field) => <label key={field} className="text-sm">{({ name: i18n.t('common:fullName'), email: 'Email', username: 'Username' })[field]}
         <input required type={field === 'email' ? 'email' : 'text'} maxLength={field === 'username' ? 32 : 100} value={form[field]} onChange={(e) => setForm({ ...form, [field]: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2" />
       </label>)}
-      <label className="text-sm">Hạn mức (MB)<input type="number" required min="0" max="1073741824" step="1" value={form.quotaMB} onChange={(e) => setForm({ ...form, quotaMB: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2" /></label>
-      <label className="text-sm">Vai trò<select value={form.role} disabled={target.id === actor.id} onChange={(e) => setForm({ ...form, role: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2"><option value="user">Người dùng</option><option value="admin">Quản trị viên</option></select></label>
-      <label className="text-sm">Trạng thái<select value={form.status} disabled={target.id === actor.id} onChange={(e) => setForm({ ...form, status: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2"><option value="active">Hoạt động</option><option value="disabled">Khóa</option></select></label>
-      <label className="text-sm sm:col-span-2">Giới thiệu<textarea maxLength={500} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2" /></label>
-      <p className="text-xs text-text-secondary sm:col-span-2">Đặt 0 MB để thu hồi quyền lưu trữ. Giảm hạn mức không xóa dữ liệu; tệp trong Thùng rác vẫn chiếm dung lượng.</p>
-      <Button type="submit" loading={update.isPending}>Lưu thay đổi</Button>
+      <label className="text-sm">{i18n.t('admin:limitMb')}<input type="number" required min="0" max="1073741824" step="1" value={form.quotaMB} onChange={(e) => setForm({ ...form, quotaMB: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2" /></label>
+      <label className="text-sm">{i18n.t('admin:role')}<select value={form.role} disabled={target.id === actor.id} onChange={(e) => setForm({ ...form, role: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2"><option value="user">{i18n.t('common:user')}</option><option value="admin">{i18n.t('common:administrator')}</option></select></label>
+      <label className="text-sm">{i18n.t('admin:status')}<select value={form.status} disabled={target.id === actor.id} onChange={(e) => setForm({ ...form, status: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2"><option value="active">{i18n.t('admin:activities')}</option><option value="disabled">{i18n.t('admin:lock')}</option></select></label>
+      <label className="text-sm sm:col-span-2">{i18n.t('common:introduction')}<textarea maxLength={500} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2" /></label>
+      <p className="text-xs text-text-secondary sm:col-span-2">{i18n.t('admin:set0MbToRevokeStoragePermissionLimitReductionWithoutDeletingDataFilesInTheTrashStillTakeUpSpace')}</p>
+      <Button type="submit" loading={update.isPending}>{i18n.t('common:saveChanges')}</Button>
     </form>
-    <h3 className="font-semibold">Tệp của người dùng</h3>
-    {files.isLoading && <p>Đang tải tệp...</p>}
-    {files.isError && <p role="alert" className="text-danger">Không thể tải danh sách tệp.</p>}
-    {files.data?.items.length === 0 && <p className="text-sm text-text-secondary">Chưa có tệp.</p>}
+    <h3 className="font-semibold">{i18n.t('admin:userFiles')}</h3>
+    {files.isLoading && <p>{i18n.t('admin:loadingFilePlaceholder')}</p>}
+    {files.isError && <p role="alert" className="text-danger">{i18n.t('admin:unableToLoadFileList')}</p>}
+    {files.data?.items.length === 0 && <p className="text-sm text-text-secondary">{i18n.t('admin:noFilesYet')}</p>}
     {files.data?.items.map((item) => <div key={item._id} className="flex flex-wrap items-center gap-2 border-b border-border py-2 text-sm">
-      <span className="min-w-0 grow break-all">{item.title} · {formatBytes(item.fileMeta?.size)} {item.isTrashed && '· Thùng rác'}</span>
-      <a className="text-primary-hover underline" href={mediaUrl(`/api/admin/users/${target.id}/files/${item._id}/download`)} rel="noreferrer">Tải xuống</a>
-      <Button size="sm" disabled={fileMutation.isPending} onClick={() => changeFile(item)}>{item.isTrashed ? 'Khôi phục' : 'Vào Thùng rác'}</Button>
-      {item.isTrashed && <Button size="sm" variant="danger" disabled={fileMutation.isPending} onClick={() => changeFile(item, true)}>Xóa vĩnh viễn</Button>}
+      <span className="min-w-0 grow break-all">{item.title} · {formatBytes(item.fileMeta?.size)} {item.isTrashed && i18n.t('admin:trash')}</span>
+      <a className="text-primary-hover underline" href={mediaUrl(`/api/admin/users/${target.id}/files/${item._id}/download`)} rel="noreferrer">{i18n.t('common:download')}</a>
+      <Button size="sm" disabled={fileMutation.isPending} onClick={() => changeFile(item)}>{item.isTrashed ? i18n.t('common:restore') : i18n.t('admin:goToTrash')}</Button>
+      {item.isTrashed && <Button size="sm" variant="danger" disabled={fileMutation.isPending} onClick={() => changeFile(item, true)}>{i18n.t('common:deletePermanently')}</Button>}
     </div>)}
     <Pager page={page} setPage={setPage} total={files.data?.total} />
-    <h3 className="font-semibold">Lịch sử quản trị</h3>
-    {audit.isError && <p role="alert">Không thể tải lịch sử.</p>}
+    <h3 className="font-semibold">{i18n.t('admin:administrationHistory')}</h3>
+    {audit.isError && <p role="alert">{i18n.t('admin:unableToLoadHistory')}</p>}
     {audit.data?.events.map((event) => <details key={event._id} className="text-xs">
-      <summary>{new Date(event.createdAt).toLocaleString()} · {event.actor?.name || 'Quản trị viên'} · {event.action}</summary>
+      <summary>{formatDateTime(event.createdAt)} · {event.actor?.name || i18n.t('common:administrator')} · {event.action}</summary>
       <pre className="overflow-auto whitespace-pre-wrap">{JSON.stringify(event.changes, null, 2)}</pre>
     </details>)}
     <Pager page={auditPage} setPage={setAuditPage} total={audit.data?.total} />
@@ -86,6 +92,7 @@ function UserEditor({ target, onClose, onSaved }) {
 }
 
 export default function AdminUsers() {
+  useTranslation();
   const { user } = useAuth();
   const [page, setPage] = useState(1);
   const [q, setQ] = useState('');
@@ -93,14 +100,14 @@ export default function AdminUsers() {
   const users = useUsers(page, q, user?.role === 'admin');
   if (user?.role !== 'admin') return <Navigate to="/app" replace />;
   return <div className="flex flex-col gap-5">
-    <h1 className="font-display text-2xl font-semibold">Quản trị người dùng</h1>
-    <input aria-label="Tìm người dùng" placeholder="Tìm tên, email hoặc username" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} className="rounded-card border border-border p-3" />
-    {users.isLoading && <p>Đang tải...</p>}
-    {users.isError && <p role="alert" className="text-danger">Không thể truy cập quản trị. Kiểm tra quyền hoặc đăng nhập lại.</p>}
+    <h1 className="font-display text-2xl font-semibold">{i18n.t('common:userAdministration')}</h1>
+    <input aria-label={i18n.t('common:findUsers')} placeholder={i18n.t('admin:findNameEmailOrUsername')} value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} className="rounded-card border border-border p-3" />
+    {users.isLoading && <p>{i18n.t('common:loading')}</p>}
+    {users.isError && <p role="alert" className="text-danger">{i18n.t('admin:cannotAccessAdminCheckPermissionsOrLogInAgain')}</p>}
     <div className="grid gap-3 md:grid-cols-2">
       {users.data?.users.map((row) => <button key={row.id} onClick={() => setSelected(row)} className="catalog-card p-4 text-left">
-        <p className="font-semibold">{row.name} · {row.role}</p>
-        <p className="break-all text-sm">{row.email} · {row.status === 'active' ? 'Hoạt động' : 'Đã khóa'} · {row.emailVerified ? 'Email đã xác thực' : 'Chờ xác thực'}</p>
+        <p className="font-semibold">{row.name} · {systemRoleLabel(row.role)}</p>
+        <p className="break-all text-sm">{row.email} · {row.status === 'active' ? i18n.t('admin:activities') : i18n.t('admin:locked')} · {row.emailVerified ? i18n.t('admin:verifiedEmail') : i18n.t('admin:waitForConfirmation')}</p>
         <p className="mt-2 text-xs text-text-secondary">{formatBytes(row.usedStorageBytes)} / {formatBytes(row.storageLimitBytes)}</p>
       </button>)}
     </div>

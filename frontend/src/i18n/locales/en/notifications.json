@@ -1,0 +1,17 @@
+{
+  "changesSaved": "Changes saved",
+  "closeNotification": "Close notification",
+  "deleteFailed": "Deletion failed, please try again",
+  "favoriteUpdateFailed": "Unable to update favorites",
+  "itemMoved": "Moved",
+  "itemPermanentlyDeleted": "Permanently deleted",
+  "itemRenamed": "Name changed",
+  "itemRestored": "The selected item has been restored",
+  "languageSaveFailed": "Could not save the language. The previous choice was restored.",
+  "moveFailed": "Migration failed",
+  "movedToTrash": "Moved to Trash",
+  "renameFailed": "Rename failed",
+  "restoreFailed": "Restore failed",
+  "saveFailed": "Save failed",
+  "unableToSaveInterfacePreviousSelectionRestored": "Unable to save interface. Previous selection restored."
+}

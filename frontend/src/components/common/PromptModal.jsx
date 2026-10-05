@@ -1,3 +1,5 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Button from './Button';
@@ -11,9 +13,10 @@ export default function PromptModal({
   label,
   placeholder,
   initialValue = '',
-  submitLabel = 'Lưu',
+  submitLabel = i18n.t('common:save'),
   loading = false,
 }) {
+  useTranslation();
   const [value, setValue] = useState(initialValue);
 
   useEffect(() => {
@@ -39,7 +42,7 @@ export default function PromptModal({
         />
         <div className="flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={onClose}>
-            Hủy
+            {i18n.t('common:cancel')}
           </Button>
           <Button type="submit" loading={loading} disabled={!value.trim()}>
             {submitLabel}

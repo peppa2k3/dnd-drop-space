@@ -1,0 +1,22 @@
+{
+  "authRequired": "Veuillez vous reconnecter.",
+  "confirmPasswordRequired": "Veuillez saisir à nouveau votre mot de passe",
+  "conflict": "Les données ont changé. Veuillez réessayer.",
+  "emailRequired": "Veuillez entrer votre email",
+  "fileTooLarge": "Le fichier dépasse la limite autorisée.",
+  "folderNameRequired": "Veuillez entrer un nom de dossier",
+  "invalidEmail": "E-mail invalide",
+  "invalidUrl": "Chemin invalide",
+  "nameTooShort": "Le nom doit comporter au moins 2 caractères",
+  "network": "Erreur de connexion. Veuillez réessayer.",
+  "notFound": "Aucune donnée trouvée.",
+  "passwordMismatch": "Le mot de passe saisi à nouveau ne correspond pas",
+  "passwordRequired": "Veuillez entrer votre mot de passe",
+  "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères",
+  "permissionDenied": "Vous n'êtes pas autorisé à effectuer cette opération.",
+  "serviceUnavailable": "Le service est temporairement indisponible.",
+  "titleRequired": "Veuillez saisir un titre",
+  "tooManyRequests": "Opération trop de fois. Veuillez réessayer plus tard.",
+  "urlRequired": "Veuillez entrer le chemin",
+  "validationFailed": "Données invalides."
+}

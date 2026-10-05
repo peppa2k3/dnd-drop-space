@@ -1,0 +1,11 @@
+{
+  "enterKeywordsInTheSearchBarAbove": "Enter keywords in the search bar above.",
+  "giveKeywords": "Give keywords",
+  "noResultsFoundForQ": "No results found for “{{q}}”",
+  "resultCount_one": "— {{formattedCount}} results",
+  "resultCount_other": "— {{formattedCount}} results",
+  "searchByTitleTagFolderNoteContentOrFileName": "Search by title, tag, folder, note content, or file name.",
+  "searching": "Searching",
+  "startSearching": "Start searching",
+  "tryADifferentKeywordOrCheckTheSpellingAgain": "Try a different keyword, or check the spelling again."
+}

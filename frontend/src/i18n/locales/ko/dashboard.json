@@ -1,0 +1,16 @@
+{
+  "capacityHasNotBeenGrantedContactTheAdministratorToCreateDataAndUploadFiles": "용량이 부여되지 않았습니다. 데이터 생성 및 파일 업로드는 관리자에게 문의하세요.",
+  "dashboard": "제어판",
+  "editProfile": "프로필 수정",
+  "file": "파일",
+  "friendsAndInvitations": "친구 및 초대",
+  "link": "링크",
+  "loadingDashboard": "대시보드 로드 중",
+  "noDataYet": "아직 데이터가 없습니다",
+  "notes": "메모",
+  "overviewOfYourPersonalDataStorage": "개인 데이터 저장 개요.",
+  "photo": "사진",
+  "recentActivity": "최근 활동",
+  "seeAll": "모두 보기",
+  "startByCreatingANoteSavingALinkOrUploadingAFileUsingTheNewButtonInTheUpperCorner": "상단 모서리에 있는 \"새로 만들기\" 버튼을 사용하여 노트를 작성하거나, 링크를 저장하거나, 파일을 업로드하는 것부터 시작하세요."
+}

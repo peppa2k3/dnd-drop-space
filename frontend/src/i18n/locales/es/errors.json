@@ -1,0 +1,22 @@
+{
+  "authRequired": "Por favor inicia sesión nuevamente.",
+  "confirmPasswordRequired": "Por favor vuelva a ingresar su contraseña",
+  "conflict": "Los datos han cambiado. Por favor inténtalo de nuevo.",
+  "emailRequired": "Por favor ingrese el correo electrónico",
+  "fileTooLarge": "El archivo excede el límite permitido.",
+  "folderNameRequired": "Por favor ingrese un nombre de carpeta",
+  "invalidEmail": "Correo electrónico no válido",
+  "invalidUrl": "Ruta no válida",
+  "nameTooShort": "El nombre debe tener al menos 2 caracteres.",
+  "network": "Error de conexión. Por favor inténtalo de nuevo.",
+  "notFound": "No se encontraron datos.",
+  "passwordMismatch": "La contraseña reingresada no coincide",
+  "passwordRequired": "Por favor ingrese su contraseña",
+  "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+  "permissionDenied": "No tiene permiso para realizar esta operación.",
+  "serviceUnavailable": "El servicio no está disponible temporalmente.",
+  "titleRequired": "Por favor introduce un título",
+  "tooManyRequests": "Operación demasiadas veces. Inténtelo de nuevo más tarde.",
+  "urlRequired": "Por favor ingresa la ruta",
+  "validationFailed": "Datos no válidos."
+}

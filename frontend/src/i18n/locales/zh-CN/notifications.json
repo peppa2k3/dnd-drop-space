@@ -1,0 +1,17 @@
+{
+  "changesSaved": "更改已保存",
+  "closeNotification": "关闭通知",
+  "deleteFailed": "删除失败，请重试",
+  "favoriteUpdateFailed": "无法更新收藏夹",
+  "itemMoved": "搬家了",
+  "itemPermanentlyDeleted": "永久删除",
+  "itemRenamed": "名称已更改",
+  "itemRestored": "所选项目已恢复",
+  "languageSaveFailed": "无法保存语言，已恢复之前的选择。",
+  "moveFailed": "迁移失败",
+  "movedToTrash": "已移至垃圾箱",
+  "renameFailed": "重命名失败",
+  "restoreFailed": "恢复失败",
+  "saveFailed": "保存失败",
+  "unableToSaveInterfacePreviousSelectionRestored": "无法保存界面。恢复之前的选择。"
+}

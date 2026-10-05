@@ -1,0 +1,16 @@
+{
+  "capacityHasNotBeenGrantedContactTheAdministratorToCreateDataAndUploadFiles": "容量が付与されていません。データの作成とファイルのアップロードについては、管理者に連絡してください。",
+  "dashboard": "コントロールパネル",
+  "editProfile": "プロフィールの編集",
+  "file": "ファイル",
+  "friendsAndInvitations": "友達と招待状",
+  "link": "リンク",
+  "loadingDashboard": "ダッシュボードを読み込み中",
+  "noDataYet": "まだデータがありません",
+  "notes": "注意事項",
+  "overviewOfYourPersonalDataStorage": "個人データ ストレージの概要。",
+  "photo": "写真",
+  "recentActivity": "最近の活動",
+  "seeAll": "全て見る",
+  "startByCreatingANoteSavingALinkOrUploadingAFileUsingTheNewButtonInTheUpperCorner": "まず、メモを作成し、リンクを保存するか、上隅の「新規」ボタンを使用してファイルをアップロードします。"
+}

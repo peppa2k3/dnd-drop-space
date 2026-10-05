@@ -1,9 +1,9 @@
 export const LIBRARY_PRESETS = {
-  all: { title: 'Tất cả dữ liệu', filter: {} },
-  notes: { title: 'Ghi chú', filter: { type: 'note' } },
-  images: { title: 'Ảnh', filter: { type: 'file', category: 'image' } },
-  videos: { title: 'Video', filter: { type: 'file', category: 'video' } },
-  files: { title: 'Tệp tin', filter: { type: 'file' } },
-  urls: { title: 'Liên kết đã lưu', filter: { type: 'url' } },
-  favorites: { title: 'Yêu thích', filter: { favorite: 'true' } },
+  all: { titleKey: 'navigation:library', filter: {} },
+  notes: { titleKey: 'navigation:notes', filter: { type: 'note' } },
+  images: { titleKey: 'navigation:images', filter: { type: 'file', category: 'image' } },
+  videos: { titleKey: 'navigation:videos', filter: { type: 'file', category: 'video' } },
+  files: { titleKey: 'navigation:files', filter: { type: 'file' } },
+  urls: { titleKey: 'navigation:urls', filter: { type: 'url' } },
+  favorites: { titleKey: 'navigation:favorites', filter: { favorite: 'true' } },
 };

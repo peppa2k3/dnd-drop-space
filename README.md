@@ -4,6 +4,8 @@ Kho cá nhân cho ghi chú Markdown, bookmark, ảnh/video và tệp. React/Vite
 
 Trong **Cài đặt → Giao diện**, chọn một trong năm theme và chế độ Sáng/Tối/Hệ thống. Chế độ Hệ thống theo màu của thiết bị; thanh trên cùng có bộ chọn nhanh. Thay đổi hiện ngay. Khi đăng nhập, lựa chọn được lưu trong hồ sơ và khôi phục ở lần đăng nhập sau; khi chưa đăng nhập, lựa chọn lưu trên trình duyệt. Nếu không có preference, ứng dụng dùng Cyber Space Blue ở chế độ tối.
 
+Trong **Cài đặt → Ngôn ngữ**, chọn Tiếng Việt, English, 简体中文, 日本語, 한국어, Français, Deutsch, Italiano hoặc Español. Giao diện đổi ngay; tài khoản lưu lựa chọn trong hồ sơ, khách lưu trên trình duyệt. Ngôn ngữ mặc định và dự phòng là Tiếng Việt.
+
 ## Chạy nhanh
 
 Yêu cầu: Docker với Linux containers, Docker Compose v2+; Node.js 22.13+ để tạo `.env`, phát triển và chạy frontend lint local.

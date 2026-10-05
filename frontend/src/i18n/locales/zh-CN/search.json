@@ -1,0 +1,11 @@
+{
+  "enterKeywordsInTheSearchBarAbove": "在上面的搜索栏中输入关键字。",
+  "giveKeywords": "给出关键词",
+  "noResultsFoundForQ": "未找到“{{q}}”的结果",
+  "resultCount_one": "— {{formattedCount}} 结果",
+  "resultCount_other": "— {{formattedCount}} 结果",
+  "searchByTitleTagFolderNoteContentOrFileName": "按标题、标签、文件夹、笔记内容或文件名搜索。",
+  "searching": "搜寻中",
+  "startSearching": "开始搜索",
+  "tryADifferentKeywordOrCheckTheSpellingAgain": "尝试不同的关键字，或再次检查拼写。"
+}

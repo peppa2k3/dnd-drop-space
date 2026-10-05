@@ -1,3 +1,5 @@
+import i18n from '../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FolderOpen } from 'lucide-react';
@@ -16,6 +18,7 @@ import PromptModal from '../components/common/PromptModal';
 import { FullPageSpinner } from '../components/common/Spinner';
 
 export default function Library({ preset = 'all' }) {
+  useTranslation();
   const { folderId } = useParams();
   const navigate = useNavigate();
 
@@ -46,7 +49,7 @@ export default function Library({ preset = 'all' }) {
   const meta = data?.meta;
 
   const currentFolder = preset === 'folder' ? folders.find((f) => f._id === folderId) : null;
-  const pageTitle = preset === 'folder' ? currentFolder?.name || 'Thư mục' : LIBRARY_PRESETS[preset]?.title || 'Thư viện';
+  const pageTitle = preset === 'folder' ? currentFolder?.name || i18n.t('common:directory') : i18n.t(LIBRARY_PRESETS[preset]?.titleKey || 'navigation:library');
 
   const handleOpen = (item) => {
     if (item.type === 'note') navigate(`/app/notes/${item._id}`);
@@ -57,7 +60,7 @@ export default function Library({ preset = 'all' }) {
     <div className="flex flex-col gap-5">
       <div>
         <h1 className="font-display text-2xl font-semibold text-text-primary">{pageTitle}</h1>
-        {meta && <p className="mt-1 text-sm text-text-secondary">{meta.total} mục</p>}
+        {meta && <p className="mt-1 text-sm text-text-secondary">{meta.total} {i18n.t('common:item')}</p>}
       </div>
 
       <LibraryToolbar
@@ -77,8 +80,8 @@ export default function Library({ preset = 'all' }) {
       ) : items.length === 0 ? (
         <EmptyState
           icon={FolderOpen}
-          title="Không có dữ liệu nào ở đây"
-          description="Hãy thử bỏ bớt bộ lọc, hoặc thêm dữ liệu mới bằng nút “Mới” ở góc trên."
+          title={i18n.t('files:thereIsNoDataHere')}
+          description={i18n.t('files:tryRemovingFiltersOrAddingNewDataUsingTheNewButtonInTheUpperCorner')}
         />
       ) : (
         <>
@@ -111,8 +114,8 @@ export default function Library({ preset = 'all' }) {
         open={Boolean(renamingItem)}
         onClose={() => setRenamingItem(null)}
         onSubmit={(title) => actions.rename(renamingItem._id, title, () => setRenamingItem(null))}
-        title="Đổi tên"
-        label="Tên"
+        title={i18n.t('common:rename')}
+        label={i18n.t('common:name')}
         initialValue={renamingItem?.title}
       />
 

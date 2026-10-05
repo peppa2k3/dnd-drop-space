@@ -1,0 +1,22 @@
+{
+  "authRequired": "请重新登录。",
+  "confirmPasswordRequired": "请重新输入您的密码",
+  "conflict": "数据已更改。请再试一次。",
+  "emailRequired": "请输入电子邮件",
+  "fileTooLarge": "文件超出了允许的限制。",
+  "folderNameRequired": "请输入文件夹名称",
+  "invalidEmail": "电子邮件无效",
+  "invalidUrl": "网址无效",
+  "nameTooShort": "名称必须至少有 2 个字符",
+  "network": "连接错误。请再试一次。",
+  "notFound": "没有找到数据。",
+  "passwordMismatch": "重新输入的密码不匹配",
+  "passwordRequired": "请输入您的密码",
+  "passwordTooShort": "密码必须至少有 8 个字符",
+  "permissionDenied": "您没有执行此操作的权限。",
+  "serviceUnavailable": "服务暂时不可用。",
+  "titleRequired": "请输入标题",
+  "tooManyRequests": "操作次数过多。请稍后重试。",
+  "urlRequired": "请输入网址",
+  "validationFailed": "无效数据。"
+}

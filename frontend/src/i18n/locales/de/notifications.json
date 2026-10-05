@@ -1,0 +1,17 @@
+{
+  "changesSaved": "Änderungen gespeichert",
+  "closeNotification": "Benachrichtigung schließen",
+  "deleteFailed": "Der Löschvorgang ist fehlgeschlagen. Bitte versuchen Sie es erneut",
+  "favoriteUpdateFailed": "Favoriten können nicht aktualisiert werden",
+  "itemMoved": "Verschoben",
+  "itemPermanentlyDeleted": "Endgültig gelöscht",
+  "itemRenamed": "Name geändert",
+  "itemRestored": "Das ausgewählte Element wurde wiederhergestellt",
+  "languageSaveFailed": "Sprache konnte nicht gespeichert werden. Die vorherige Auswahl wurde wiederhergestellt.",
+  "moveFailed": "Die Migration ist fehlgeschlagen",
+  "movedToTrash": "In den Papierkorb verschoben",
+  "renameFailed": "Umbenennen fehlgeschlagen",
+  "restoreFailed": "Wiederherstellung fehlgeschlagen",
+  "saveFailed": "Speichern fehlgeschlagen",
+  "unableToSaveInterfacePreviousSelectionRestored": "Die Schnittstelle konnte nicht gespeichert werden. Vorherige Auswahl wiederhergestellt."
+}

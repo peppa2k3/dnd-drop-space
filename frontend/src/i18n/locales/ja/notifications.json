@@ -1,0 +1,17 @@
+{
+  "changesSaved": "変更が保存されました",
+  "closeNotification": "通知を閉じる",
+  "deleteFailed": "削除に失敗しました。もう一度お試しください",
+  "favoriteUpdateFailed": "お気に入りを更新できません",
+  "itemMoved": "移転しました",
+  "itemPermanentlyDeleted": "完全に削除されました",
+  "itemRenamed": "名前が変更されました",
+  "itemRestored": "選択したアイテムが復元されました",
+  "languageSaveFailed": "言語を保存できませんでした。前の選択に戻しました。",
+  "moveFailed": "移行に失敗しました",
+  "movedToTrash": "ゴミ箱に移動しました",
+  "renameFailed": "名前の変更に失敗しました",
+  "restoreFailed": "復元に失敗しました",
+  "saveFailed": "保存に失敗しました",
+  "unableToSaveInterfacePreviousSelectionRestored": "インターフェースを保存できません。以前の選択が復元されました。"
+}

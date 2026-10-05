@@ -1,3 +1,6 @@
+import { apiErrorMessage } from '../../utils/apiErrorMessage';
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { ChevronRight, Folder, FolderOpen, Plus, MoreHorizontal, Pencil, Trash2, FolderPlus } from 'lucide-react';
 import clsx from 'clsx';
@@ -10,6 +13,7 @@ import { useCreateFolder, useUpdateFolder, useDeleteFolder } from '../../hooks/u
 import { useToast } from '../../context/ToastContext';
 
 export default function FolderTree({ folders, activeFolderId, onSelectFolder }) {
+  useTranslation();
   const tree = buildFolderTree(folders);
   const createFolder = useCreateFolder();
   const updateFolder = useUpdateFolder();
@@ -25,10 +29,10 @@ export default function FolderTree({ folders, activeFolderId, onSelectFolder }) 
       { name, parent: creatingUnder || null },
       {
         onSuccess: () => {
-          addToast('Đã tạo thư mục');
+          addToast(i18n.t('folders:folderCreated'));
           setCreatingUnder(undefined);
         },
-        onError: (err) => addToast(err?.response?.data?.message || 'Tạo thư mục thất bại', 'error'),
+        onError: (err) => addToast(apiErrorMessage(err, i18n.t('folders:folderCreationFailed')), 'error'),
       }
     );
   };
@@ -38,10 +42,10 @@ export default function FolderTree({ folders, activeFolderId, onSelectFolder }) 
       { id: renaming._id, payload: { name } },
       {
         onSuccess: () => {
-          addToast('Đã đổi tên thư mục');
+          addToast(i18n.t('folders:renamedFolder'));
           setRenaming(null);
         },
-        onError: (err) => addToast(err?.response?.data?.message || 'Đổi tên thất bại', 'error'),
+        onError: (err) => addToast(apiErrorMessage(err, i18n.t('folders:renameFailed')), 'error'),
       }
     );
   };
@@ -49,19 +53,19 @@ export default function FolderTree({ folders, activeFolderId, onSelectFolder }) 
   const handleDelete = () => {
     deleteFolder.mutate(deleting._id, {
       onSuccess: () => {
-        addToast('Đã xóa thư mục, dữ liệu bên trong đã chuyển vào Thùng rác');
+        addToast(i18n.t('folders:folderDeletedDataInsideMovedToTrash'));
         setDeleting(null);
         if (activeFolderId === deleting._id) onSelectFolder(null);
       },
-      onError: (err) => addToast(err?.response?.data?.message || 'Xóa thư mục thất bại', 'error'),
+      onError: (err) => addToast(apiErrorMessage(err, i18n.t('folders:folderDeletionFailed')), 'error'),
     });
   };
 
   return (
     <div className="flex flex-col gap-0.5">
       <div className="flex items-center justify-between px-2 py-1">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">Thư mục</span>
-        <IconButton icon={Plus} label="Thêm thư mục gốc" variant="onDark" onClick={() => setCreatingUnder(null)} />
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">{i18n.t('common:directory')}</span>
+        <IconButton icon={Plus} label={i18n.t('folders:addRootDirectory')} variant="onDark" onClick={() => setCreatingUnder(null)} />
       </div>
 
       {tree.map((folder) => (
@@ -81,29 +85,29 @@ export default function FolderTree({ folders, activeFolderId, onSelectFolder }) 
         open={creatingUnder !== undefined}
         onClose={() => setCreatingUnder(undefined)}
         onSubmit={handleCreate}
-        title="Tạo thư mục mới"
-        label="Tên thư mục"
-        placeholder="Ví dụ: Công việc"
-        submitLabel="Tạo"
+        title={i18n.t('folders:createANewFolder')}
+        label={i18n.t('folders:directoryName')}
+        placeholder={i18n.t('folders:forExampleWork')}
+        submitLabel={i18n.t('folders:create')}
         loading={createFolder.isPending}
       />
       <PromptModal
         open={Boolean(renaming)}
         onClose={() => setRenaming(null)}
         onSubmit={handleRename}
-        title="Đổi tên thư mục"
-        label="Tên thư mục"
+        title={i18n.t('folders:renameTheFolder')}
+        label={i18n.t('folders:directoryName')}
         initialValue={renaming?.name}
-        submitLabel="Lưu"
+        submitLabel={i18n.t('common:save')}
         loading={updateFolder.isPending}
       />
       <ConfirmDialog
         open={Boolean(deleting)}
         onClose={() => setDeleting(null)}
         onConfirm={handleDelete}
-        title="Xóa thư mục?"
-        message={`Toàn bộ dữ liệu bên trong "${deleting?.name}" (và các thư mục con) sẽ được chuyển vào Thùng rác. Hành động này không thể hoàn tác đối với cấu trúc thư mục.`}
-        confirmLabel="Xóa thư mục"
+        title={i18n.t('folders:confirmDeleteFolder')}
+        message={i18n.t('folders:allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures', { name: deleting?.name })}
+        confirmLabel={i18n.t('folders:deleteFolder')}
         loading={deleteFolder.isPending}
       />
     </div>
@@ -111,6 +115,7 @@ export default function FolderTree({ folders, activeFolderId, onSelectFolder }) 
 }
 
 function FolderNode({ folder, depth, activeFolderId, onSelectFolder, onAddChild, onRename, onDelete }) {
+  useTranslation();
   const [expanded, setExpanded] = useState(true);
   const hasChildren = folder.children.length > 0;
   const isActive = activeFolderId === folder._id;
@@ -126,7 +131,7 @@ function FolderNode({ folder, depth, activeFolderId, onSelectFolder, onAddChild,
         onClick={() => onSelectFolder(folder._id)}
         role="button"
         tabIndex={0}
-        aria-label={`Mở thư mục ${folder.name}`}
+        aria-label={i18n.t('folders:openFolderName', { name: folder.name })}
         onKeyDown={(event) => {
           if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
             event.preventDefault();
@@ -149,12 +154,12 @@ function FolderNode({ folder, depth, activeFolderId, onSelectFolder, onAddChild,
         <div className="ml-auto hidden shrink-0 items-center gap-0.5 group-hover:flex">
           <Menu
             align="right"
-            trigger={<IconButton icon={MoreHorizontal} label="Tùy chọn thư mục" size={13} variant="onDark" />}
+            trigger={<IconButton icon={MoreHorizontal} label={i18n.t('folders:folderOptions')} size={13} variant="onDark" />}
             items={[
-              { label: 'Tạo thư mục con', icon: FolderPlus, onClick: () => onAddChild(folder._id) },
-              { label: 'Đổi tên', icon: Pencil, onClick: () => onRename(folder) },
+              { label: i18n.t('folders:createSubfolders'), icon: FolderPlus, onClick: () => onAddChild(folder._id) },
+              { label: i18n.t('common:rename'), icon: Pencil, onClick: () => onRename(folder) },
               { divider: true },
-              { label: 'Xóa thư mục', icon: Trash2, danger: true, onClick: () => onDelete(folder) },
+              { label: i18n.t('folders:deleteFolder'), icon: Trash2, danger: true, onClick: () => onDelete(folder) },
             ]}
           />
         </div>

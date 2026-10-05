@@ -1,30 +1,31 @@
-import { formatDistanceToNow } from 'date-fns';
-import { vi } from 'date-fns/locale';
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { Star, MoreVertical, FolderInput, Pencil, Trash2, Download, RotateCcw, XCircle } from 'lucide-react';
 import clsx from 'clsx';
 import Menu from '../common/Menu';
 import IconButton from '../common/IconButton';
 import TagChip from '../common/TagChip';
 import { getItemVisual } from '../../utils/itemVisual';
-import { formatBytes } from '../../utils/format';
+import { formatBytes, formatRelativeTime } from '../../utils/format';
 import { mediaUrl } from '../../utils/mediaUrl';
 
 export default function ItemRow({ item, onOpen, onToggleFavorite, onRename, onMove, onDelete, onRestore, onPermanentDelete, isTrashed = false }) {
+  useTranslation();
   const { Icon, label } = getItemVisual(item);
   const thumbnailSrc = item.urls?.thumbnail ? mediaUrl(item.urls.thumbnail) : null;
 
   const menuItems = isTrashed
     ? [
-        { label: 'Khôi phục', icon: RotateCcw, onClick: () => onRestore?.(item._id) },
+        { label: i18n.t('common:restore'), icon: RotateCcw, onClick: () => onRestore?.(item._id) },
         { divider: true },
-        { label: 'Xóa vĩnh viễn', icon: XCircle, danger: true, onClick: () => onPermanentDelete?.(item._id) },
+        { label: i18n.t('common:deletePermanently'), icon: XCircle, danger: true, onClick: () => onPermanentDelete?.(item._id) },
       ]
     : [
-        { label: 'Đổi tên', icon: Pencil, onClick: () => onRename?.(item) },
-        { label: 'Di chuyển đến...', icon: FolderInput, onClick: () => onMove?.(item) },
-        ...(item.type === 'file' ? [{ label: 'Tải xuống', icon: Download, onClick: () => window.open(mediaUrl(item.urls.download), '_blank') }] : []),
+        { label: i18n.t('common:rename'), icon: Pencil, onClick: () => onRename?.(item) },
+        { label: i18n.t('files:moveToPlaceholder'), icon: FolderInput, onClick: () => onMove?.(item) },
+        ...(item.type === 'file' ? [{ label: i18n.t('common:download'), icon: Download, onClick: () => window.open(mediaUrl(item.urls.download), '_blank') }] : []),
         { divider: true },
-        { label: 'Chuyển vào Thùng rác', icon: Trash2, danger: true, onClick: () => onDelete?.(item._id) },
+        { label: i18n.t('files:moveToTrash'), icon: Trash2, danger: true, onClick: () => onDelete?.(item._id) },
       ];
 
   return (
@@ -33,7 +34,7 @@ export default function ItemRow({ item, onOpen, onToggleFavorite, onRename, onMo
       onClick={() => onOpen?.(item)}
       role="button"
       tabIndex={0}
-      aria-label={`Mở ${item.title}`}
+      aria-label={i18n.t('files:openTitle', { title: item.title })}
       onKeyDown={(event) => {
         if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
           event.preventDefault();
@@ -55,7 +56,7 @@ export default function ItemRow({ item, onOpen, onToggleFavorite, onRename, onMo
           <span>{label}</span>
           {item.folder?.name && <span>· {item.folder.name}</span>}
           {item.fileMeta?.size ? <span>· {formatBytes(item.fileMeta.size)}</span> : null}
-          <span>· {formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true, locale: vi })}</span>
+          <span>· {formatRelativeTime(item.updatedAt)}</span>
         </div>
       </div>
 
@@ -75,13 +76,13 @@ export default function ItemRow({ item, onOpen, onToggleFavorite, onRename, onMo
             onToggleFavorite?.(item._id);
           }}
           className={clsx('shrink-0', item.favorite ? 'text-primary-hover' : 'text-text-muted hover:text-text-primary')}
-          aria-label="Đánh dấu yêu thích"
+          aria-label={i18n.t('files:markFavorites')}
         >
           <Star size={16} fill={item.favorite ? 'currentColor' : 'none'} />
         </button>
       )}
 
-      <Menu trigger={<IconButton icon={MoreVertical} label="Tùy chọn khác" onClick={(e) => e.stopPropagation()} />} items={menuItems} />
+      <Menu trigger={<IconButton icon={MoreVertical} label={i18n.t('files:otherOptions')} onClick={(e) => e.stopPropagation()} />} items={menuItems} />
     </div>
   );
 }

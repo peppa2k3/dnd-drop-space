@@ -1,0 +1,22 @@
+{
+  "addRootDirectory": "ルートディレクトリを追加",
+  "allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures": "「{{name}}」（およびサブフォルダー）内のすべてのデータはゴミ箱に移動されます。フォルダー構造の場合、この操作を元に戻すことはできません。",
+  "confirmDeleteFolder": "フォルダを削除しますか?",
+  "create": "作成",
+  "createANewFolder": "新しいフォルダーを作成する",
+  "createSubfolders": "サブフォルダーの作成",
+  "deleteFolder": "フォルダの削除",
+  "directoryName": "ディレクトリ名",
+  "folderCreated": "フォルダが作成されました",
+  "folderCreationFailed": "フォルダーの作成に失敗しました",
+  "folderDeletedDataInsideMovedToTrash": "フォルダーが削除され、内部のデータはゴミ箱に移動されました",
+  "folderDeletionFailed": "フォルダーの削除に失敗しました",
+  "folderOptions": "フォルダーオプション",
+  "forExampleWork": "例: 仕事",
+  "move": "移動",
+  "moveToFolder": "フォルダに移動",
+  "openFolderName": "フォルダー {{name}} を開く",
+  "renamedFolder": "名前を変更したフォルダー",
+  "renameFailed": "名前の変更に失敗しました",
+  "renameTheFolder": "フォルダーの名前を変更する"
+}

@@ -1,0 +1,22 @@
+{
+  "authRequired": "再度ログインしてください。",
+  "confirmPasswordRequired": "パスワードを再入力してください",
+  "conflict": "データが変更されました。もう一度試してください。",
+  "emailRequired": "メールアドレスを入力してください",
+  "fileTooLarge": "ファイルが許可された制限を超えています。",
+  "folderNameRequired": "フォルダ名を入力してください",
+  "invalidEmail": "無効な電子メール",
+  "invalidUrl": "無効なパス",
+  "nameTooShort": "名前には少なくとも 2 文字が必要です",
+  "network": "接続エラー。もう一度試してください。",
+  "notFound": "データが見つかりませんでした。",
+  "passwordMismatch": "再入力したパスワードが一致しません",
+  "passwordRequired": "パスワードを入力してください",
+  "passwordTooShort": "パスワードは8文字以上である必要があります",
+  "permissionDenied": "この操作を実行する権限がありません。",
+  "serviceUnavailable": "サービスが一時的に利用できなくなりました。",
+  "titleRequired": "タイトルを入力してください",
+  "tooManyRequests": "操作回数が多すぎます。後でもう一度試してください。",
+  "urlRequired": "パスを入力してください",
+  "validationFailed": "無効なデータです。"
+}

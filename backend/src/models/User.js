@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema(
       }, { _id: false }),
       default: undefined,
     },
+    language: { type: String, enum: ['vi', 'en', 'zh-CN', 'ja', 'ko', 'fr', 'de', 'it', 'es'], default: undefined },
     avatarObjectKey: { type: String, default: null },
     name: {
       type: String,
@@ -64,6 +65,7 @@ userSchema.methods.toSafeJSON = function toSafeJSON() {
     username: this.username || '',
     bio: this.bio || '',
     appearance: this.appearance || { theme: 'cyber-blue', mode: 'dark' },
+    language: this.language || null,
     role: this.role,
     status: this.status,
     emailVerified: this.hasVerifiedEmail(),

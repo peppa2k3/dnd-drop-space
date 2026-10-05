@@ -1,3 +1,6 @@
+import { apiErrorMessage } from '../../utils/apiErrorMessage';
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +16,7 @@ import { useToast } from '../../context/ToastContext';
 import { buildFolderTree, flattenForSelect } from '../../utils/folderTree';
 
 export default function CreateUrlModal({ open, onClose, defaultFolder = null }) {
+  useTranslation();
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
   const {
@@ -20,7 +24,7 @@ export default function CreateUrlModal({ open, onClose, defaultFolder = null }) 
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(urlSchema), defaultValues: { url: '', title: '', description: '', folder: defaultFolder || '' } });
+  } = useForm({ resolver: zodResolver(urlSchema()), defaultValues: { url: '', title: '', description: '', folder: defaultFolder || '' } });
 
   const { data: folders = [] } = useFolders();
   const folderOptions = flattenForSelect(buildFolderTree(folders));
@@ -46,25 +50,25 @@ export default function CreateUrlModal({ open, onClose, defaultFolder = null }) 
       { ...values, folder: values.folder || null, tags },
       {
         onSuccess: () => {
-          addToast('Đã lưu liên kết');
+          addToast(i18n.t('upload:linkSaved'));
           handleClose();
         },
-        onError: (err) => addToast(err?.response?.data?.message || 'Lưu liên kết thất bại', 'error'),
+        onError: (err) => addToast(apiErrorMessage(err, i18n.t('upload:saveLinkFailed')), 'error'),
       }
     );
   };
 
   return (
-    <Modal open={open} onClose={handleClose} title="Lưu liên kết (URL)" size="md">
+    <Modal open={open} onClose={handleClose} title={i18n.t('common:saveLinkUrl')} size="md">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <Input label="Đường dẫn (URL)" placeholder="https://..." autoFocus {...register('url')} error={errors.url?.message} />
-        <Input label="Tiêu đề (tùy chọn)" placeholder="Để trống để tự lấy từ trang web" {...register('title')} error={errors.title?.message} />
-        <Textarea label="Mô tả (tùy chọn)" rows={2} {...register('description')} error={errors.description?.message} />
+        <Input label={i18n.t('upload:pathUrl')} placeholder={i18n.t('upload:httpsPlaceholder')} autoFocus {...register('url')} error={errors.url?.message} />
+        <Input label={i18n.t('upload:titleOptional')} placeholder={i18n.t('upload:leaveBlankToGetItYourselfFromTheWebsite')} {...register('title')} error={errors.title?.message} />
+        <Textarea label={i18n.t('upload:descriptionOptional')} rows={2} {...register('description')} error={errors.description?.message} />
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-text-primary">Thư mục</label>
+          <label className="text-sm font-medium text-text-primary">{i18n.t('common:directory')}</label>
           <select {...register('folder')} className="w-full rounded-card border border-border bg-surface px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-            <option value="">— Không có thư mục (gốc) —</option>
+            <option value="">{i18n.t('common:noDirectoryRoot')}</option>
             {folderOptions.map((opt) => (
               <option key={opt.id} value={opt.id}>
                 {opt.label}
@@ -74,7 +78,7 @@ export default function CreateUrlModal({ open, onClose, defaultFolder = null }) 
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-text-primary">Thẻ</label>
+          <label className="text-sm font-medium text-text-primary">{i18n.t('common:tags')}</label>
           <div className="flex flex-wrap items-center gap-1.5 rounded-card border border-border bg-surface px-2.5 py-2">
             {tags.map((t) => (
               <TagChip key={t} name={t} onRemove={() => setTags(tags.filter((x) => x !== t))} />
@@ -88,7 +92,7 @@ export default function CreateUrlModal({ open, onClose, defaultFolder = null }) 
                   addTag();
                 }
               }}
-              placeholder="Thêm thẻ..."
+              placeholder={i18n.t('common:addTagsPlaceholder')}
               className="min-w-[80px] grow bg-transparent text-xs focus:outline-none"
             />
           </div>
@@ -96,10 +100,10 @@ export default function CreateUrlModal({ open, onClose, defaultFolder = null }) 
 
         <div className="flex justify-end gap-2 pt-1">
           <Button type="button" variant="ghost" onClick={handleClose}>
-            Hủy
+            {i18n.t('common:cancel')}
           </Button>
           <Button type="submit" loading={createUrl.isPending}>
-            Lưu liên kết
+            {i18n.t('upload:saveLink')}
           </Button>
         </div>
       </form>

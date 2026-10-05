@@ -1,0 +1,22 @@
+{
+  "addRootDirectory": "루트 디렉터리 추가",
+  "allDataInsideNameAndSubfoldersWillBeMovedToTheTrashThisActionCannotBeUndoneForFolderStructures": "\"{{name}}\"(및 하위 폴더) 내부의 모든 데이터는 휴지통으로 이동됩니다. 폴더 구조에 대해서는 이 작업을 취소할 수 없습니다.",
+  "confirmDeleteFolder": "폴더를 삭제하시겠습니까?",
+  "create": "만들기",
+  "createANewFolder": "새 폴더 만들기",
+  "createSubfolders": "하위 폴더 만들기",
+  "deleteFolder": "폴더 삭제",
+  "directoryName": "디렉토리 이름",
+  "folderCreated": "폴더가 생성되었습니다.",
+  "folderCreationFailed": "폴더 생성 실패",
+  "folderDeletedDataInsideMovedToTrash": "폴더가 삭제되고 내부 데이터가 휴지통으로 이동되었습니다.",
+  "folderDeletionFailed": "폴더 삭제 실패",
+  "folderOptions": "폴더 옵션",
+  "forExampleWork": "예: 직장",
+  "move": "이동",
+  "moveToFolder": "폴더로 이동",
+  "openFolderName": "{{name}} 폴더 열기",
+  "renamedFolder": "폴더 이름이 변경됨",
+  "renameFailed": "이름 바꾸기 실패",
+  "renameTheFolder": "폴더 이름 바꾸기"
+}

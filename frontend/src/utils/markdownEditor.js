@@ -1,3 +1,5 @@
+import i18n from '../i18n/config';
+
 /**
  * Each function takes the current textarea value + selection range and
  * returns { value, start, end } - the new content and where the cursor /
@@ -6,7 +8,7 @@
  */
 
 function wrapSelection(value, start, end, marker) {
-  const selected = value.slice(start, end) || 'văn bản';
+  const selected = value.slice(start, end) || i18n.t('files:sampleText');
   const before = value.slice(0, start);
   const after = value.slice(end);
   const newValue = `${before}${marker}${selected}${marker}${after}`;
@@ -17,7 +19,7 @@ function prefixLines(value, start, end, prefix, numbered = false) {
   const before = value.slice(0, start);
   const after = value.slice(end);
   const lineStart = before.lastIndexOf('\n') + 1;
-  const selectedBlock = value.slice(lineStart, end) || 'mục danh sách';
+  const selectedBlock = value.slice(lineStart, end) || i18n.t('files:sampleListItem');
 
   const lines = selectedBlock.split('\n');
   const newBlock = lines.map((line, i) => `${numbered ? `${i + 1}. ` : prefix}${line}`).join('\n');
@@ -35,7 +37,7 @@ export const markdownActions = {
   checklist: (value, start, end) => prefixLines(value, start, end, '- [ ] '),
   numberedList: (value, start, end) => prefixLines(value, start, end, '', true),
   link: (value, start, end) => {
-    const selected = value.slice(start, end) || 'liên kết';
+    const selected = value.slice(start, end) || i18n.t('files:sampleLink');
     const before = value.slice(0, start);
     const after = value.slice(end);
     const insertion = `[${selected}](https://)`;

@@ -1,15 +1,18 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { LayoutGrid, List, ArrowDownWideNarrow, ArrowUpNarrowWide } from 'lucide-react';
 import clsx from 'clsx';
 import IconButton from '../common/IconButton';
 
 const SORT_OPTIONS = [
-  { value: 'createdAt', label: 'Ngày tạo' },
-  { value: 'updatedAt', label: 'Cập nhật gần đây' },
-  { value: 'title', label: 'Tiêu đề' },
-  { value: 'size', label: 'Dung lượng' },
+  { value: 'createdAt', labelKey: 'files:sortCreatedAt' },
+  { value: 'updatedAt', labelKey: 'files:sortUpdatedAt' },
+  { value: 'title', labelKey: 'files:sortTitle' },
+  { value: 'size', labelKey: 'files:sortSize' },
 ];
 
 export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order, onSortChange, onOrderToggle, tags = [], activeTag, onTagChange }) {
+  useTranslation();
   return (
     <div className="flex flex-col gap-3 border-b border-border pb-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-2 overflow-x-auto">
@@ -21,7 +24,7 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
             !activeTag ? 'border-primary bg-primary/10 text-primary-hover' : 'border-border text-text-secondary hover:border-primary/60'
           )}
         >
-          Tất cả thẻ
+          {i18n.t('files:allTags')}
         </button>
         {tags.map((tag) => (
           <button
@@ -46,18 +49,18 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
-              {opt.label}
+              {i18n.t(opt.labelKey)}
             </option>
           ))}
         </select>
-        <IconButton icon={order === 'asc' ? ArrowUpNarrowWide : ArrowDownWideNarrow} label="Đổi thứ tự sắp xếp" onClick={onOrderToggle} />
+        <IconButton icon={order === 'asc' ? ArrowUpNarrowWide : ArrowDownWideNarrow} label={i18n.t('files:changeSortOrder')} onClick={onOrderToggle} />
 
         <div className="flex items-center rounded-card border border-border p-0.5">
           <button
             type="button"
             onClick={() => onViewModeChange('grid')}
             className={clsx('rounded-[8px] p-1.5 transition-colors duration-200', viewMode === 'grid' ? 'bg-primary/10 text-primary-hover' : 'text-text-muted hover:text-text-primary')}
-            aria-label="Xem dạng lưới"
+            aria-label={i18n.t('files:gridView')}
           >
             <LayoutGrid size={15} />
           </button>
@@ -65,7 +68,7 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
             type="button"
             onClick={() => onViewModeChange('list')}
             className={clsx('rounded-[8px] p-1.5 transition-colors duration-200', viewMode === 'list' ? 'bg-primary/10 text-primary-hover' : 'text-text-muted hover:text-text-primary')}
-            aria-label="Xem dạng danh sách"
+            aria-label={i18n.t('files:viewAsList')}
           >
             <List size={15} />
           </button>

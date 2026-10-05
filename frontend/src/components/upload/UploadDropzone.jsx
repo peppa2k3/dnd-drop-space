@@ -1,8 +1,11 @@
+import i18n from '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { useCallback, useRef, useState } from 'react';
 import { UploadCloud } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function UploadDropzone({ onFilesSelected, disabled = false }) {
+  useTranslation();
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef(null);
 
@@ -47,8 +50,8 @@ export default function UploadDropzone({ onFilesSelected, disabled = false }) {
       )}
     >
       <UploadCloud size={28} className="text-text-muted" strokeWidth={1.5} />
-      <p className="text-sm font-medium text-text-primary">Kéo & thả tệp vào đây, dán (Ctrl+V), hoặc bấm để chọn</p>
-      <p className="text-xs text-text-muted">Hỗ trợ mọi định dạng tệp</p>
+      <p className="text-sm font-medium text-text-primary">{i18n.t('upload:dragDropFilesHerePasteCtrlVOrClickToSelect')}</p>
+      <p className="text-xs text-text-muted">{i18n.t('upload:supportsAllFileFormats')}</p>
       <input ref={inputRef} type="file" multiple hidden disabled={disabled} onChange={(e) => {
         handleFiles(e.target.files);
         e.target.value = '';

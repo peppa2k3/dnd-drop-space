@@ -1,0 +1,16 @@
+{
+  "capacityHasNotBeenGrantedContactTheAdministratorToCreateDataAndUploadFiles": "尚未授予容量。联系管理员创建数据并上传文件。",
+  "dashboard": "控制面板",
+  "editProfile": "编辑个人资料",
+  "file": "文件",
+  "friendsAndInvitations": "朋友和邀请",
+  "link": "链接",
+  "loadingDashboard": "正在加载仪表板",
+  "noDataYet": "还没有数据",
+  "notes": "注释",
+  "overviewOfYourPersonalDataStorage": "您的个人数据存储概述。",
+  "photo": "照片",
+  "recentActivity": "最近的活动",
+  "seeAll": "查看全部",
+  "startByCreatingANoteSavingALinkOrUploadingAFileUsingTheNewButtonInTheUpperCorner": "首先使用右上角的“新建”按钮创建注释、保存链接或上传文件。"
+}

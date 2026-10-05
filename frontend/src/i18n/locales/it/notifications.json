@@ -1,0 +1,17 @@
+{
+  "changesSaved": "Modifiche salvate",
+  "closeNotification": "Chiudi notifica",
+  "deleteFailed": "Eliminazione non riuscita, riprova",
+  "favoriteUpdateFailed": "Impossibile aggiornare i preferiti",
+  "itemMoved": "Mosso",
+  "itemPermanentlyDeleted": "Eliminato definitivamente",
+  "itemRenamed": "Nome cambiato",
+  "itemRestored": "L'elemento selezionato è stato ripristinato",
+  "languageSaveFailed": "Impossibile salvare la lingua. È stata ripristinata la scelta precedente.",
+  "moveFailed": "La migrazione non è riuscita",
+  "movedToTrash": "Spostato nel cestino",
+  "renameFailed": "Rinomina non riuscita",
+  "restoreFailed": "Ripristino non riuscito",
+  "saveFailed": "Salvataggio non riuscito",
+  "unableToSaveInterfacePreviousSelectionRestored": "Impossibile salvare l'interfaccia. Selezione precedente ripristinata."
+}

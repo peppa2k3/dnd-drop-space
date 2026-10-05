@@ -9,7 +9,11 @@ const appearanceSchema = z.object({
   theme: z.enum(['cyber-blue', 'neon-storage', 'deep-purple', 'space-terminal', 'ice-data', 'ice-datacenter']),
   mode: z.enum(['dark', 'light', 'system']),
 }).strict();
-const profileSchema = z.object({ ...profileFields, appearance: appearanceSchema.optional() }).strict();
+const profileSchema = z.object({
+  ...profileFields,
+  appearance: appearanceSchema.optional(),
+  language: z.enum(['vi', 'en', 'zh-CN', 'ja', 'ko', 'fr', 'de', 'it', 'es']).optional(),
+}).strict();
 const adminUserSchema = z.object({
   ...profileFields,
   email: z.string().trim().toLowerCase().email().optional(),

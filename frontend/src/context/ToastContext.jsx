@@ -1,3 +1,5 @@
+import i18n from '../i18n/config';
+import { useTranslation } from 'react-i18next';
 import { createContext, useCallback, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CheckCircle2, XCircle, Info, X } from 'lucide-react';
@@ -13,6 +15,7 @@ const COLORS = {
 };
 
 export function ToastProvider({ children }) {
+  useTranslation();
   const [toasts, setToasts] = useState([]);
 
   const removeToast = useCallback((id) => {
@@ -43,7 +46,7 @@ export function ToastProvider({ children }) {
               >
                 <Icon size={18} className={clsx('mt-0.5 shrink-0', COLORS[t.type])} />
                 <p className="grow text-sm text-text-primary">{t.message}</p>
-                <button onClick={() => removeToast(t.id)} className="text-text-muted hover:text-text-primary" aria-label="Đóng thông báo">
+                <button onClick={() => removeToast(t.id)} className="text-text-muted hover:text-text-primary" aria-label={i18n.t('notifications:closeNotification')}>
                   <X size={14} />
                 </button>
               </div>
