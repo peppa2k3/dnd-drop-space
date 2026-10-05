@@ -1,0 +1,81 @@
+# Production is image-only. Keep service and volume names aligned with docker-compose.yml.
+services:
+  mongo:
+    image: mongo:4.0
+    restart: unless-stopped
+    volumes:
+      - mongo40-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "quit(db.adminCommand('ping').ok ? 0 : 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:RELEASE.2025-07-23T15-54-02Z
+    restart: unless-stopped
+    stop_grace_period: 60s
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:?Set MINIO_ACCESS_KEY in the private backend.env}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:?Set MINIO_SECRET_KEY in the private backend.env}
+    volumes:
+      - minio-data:/data
+    ports:
+      - '127.0.0.1:${MINIO_API_PORT:-9000}:9000'
+      - '127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: ${BACKEND_IMAGE:?Set immutable BACKEND_IMAGE}
+    restart: unless-stopped
+    stop_grace_period: 30s
+    env_file:
+      - ${PKH_ENV_FILE:?Set private backend.env path}
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      TRUST_PROXY_HOPS: 2
+      MONGO_URI: mongodb://mongo:27017/personal_knowledge_hub
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_USE_SSL: 'false'
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:?Set MINIO_ACCESS_KEY in the private backend.env}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:?Set MINIO_SECRET_KEY in the private backend.env}
+    depends_on:
+      mongo:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    expose:
+      - '5000'
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:5000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+  nginx:
+    image: ${WEB_IMAGE:?Set immutable WEB_IMAGE}
+    restart: unless-stopped
+    stop_signal: SIGQUIT
+    stop_grace_period: 120s
+    ports:
+      - '127.0.0.1:${WEB_PORT:-8080}:80'
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo40-data:
+  minio-data:

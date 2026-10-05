@@ -1,35 +1,21 @@
 # Khởi chạy và triển khai
 
-## Hiện tại
-Local dùng Compose; production chưa triển khai. Repo chưa có Git remote/server/domain. Pipeline được chuẩn bị trong `.github/workflows/`; không coi file cấu hình là bằng chứng CI/CD đã chạy.
+## Trạng thái
 
-## Local
-Theo [README](../README.md). Luôn truyền `--env-file backend/.env`: Compose và backend cần cùng credentials MinIO. `.env` không nằm trong image/Git. HTTP local dùng `NODE_ENV=development`; production dùng HTTPS + `NODE_ENV=production`.
+Local chạy bằng `docker-compose.yml` theo [README](../README.md). Repo đã có Git remote; workflow production mới được chuẩn bị nhưng **chưa chạy trên GitHub/VPS**. Không xem code CI/CD là bằng chứng site public. Các bước cấu hình từ đầu: [DEPLOY_GUIDES](../DEPLOY_GUIDES.md). State machine và điểm cần sửa sau khi chạy thật: [context_deploy](context_deploy.md).
 
-Image MongoDB là `mongo:4.0` (không phải `mongodb:4.0`); healthcheck dùng `mongo`. Mongoose được khóa `7.8.12` theo [bảng tương thích](https://mongoosejs.com/docs/7.x/docs/compatibility.html). MongoDB 4.0 đã [hết hỗ trợ từ 04/2022](https://www.mongodb.com/legal/support-policy/legacy); giữ đúng yêu cầu hiện tại và lập kế hoạch nâng cấp riêng cho vận hành dài hạn.
+## Thiết kế production
 
-## CI và CD
-1. Tạo Git remote và push khi được yêu cầu. Bật CI cho PR/main; đặt check `verify` bắt buộc khi merge.
-2. Chuẩn bị VPS Linux x64, Docker/Compose v2+, Git, Node 22; runner riêng có label `pkh-production`. Không cho PR không tin cậy chạy trên runner này.
-3. Tạo GitHub environment `production`, chỉ cho `main/master`. Có thể đặt variable `PKH_DEPLOY_ROOT` (mặc định `/srv/pkh`); runner có quyền ghi thư mục này và dùng Docker.
-4. Đặt secrets trong `/srv/pkh/shared/backend.env`, quyền `600`, dựa trên [mẫu đầy đủ key](../backend/.env.example): `NODE_ENV=production`, `CLIENT_ORIGIN=https://<domain>` (origin, không có path), hai JWT secret ngẫu nhiên khác nhau dài ít nhất 32 ký tự, `GOOGLE_CLIENT_ID`, `EMAIL_HOST/PORT/SECURE/USER/PASSWORD` (`EMAIL_FROM` tùy chọn, mặc định bằng user), MinIO secret riêng và các cổng host chưa bị chiếm. Cấu hình Google OAuth Web client với Authorized JavaScript origin đúng bằng `CLIENT_ORIGIN`; cổng 587 dùng STARTTLS, cổng 465 dùng TLS ngay. `IMAGE_TAG` và `PKH_ENV_FILE` do script deploy cung cấp. Không tạo secrets trong workflow logs.
-5. Cấu hình reverse proxy HTTPS **trên host** → `127.0.0.1:8080`; chỉ mở 80/443. MongoDB/backend nội bộ; MinIO chỉ bind loopback. Nginx hiện giữ một hop tin cậy, chưa khôi phục IP khách qua lớp HTTPS ngoài; phải kiểm tra rate-limit khi thiết lập lớp proxy đó.
-6. Chạy workflow **Deploy production** trên main/master. Workflow chạy lại CI trên đúng commit rồi build/deploy trên server; `current` chỉ chuyển sau health thành công. Image app gắn commit SHA, releases cũ được giữ.
+Push `main` chạy `changes → validate → build-images → push-images → deploy → verify → promote-tags`; job `rollback` chạy khi deploy hoặc verify lỗi. `workflow_dispatch` trên `main` build cả backend/web cho lần đầu. CI dùng Compose local với MongoDB 4.0; production dùng `docker-compose.prod.yml` chỉ pull image SHA từ GHCR hoặc Docker Hub. Trạng thái image từng service nằm trong `/srv/pkh/shared/current-images.env`, secret ứng dụng trong `backend.env` ngoài release. `production` tag chỉ cập nhật sau verify; Compose không dùng tag di động.
 
-Script `scripts/deploy.sh` tự quay về release trước nếu bước `up --wait` thất bại. Lần đầu chưa có release trước thì báo lỗi để sửa. Rollback này chỉ phục hồi ứng dụng, không phục hồi DB/MinIO; chưa áp dụng cho migration schema. Chưa kiểm chứng script trên server thật.
+VPS chạy một Compose project cố định `pkh-production`, giữ volume `mongo40-data` và `minio-data`. Web/MinIO bind loopback sau HTTPS reverse proxy trên host; MongoDB/backend nội bộ. Docker image MongoDB là **`mongo:4.0`** và không được gắn volume từng chạy phiên bản MongoDB cao hơn. Mongoose 7.8.12 theo [bảng tương thích](https://mongoosejs.com/docs/7.x/docs/compatibility.html). MongoDB 4.0 đã [hết hỗ trợ](https://www.mongodb.com/legal/support-policy/legacy), nên kế hoạch nâng cấp phải là việc riêng có backup/restore.
 
-## Backup / rollback
-- Trước release có thay đổi dữ liệu: dừng API để ngừng upload và cron; dump MongoDB bằng công cụ cùng phiên bản và sao lưu toàn bộ MinIO. Giữ cặp backup có cùng mốc thời gian, mã hóa ngoài server.
-- Thử restore trên Compose project/volumes riêng, chạy smoke và kiểm tra một tệp thực tế. Không restore đè production để thử.
-- Rollback thủ công trên server: lấy SHA release cũ, đặt `IMAGE_TAG=<SHA>`, `PKH_ENV_FILE=/srv/pkh/shared/backend.env`, dùng Compose của release đó với `-p pkh-production --env-file "$PKH_ENV_FILE" up -d --no-build --wait`. Xác nhận health rồi cập nhật symlink `current`.
-- Không prune image/release đang dùng hoặc bản rollback; không chạy `down --volumes` ở production.
+Trước khi thay image, script pull candidate, dừng luồng ghi và tạo cặp backup MongoDB–MinIO cộng env/state hiện hành. Sau Compose `up --wait`, verify health bốn container và frontend/API qua loopback lẫn HTTPS public; chỉ lúc đó mới đổi `current`. Thất bại sẽ chạy lại image cũ và verify; không tự restore hoặc xóa dữ liệu. Backup vẫn ở VPS, cần offsite và diễn tập restore riêng. Rollback image không đảm bảo an toàn cho migration dữ liệu không tương thích ngược.
 
-## Điều kiện đưa public
-- Kiểm tra HTTPS login/refresh trong trình duyệt, upload/download, restart giữ dữ liệu, backup/restore, rollback.
-- Rà quyền tham chiếu folder/tag, SSRF khi lấy URL preview, upload trong RAM và dependency audit. Chưa có audit bảo mật đầy đủ.
-- Đặt quota/upload phù hợp RAM; một replica API vì cron còn nằm trong process API. Thêm giám sát uptime/dung lượng và backup định kỳ.
-- Image nền Node/Nginx dùng tag dòng; pin digest cho release production sau khi kiểm chứng. Chưa có registry/image signing.
+## Điều kiện vận hành còn chờ
 
-Avatar cần `MINIO_PUBLIC_ENDPOINT`, `MINIO_PUBLIC_PORT`, `MINIO_PUBLIC_USE_SSL=true` cho endpoint HTTPS tới MinIO/CDN; proxy giữ Host/path để chữ ký S3 hợp lệ. URL ký có hiệu lực 5 phút, không đặt bucket public.
+- Người dùng cấu hình GitHub repository variables/secrets, registry, deploy account, VPS, DNS/TLS và production `backend.env` theo guide.
+- Kiểm tra trên GitHub/VPS: CI xanh; quyền push/pull registry; backup hoàn chỉnh; login/refresh, Google/SMTP/OTP, upload/download, avatar; rollback lỗi có chủ đích trên staging và restore cặp backup trên volume riêng.
+- Trước public: rà quyền folder/tag, SSRF khi preview URL, upload trong RAM, dependency, giám sát và backup định kỳ. Chỉ một replica API vì cron/quota lock nằm trong process.
 
-Checklist thực hiện: [prompt 009](../prompts/backlog/009-production-release.md).
+Prompt code CI/CD: [009](../prompts/progress/009-build_workflow_github-VPS-deploy.md). Việc đưa public và nghiệm thu vận hành: [010](../prompts/backlog/010-production-release.md).

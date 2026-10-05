@@ -12,6 +12,7 @@ Luồng: `backlog/` → `progress/` → `completed/`. Move cùng file, giữ ID;
 | [006](completed/006-build_sharing_file_and_user_group_feature.md) | Bạn bè, nhóm, chia sẻ tệp và quản trị | Hoàn tất; xem logscontext/006-collaboration.md |
 | [007](progress/007-build_GOOGLE_auth_feature.md) | Google Login, xác thực email và OTP | Code đã chuẩn bị; chờ SMTP/Google và UI thực tế |
 | [008](progress/008-themes-mode-feature.md) | DND Drop Space, 5 theme và dark/light | Code/test đạt; chờ kiểm tra UI trong browser |
-| [009](backlog/009-production-release.md) | Triển khai public, backup/restore | Chờ hạ tầng |
+| [009](progress/009-build_workflow_github-VPS-deploy.md) | Production CI/CD, registry, VPS deploy/backup/rollback | Code/tài liệu đã chuẩn bị; chờ chạy GitHub/VPS |
+| [010](backlog/010-production-release.md) | Đưa public, kiểm tra backup/restore | Chờ hạ tầng và nghiệm thu |
 
 Code ban đầu ở commit `860f085`; không dựng lại lịch sử prompt chưa tồn tại.

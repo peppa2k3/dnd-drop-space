@@ -4,6 +4,7 @@
 1. Đọc `docs/AI_CONTEXT.md`, `docs/ARCHITECTURE.md`, `docs/CODING_RULES.md` và prompt hiện tại.
 2. Kiểm tra `git status`, đọc code liên quan; giữ lại module đang hoạt động.
 3. Nêu ngắn gọn file sẽ sửa, cách kiểm tra và rủi ro dữ liệu.
+4. Việc GitHub CI/CD/VPS: đọc thêm `docs/context_deploy.md` và `DEPLOY_GUIDES.md` để giữ đúng state, backup và rollback hiện có.
 
 ## Luồng prompt
 1. Mỗi việc có một file `NNN-ten-viec.md`, theo `prompts/TEMPLATE.md`.

@@ -1,25 +1,323 @@
-name: Deploy production
+name: Production CI/CD
+
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
+
 concurrency:
   group: pkh-production
   cancel-in-progress: false
+
 jobs:
-  verify:
+  changes:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.detect.outputs.deploy }}
+      backend: ${{ steps.detect.outputs.backend }}
+      web: ${{ steps.detect.outputs.web }}
+      matrix: ${{ steps.detect.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: detect
+        name: Select affected images
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          backend=false
+          web=false
+          if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch || \
+                "$BEFORE_SHA" == 0000000000000000000000000000000000000000 ]] || \
+             ! git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
+            backend=true
+            web=true
+          else
+            while IFS= read -r path; do
+              case "$path" in
+                backend/*) backend=true ;;
+                frontend/*|nginx/*) web=true ;;
+                docker-compose.yml|docker-compose.prod.yml|.dockerignore|scripts/deploy.sh|.github/workflows/deploy.yml)
+                  backend=true; web=true ;;
+              esac
+            done < <(git diff --name-only "$BEFORE_SHA" "$GITHUB_SHA")
+          fi
+          services=()
+          [[ "$backend" == false ]] || services+=(backend)
+          [[ "$web" == false ]] || services+=(web)
+          if (( ${#services[@]} )); then
+            deploy=true
+            matrix="$(printf '%s\n' "${services[@]}" | jq -R . | jq -sc .)"
+          else
+            deploy=false
+            matrix='[]'
+          fi
+          {
+            echo "deploy=$deploy"
+            echo "backend=$backend"
+            echo "web=$web"
+            echo "matrix=$matrix"
+          } >> "$GITHUB_OUTPUT"
+
+  validate:
+    needs: changes
+    if: needs.changes.outputs.deploy == 'true'
     uses: ./.github/workflows/ci.yml
-  deploy:
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    needs: verify
-    environment: production
-    runs-on: [self-hosted, linux, x64, pkh-production]
-    timeout-minutes: 25
+
+  build-images:
+    needs: [changes, validate]
+    if: needs.changes.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJSON(needs.changes.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Deploy verified commit
+      - name: Build verified source into an image artifact
         env:
-          PKH_DEPLOY_ROOT: ${{ vars.PKH_DEPLOY_ROOT }}
-        run: bash scripts/deploy.sh
+          SERVICE: ${{ matrix.service }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          case "$SERVICE" in
+            backend) docker build --pull -f backend/Dockerfile -t "pkh-backend:$GITHUB_SHA" backend ;;
+            web) docker build --pull -f nginx/Dockerfile -t "pkh-web:$GITHUB_SHA" . ;;
+            *) exit 1 ;;
+          esac
+          docker save "pkh-$SERVICE:$GITHUB_SHA" | gzip -1 > "$RUNNER_TEMP/$SERVICE.tar.gz"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: image-${{ matrix.service }}
+          path: ${{ runner.temp }}/${{ matrix.service }}.tar.gz
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
+  push-images:
+    needs: [changes, build-images]
+    if: needs.changes.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJSON(needs.changes.outputs.matrix) }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: image-${{ matrix.service }}
+          path: ${{ runner.temp }}
+      - name: Publish immutable SHA image
+        env:
+          SERVICE: ${{ matrix.service }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUB_ENABLED: ${{ vars.PUBLISH_DOCKERHUB }}
+          HUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+          HUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          HUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          gunzip -c "$RUNNER_TEMP/$SERVICE.tar.gz" | docker load
+          repo="${GITHUB_REPOSITORY,,}"
+          ghcr="ghcr.io/$repo/$SERVICE:$GITHUB_SHA"
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          if docker manifest inspect "$ghcr" >/dev/null 2>&1; then
+            docker pull "$ghcr"
+          else
+            docker tag "pkh-$SERVICE:$GITHUB_SHA" "$ghcr"
+            docker push "$ghcr"
+          fi
+          if [[ "$HUB_ENABLED" == true ]]; then
+            [[ "$HUB_NAMESPACE" =~ ^[a-z0-9_-]+$ && -n "$HUB_USER" && -n "$HUB_TOKEN" ]] || {
+              echo 'Docker Hub publishing is enabled but credentials/namespace are missing'; exit 1;
+            }
+            name="${repo#*/}"
+            hub="docker.io/$HUB_NAMESPACE/$name-$SERVICE:$GITHUB_SHA"
+            printf '%s' "$HUB_TOKEN" | docker login docker.io -u "$HUB_USER" --password-stdin
+            docker tag "$ghcr" "$hub"
+            docker push "$hub"
+          fi
+
+  deploy:
+    needs: [changes, validate, build-images, push-images]
+    if: needs.changes.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Configure pinned SSH identity
+        env:
+          DEPLOY_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VPS_SSH_KNOWN_HOSTS }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ -n "$DEPLOY_KEY" && -n "$KNOWN_HOSTS" ]] || exit 1
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"
+      - name: Transfer release and apply on VPS
+        env:
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          VPS_USER: ${{ vars.VPS_USER }}
+          VPS_PORT: ${{ vars.VPS_PORT }}
+          DEPLOY_ROOT: ${{ vars.VPS_DEPLOY_ROOT }}
+          DEPLOY_REGISTRY: ${{ vars.DEPLOY_REGISTRY }}
+          HUB_ENABLED: ${{ vars.PUBLISH_DOCKERHUB }}
+          HUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+          BUILD_BACKEND: ${{ needs.changes.outputs.backend }}
+          BUILD_WEB: ${{ needs.changes.outputs.web }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          root="${DEPLOY_ROOT:-/srv/pkh}"
+          port="${VPS_PORT:-22}"
+          [[ "$root" =~ ^/[A-Za-z0-9/_-]+$ && "$root" != / ]] || exit 1
+          [[ "$VPS_HOST" =~ ^[A-Za-z0-9.-]+$ && "$VPS_USER" =~ ^[a-z_][a-z0-9_-]*$ ]] || exit 1
+          [[ "$port" =~ ^[0-9]+$ ]] && (( port >= 1 && port <= 65535 )) || exit 1
+          repo="${GITHUB_REPOSITORY,,}"
+          case "${DEPLOY_REGISTRY:-ghcr}" in
+            ghcr) prefix="ghcr.io/$repo/"; suffix='' ;;
+            dockerhub)
+              [[ "$HUB_ENABLED" == true && "$HUB_NAMESPACE" =~ ^[a-z0-9_-]+$ ]] || exit 1
+              prefix="docker.io/$HUB_NAMESPACE/${repo#*/}-"; suffix='' ;;
+            *) echo 'DEPLOY_REGISTRY must be ghcr or dockerhub'; exit 1 ;;
+          esac
+          backend_image='-'
+          web_image='-'
+          [[ "$BUILD_BACKEND" != true ]] || backend_image="${prefix}backend:$GITHUB_SHA"
+          [[ "$BUILD_WEB" != true ]] || web_image="${prefix}web:$GITHUB_SHA"
+          remote="$VPS_USER@$VPS_HOST"
+          release="$root/releases/$GITHUB_SHA"
+          ssh_options=(-i "$HOME/.ssh/id_ed25519" -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/known_hosts")
+          tar -czf "$RUNNER_TEMP/release.tar.gz" docker-compose.prod.yml scripts/deploy.sh
+          ssh "${ssh_options[@]}" -p "$port" "$remote" "mkdir -p '$release'"
+          scp "${ssh_options[@]}" -P "$port" "$RUNNER_TEMP/release.tar.gz" "$remote:$release/release.tar.gz"
+          ssh "${ssh_options[@]}" -p "$port" "$remote" \
+            "tar -xzf '$release/release.tar.gz' -C '$release' && rm -f '$release/release.tar.gz' && bash '$release/scripts/deploy.sh' apply '$root' '$GITHUB_SHA' '$backend_image' '$web_image'"
+
+  verify:
+    needs: [changes, deploy]
+    if: needs.changes.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Configure pinned SSH identity
+        env:
+          DEPLOY_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VPS_SSH_KNOWN_HOSTS }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ -n "$DEPLOY_KEY" && -n "$KNOWN_HOSTS" ]] || exit 1
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"
+      - name: Check services, HTTPS and promote release
+        env:
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          VPS_USER: ${{ vars.VPS_USER }}
+          VPS_PORT: ${{ vars.VPS_PORT }}
+          DEPLOY_ROOT: ${{ vars.VPS_DEPLOY_ROOT }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          root="${DEPLOY_ROOT:-/srv/pkh}"
+          port="${VPS_PORT:-22}"
+          [[ "$root" =~ ^/[A-Za-z0-9/_-]+$ && "$root" != / ]] || exit 1
+          [[ "$VPS_HOST" =~ ^[A-Za-z0-9.-]+$ && "$VPS_USER" =~ ^[a-z_][a-z0-9_-]*$ ]] || exit 1
+          [[ "$port" =~ ^[0-9]+$ ]] && (( port >= 1 && port <= 65535 )) || exit 1
+          ssh -i "$HOME/.ssh/id_ed25519" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -p "$port" "$VPS_USER@$VPS_HOST" \
+            "bash '$root/releases/$GITHUB_SHA/scripts/deploy.sh' verify '$root' '$GITHUB_SHA'"
+
+  rollback:
+    needs: [changes, deploy, verify]
+    if: ${{ always() && needs.changes.outputs.deploy == 'true' && (needs.deploy.result == 'failure' || needs.verify.result == 'failure') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Restore previous application images when pending
+        env:
+          DEPLOY_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VPS_SSH_KNOWN_HOSTS }}
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          VPS_USER: ${{ vars.VPS_USER }}
+          VPS_PORT: ${{ vars.VPS_PORT }}
+          DEPLOY_ROOT: ${{ vars.VPS_DEPLOY_ROOT }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          root="${DEPLOY_ROOT:-/srv/pkh}"
+          port="${VPS_PORT:-22}"
+          [[ "$root" =~ ^/[A-Za-z0-9/_-]+$ && "$root" != / ]] || exit 1
+          [[ "$VPS_HOST" =~ ^[A-Za-z0-9.-]+$ && "$VPS_USER" =~ ^[a-z_][a-z0-9_-]*$ ]] || exit 1
+          [[ "$port" =~ ^[0-9]+$ ]] && (( port >= 1 && port <= 65535 )) || exit 1
+          [[ -n "$DEPLOY_KEY" && -n "$KNOWN_HOSTS" ]] || exit 1
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"
+          ssh -i "$HOME/.ssh/id_ed25519" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -p "$port" "$VPS_USER@$VPS_HOST" \
+            "bash -s -- rollback '$root' '$GITHUB_SHA'" < scripts/deploy.sh
+
+  promote-tags:
+    needs: [changes, verify]
+    if: needs.changes.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJSON(needs.changes.outputs.matrix) }}
+    steps:
+      - name: Move production alias only after verified deployment
+        env:
+          SERVICE: ${{ matrix.service }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUB_ENABLED: ${{ vars.PUBLISH_DOCKERHUB }}
+          HUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+          HUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          HUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          repo="${GITHUB_REPOSITORY,,}"
+          ghcr="ghcr.io/$repo/$SERVICE"
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker pull "$ghcr:$GITHUB_SHA"
+          docker tag "$ghcr:$GITHUB_SHA" "$ghcr:production"
+          docker push "$ghcr:production"
+          if [[ "$HUB_ENABLED" == true ]]; then
+            [[ "$HUB_NAMESPACE" =~ ^[a-z0-9_-]+$ && -n "$HUB_USER" && -n "$HUB_TOKEN" ]] || exit 1
+            hub="docker.io/$HUB_NAMESPACE/${repo#*/}-$SERVICE"
+            printf '%s' "$HUB_TOKEN" | docker login docker.io -u "$HUB_USER" --password-stdin
+            docker pull "$hub:$GITHUB_SHA"
+            docker tag "$hub:$GITHUB_SHA" "$hub:production"
+            docker push "$hub:production"
+          fi
