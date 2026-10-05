@@ -25,13 +25,13 @@ export default function VerifyEmail() {
   };
   return <AuthLayout title="Xác thực email" subtitle="Nhập mã đã gửi đến email của bạn để kích hoạt tài khoản.">
     <form onSubmit={submit} className="flex flex-col gap-4">
-      <label className="text-sm">Email<input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 w-full rounded-card border border-line p-2" /></label>
-      <label className="text-sm">Mã xác thực<input inputMode="numeric" autoComplete="one-time-code" minLength={6} maxLength={8} required value={code} onChange={(e) => setCode(e.target.value)} className="mt-1 w-full rounded-card border border-line p-2" /></label>
-      {error && <p role="alert" className="text-sm text-brick">{error}</p>}
+      <label className="text-sm">Email<input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 w-full rounded-card border border-border p-2" /></label>
+      <label className="text-sm">Mã xác thực<input inputMode="numeric" autoComplete="one-time-code" minLength={6} maxLength={8} required value={code} onChange={(e) => setCode(e.target.value)} className="mt-1 w-full rounded-card border border-border p-2" /></label>
+      {error && <p role="alert" className="text-sm text-danger">{error}</p>}
       {status && <p role="status" className="text-sm text-success">{status}</p>}
       <Button type="submit" loading={busy}>Xác thực</Button>
       <Button type="button" variant="secondary" disabled={busy || !email} onClick={resend}>Gửi lại mã</Button>
     </form>
-    <p className="mt-5 text-center text-sm"><Link to="/login" className="text-gold-deep hover:underline">Đến trang đăng nhập</Link></p>
+    <p className="mt-5 text-center text-sm"><Link to="/login" className="text-primary-hover hover:underline">Đến trang đăng nhập</Link></p>
   </AuthLayout>;
 }

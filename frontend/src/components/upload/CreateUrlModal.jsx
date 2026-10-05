@@ -62,8 +62,8 @@ export default function CreateUrlModal({ open, onClose, defaultFolder = null }) 
         <Textarea label="Mô tả (tùy chọn)" rows={2} {...register('description')} error={errors.description?.message} />
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-ink">Thư mục</label>
-          <select {...register('folder')} className="w-full rounded-card border border-line bg-paper-card px-3.5 py-2.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold">
+          <label className="text-sm font-medium text-text-primary">Thư mục</label>
+          <select {...register('folder')} className="w-full rounded-card border border-border bg-surface px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
             <option value="">— Không có thư mục (gốc) —</option>
             {folderOptions.map((opt) => (
               <option key={opt.id} value={opt.id}>
@@ -74,8 +74,8 @@ export default function CreateUrlModal({ open, onClose, defaultFolder = null }) 
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-ink">Thẻ</label>
-          <div className="flex flex-wrap items-center gap-1.5 rounded-card border border-line bg-paper-card px-2.5 py-2">
+          <label className="text-sm font-medium text-text-primary">Thẻ</label>
+          <div className="flex flex-wrap items-center gap-1.5 rounded-card border border-border bg-surface px-2.5 py-2">
             {tags.map((t) => (
               <TagChip key={t} name={t} onRemove={() => setTags(tags.filter((x) => x !== t))} />
             ))}

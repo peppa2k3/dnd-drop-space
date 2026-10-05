@@ -27,12 +27,12 @@ export default function AdminCollaboration() {
     <div className="flex flex-wrap gap-2">{Object.entries(LABELS).map(([name, label]) =>
       <Button key={name} size="sm" variant={kind === name ? 'primary' : 'secondary'} onClick={() => { setKind(name); setPage(1); }}>{label}</Button>)}</div>
     {data.isLoading && <p>Đang tải...</p>}
-    {data.isError && <p role="alert" className="text-brick">Không thể tải dữ liệu quản trị.</p>}
-    {data.data?.rows.length === 0 && <p className="text-sm text-slate">Không có dữ liệu.</p>}
+    {data.isError && <p role="alert" className="text-danger">Không thể tải dữ liệu quản trị.</p>}
+    {data.data?.rows.length === 0 && <p className="text-sm text-text-secondary">Không có dữ liệu.</p>}
     {data.data?.rows.map((row) => <article key={row._id || row.id} className="catalog-card flex flex-col gap-2 p-4 text-sm">
-      {kind === 'friends' && <><p>{row.users?.join(' ↔ ')} · {row.status}</p><p className="text-xs text-slate">Người mời: {row.requester}</p></>}
-      {kind === 'groups' && <><p className="font-semibold">{row.name} · {row.members?.length} thành viên</p><p className="break-all text-xs text-slate">Chủ nhóm: {row.owner} · ID: {row._id}</p>
-        {row.members?.map((member) => <div key={member.user} className="flex flex-wrap items-center gap-2 border-t border-line py-1 text-xs">
+      {kind === 'friends' && <><p>{row.users?.join(' ↔ ')} · {row.status}</p><p className="text-xs text-text-secondary">Người mời: {row.requester}</p></>}
+      {kind === 'groups' && <><p className="font-semibold">{row.name} · {row.members?.length} thành viên</p><p className="break-all text-xs text-text-secondary">Chủ nhóm: {row.owner} · ID: {row._id}</p>
+        {row.members?.map((member) => <div key={member.user} className="flex flex-wrap items-center gap-2 border-t border-border py-1 text-xs">
           <span className="grow">{member.user} · {member.role}</span>
           {member.role !== 'OWNER' && <><Button size="sm" variant="secondary" onClick={() => perform('member', row._id, member.user, member.role === 'ADMIN' ? 'MEMBER' : 'ADMIN')}>{member.role === 'ADMIN' ? 'Gỡ admin' : 'Gán admin'}</Button>
             <Button size="sm" variant="danger" onClick={() => perform('member', row._id, member.user, null)}>Xóa thành viên</Button></>}
@@ -40,7 +40,7 @@ export default function AdminCollaboration() {
         <Button size="sm" variant="secondary" onClick={() => perform('updateGroup', row._id, { discoverable: !row.discoverable })}>{row.discoverable ? 'Ẩn nhóm khỏi tìm kiếm' : 'Cho tìm kiếm nhóm'}</Button>
       </>}
       {kind === 'shares' && <><p>{row.item?.title || 'Tệp đã xóa'} · {row.targetType}: {row.targetId}</p>
-        <p className="text-xs text-slate">Chủ sở hữu: {row.owner} · Xem {row.canView ? 'có' : 'không'} · Tải {row.canDownload ? 'có' : 'không'} · Chia sẻ tiếp {row.canReshare ? 'có' : 'không'}</p></>}
+        <p className="text-xs text-text-secondary">Chủ sở hữu: {row.owner} · Xem {row.canView ? 'có' : 'không'} · Tải {row.canDownload ? 'có' : 'không'} · Chia sẻ tiếp {row.canReshare ? 'có' : 'không'}</p></>}
       <Button size="sm" variant="danger" disabled={mutation.isPending} onClick={() => remove(row._id || row.id)}>{kind === 'groups' ? 'Xóa nhóm' : 'Thu hồi'}</Button>
     </article>)}
     <div className="flex items-center gap-3"><Button size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>Trước</Button>

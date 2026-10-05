@@ -2,12 +2,11 @@ import clsx from 'clsx';
 import { Loader2 } from 'lucide-react';
 
 const VARIANTS = {
-  primary: 'bg-gold text-primary-contrast hover:bg-gold-deep active:brightness-90',
-  gold: 'bg-gold-soft text-gold-deep border border-gold/35 hover:bg-gold/25 active:bg-gold/35',
-  secondary: 'bg-paper-card text-ink border border-line hover:border-gold/65 hover:bg-paper-dim active:bg-gold-soft',
-  ghost: 'bg-transparent text-slate hover:text-ink hover:bg-paper-dim',
-  danger: 'bg-transparent text-brick border border-brick/40 hover:bg-brick-soft',
-  dangerSolid: 'bg-brick text-paper-card hover:bg-brick/90',
+  primary: 'bg-primary text-primary-contrast hover:bg-primary-hover active:brightness-90',
+  secondary: 'bg-surface text-text-primary border border-border hover:border-primary/65 hover:bg-background-secondary active:bg-primary/10',
+  ghost: 'bg-transparent text-text-secondary hover:text-text-primary hover:bg-background-secondary',
+  danger: 'bg-transparent text-danger border border-danger/40 hover:bg-danger/10',
+  dangerSolid: 'bg-danger text-primary-contrast hover:bg-danger/90',
 };
 
 const SIZES = {

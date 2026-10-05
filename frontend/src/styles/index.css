@@ -3,62 +3,66 @@
 @tailwind utilities;
 
 :root {
-  --ink: 233 243 251;
-  --ink-soft: 205 222 233;
-  --ink-light: 172 198 214;
-  --paper: 7 11 20;
-  --paper-dim: 11 19 32;
-  --paper-card: 16 24 39;
-  --line: 49 69 86;
-  --slate: 171 193 207;
-  --slate-light: 141 168 185;
-  --gold: 0 217 255;
-  --gold-deep: 85 231 255;
-  --gold-soft: 13 54 70;
+  --background: 7 8 20;
+  --background-secondary: 11 19 32;
+  --surface: 16 24 39;
+  --surface-hover: 24 40 59;
+  --primary: 0 217 255;
+  --primary-hover: 85 231 255;
+  --primary-contrast: 7 16 24;
   --secondary: 99 102 241;
   --accent: 34 211 238;
-  --brick: 255 138 138;
-  --brick-soft: 65 30 41;
-  --success: 103 232 177;
-  --sidebar: 7 16 30;
-  --sidebar-text: 237 249 255;
-  --sidebar-muted: 178 201 214;
-  --sidebar-hover: 18 37 53;
-  --sidebar-active: 19 56 74;
+  --text-primary: 233 243 251;
+  --text-secondary: 197 222 233;
+  --text-muted: 171 198 214;
+  --border: 49 69 86;
+  --border-hover: 85 116 138;
+  --success: 34 197 94;
+  --warning: 245 158 11;
+  --danger: 239 68 68;
+  --glow: 0 217 255;
   --overlay: 0 4 12;
+  --overlay-contrast: 255 255 255;
   --shadow-color: 0 0 0;
-  --primary-contrast: 4 17 24;
+  --glow-opacity: 0.25;
   color-scheme: dark;
 }
 
+:root[data-mode='light'] { --glow-opacity: 0.11; }
+
 @layer base {
   html { scroll-behavior: smooth; }
-  body { @apply bg-paper text-ink font-sans antialiased; }
-  ::selection { background: rgb(var(--gold-soft)); color: rgb(var(--ink)); }
-  * { scrollbar-width: thin; scrollbar-color: rgb(var(--line)) transparent; }
+  body { @apply bg-background text-text-primary font-sans antialiased; }
+  ::selection { background: rgb(var(--primary) / 0.24); color: rgb(var(--text-primary)); }
+  * { scrollbar-width: thin; scrollbar-color: rgb(var(--border)) transparent; }
   *::-webkit-scrollbar { width: 8px; height: 8px; }
-  *::-webkit-scrollbar-thumb { background: rgb(var(--line)); border-radius: 999px; }
+  *::-webkit-scrollbar-thumb { background: rgb(var(--border)); border-radius: 999px; }
   *::-webkit-scrollbar-track { background: transparent; }
-  :focus-visible { outline: 2px solid rgb(var(--gold)); outline-offset: 2px; }
-  input, textarea, select { @apply bg-paper-card text-ink; }
+  :focus-visible { outline: 2px solid rgb(var(--primary)); outline-offset: 2px; }
+  input, textarea, select { @apply bg-surface text-text-primary; }
+  :disabled { cursor: not-allowed; }
 }
 
 @layer components {
   .catalog-card {
-    @apply relative rounded-card border border-line bg-paper-card/90;
+    @apply relative rounded-card border border-border bg-surface/95;
     box-shadow: 0 8px 28px rgb(var(--shadow-color) / 0.11);
     backdrop-filter: blur(12px);
-    transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+    transition: transform 200ms ease, background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
   }
   .catalog-card:hover {
     transform: translateY(-2px);
-    border-color: rgb(var(--gold) / 0.48);
-    box-shadow: 0 0 0 1px rgb(var(--gold) / 0.12), 0 16px 36px rgb(var(--shadow-color) / 0.22);
+    background-color: rgb(var(--surface-hover));
+    border-color: rgb(var(--primary) / 0.48);
+    box-shadow: 0 0 0 1px rgb(var(--primary) / 0.12), 0 16px 36px rgb(var(--shadow-color) / 0.22);
   }
-  .catalog-card:focus-within { border-color: rgb(var(--gold) / 0.7); }
+  .catalog-card:focus-within { border-color: rgb(var(--primary) / 0.7); }
   .auth-orbit {
-    background-image: radial-gradient(circle, rgb(var(--sidebar-text) / 0.16) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgb(var(--primary) / 0.14) 1px, transparent 1px);
     background-size: 24px 24px;
+  }
+  .brand-mark {
+    background: linear-gradient(135deg, rgb(var(--primary) / 0.2), rgb(var(--secondary) / 0.2));
   }
   .status-led {
     @apply inline-block h-2 w-2 rounded-full bg-success;
@@ -71,20 +75,20 @@
   50% { opacity: 0.55; box-shadow: 0 0 3px rgb(var(--success) / 0.45); }
 }
 
-.note-prose { @apply text-ink leading-relaxed; }
-.note-prose h1, .note-prose h2, .note-prose h3 { @apply font-display font-semibold text-ink mt-5 mb-2; }
+.note-prose { @apply text-text-primary leading-relaxed; }
+.note-prose h1, .note-prose h2, .note-prose h3 { @apply font-display font-semibold text-text-primary mt-5 mb-2; }
 .note-prose h1 { @apply text-2xl; }
 .note-prose h2 { @apply text-xl; }
 .note-prose h3 { @apply text-lg; }
 .note-prose p { @apply mb-3; }
 .note-prose ul { @apply list-disc pl-5 mb-3; }
 .note-prose ol { @apply list-decimal pl-5 mb-3; }
-.note-prose a { @apply text-gold-deep underline underline-offset-2; }
-.note-prose code { @apply font-mono text-sm bg-paper-dim px-1 py-0.5 rounded; }
-.note-prose pre { @apply font-mono text-sm bg-paper-dim border border-line p-3 rounded-card overflow-x-auto mb-3; }
+.note-prose a { @apply text-primary-hover underline underline-offset-2; }
+.note-prose code { @apply font-mono text-sm bg-background-secondary px-1 py-0.5 rounded; }
+.note-prose pre { @apply font-mono text-sm bg-background-secondary border border-border p-3 rounded-card overflow-x-auto mb-3; }
 .note-prose pre code { @apply bg-transparent p-0; }
-.note-prose blockquote { @apply border-l-2 border-gold pl-3 italic text-slate mb-3; }
-.note-prose input[type='checkbox'] { @apply accent-gold-deep mr-2; }
+.note-prose blockquote { @apply border-l-2 border-primary pl-3 italic text-text-secondary mb-3; }
+.note-prose input[type='checkbox'] { @apply accent-primary mr-2; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

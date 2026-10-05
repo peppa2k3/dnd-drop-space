@@ -12,7 +12,7 @@ import { useToast } from '../../context/ToastContext';
 import { useDashboardStats } from '../../hooks/useDashboard';
 import ThemeQuickSwitch from '../theme/ThemeQuickSwitch';
 
-export default function Topbar({ onOpenMobileSidebar }) {
+export default function Topbar({ mobileSidebarOpen, onOpenMobileSidebar }) {
   const [search, setSearch] = useState('');
   const [uploadOpen, setUploadOpen] = useState(false);
   const [urlModalOpen, setUrlModalOpen] = useState(false);
@@ -38,16 +38,16 @@ export default function Topbar({ onOpenMobileSidebar }) {
   };
 
   return (
-    <header className="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-line bg-paper/90 px-4 py-3 backdrop-blur-xl sm:flex-nowrap">
-      <IconButton icon={MenuIcon} label="Mở menu" className="lg:hidden" onClick={onOpenMobileSidebar} />
+    <header className="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-border bg-background/90 px-4 py-3 backdrop-blur-xl sm:flex-nowrap">
+      <IconButton icon={MenuIcon} label="Mở menu" className="md:hidden" aria-controls="app-sidebar" aria-expanded={mobileSidebarOpen} onClick={onOpenMobileSidebar} />
 
       <form onSubmit={handleSearchSubmit} className="relative order-2 w-full min-w-0 sm:order-none sm:max-w-md sm:grow">
-        <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-light" />
+        <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Tìm theo tiêu đề, thẻ, thư mục, nội dung..."
-          className="w-full rounded-card border border-line bg-paper-card py-2 pl-9 pr-3 text-sm text-ink placeholder:text-slate-light focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
+          className="w-full rounded-card border border-border bg-surface py-2 pl-9 pr-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
         />
       </form>
 
@@ -55,7 +55,7 @@ export default function Topbar({ onOpenMobileSidebar }) {
         <ThemeQuickSwitch />
         <Menu
           trigger={
-            <Button variant="gold" size="md" disabled={!stats || stats.storageLimitBytes <= 0} title={stats?.storageLimitBytes === 0 ? 'Chưa được cấp dung lượng' : 'Tạo mới'}>
+            <Button variant="primary" size="md" disabled={!stats || stats.storageLimitBytes <= 0} title={stats?.storageLimitBytes === 0 ? 'Chưa được cấp dung lượng' : 'Tạo mới'}>
               <Plus size={15} /> Mới
             </Button>
           }
@@ -68,7 +68,7 @@ export default function Topbar({ onOpenMobileSidebar }) {
 
         <Menu
           trigger={
-            <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-gold text-primary-contrast transition-all duration-200 hover:shadow-glow">
+            <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-contrast transition-all duration-200 hover:shadow-glow">
               <UserIcon size={16} />
             </button>
           }

@@ -41,14 +41,14 @@ export default function UploadDropzone({ onFilesSelected, disabled = false }) {
       onDrop={onDrop}
       onPaste={onPaste}
       className={clsx(
-        'flex flex-col items-center justify-center gap-2 rounded-card border-2 border-dashed px-6 py-10 text-center transition-all duration-200 focus-visible:border-gold',
-        disabled ? 'cursor-not-allowed border-line bg-paper-dim opacity-50' : 'cursor-pointer',
-        isDragging && !disabled ? 'border-gold bg-gold-soft/50 shadow-glow' : 'border-line bg-paper-dim hover:-translate-y-0.5 hover:border-gold/60 hover:bg-gold-soft/25'
+        'flex flex-col items-center justify-center gap-2 rounded-card border-2 border-dashed px-6 py-10 text-center transition-all duration-200 focus-visible:border-primary',
+        disabled ? 'cursor-not-allowed border-border bg-background-secondary opacity-50' : 'cursor-pointer',
+        isDragging && !disabled ? 'border-primary bg-primary/10 shadow-glow' : 'border-border bg-background-secondary hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10'
       )}
     >
-      <UploadCloud size={28} className="text-slate-light" strokeWidth={1.5} />
-      <p className="text-sm font-medium text-ink">Kéo & thả tệp vào đây, dán (Ctrl+V), hoặc bấm để chọn</p>
-      <p className="font-mono text-xs text-slate-light">Hỗ trợ mọi định dạng tệp</p>
+      <UploadCloud size={28} className="text-text-muted" strokeWidth={1.5} />
+      <p className="text-sm font-medium text-text-primary">Kéo & thả tệp vào đây, dán (Ctrl+V), hoặc bấm để chọn</p>
+      <p className="text-xs text-text-muted">Hỗ trợ mọi định dạng tệp</p>
       <input ref={inputRef} type="file" multiple hidden disabled={disabled} onChange={(e) => {
         handleFiles(e.target.files);
         e.target.value = '';

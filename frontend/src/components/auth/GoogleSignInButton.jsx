@@ -49,6 +49,6 @@ export default function GoogleSignInButton({ onCredential }) {
     return () => { active = false; };
   }, []);
   return <div className="flex flex-col items-center gap-2">
-    <div ref={container} />{error && <p role="alert" className="text-sm text-brick">{error}</p>}
+    <div ref={container} />{error && <p role="alert" className="text-sm text-danger">{error}</p>}
   </div>;
 }

@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DND DROP SPACE - Theme Color Showcase</title>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          boxShadow: {
+            'glow-cyan': '0 0 20px -3px rgba(0, 217, 255, 0.45)',
+            'glow-neon': '0 0 20px -3px rgba(0, 255, 178, 0.45)',
+            'glow-purple': '0 0 20px -3px rgba(136, 92, 246, 0.45)',
+            'glow-green': '0 0 20px -3px rgba(57, 255, 136, 0.45)',
+            'glow-ice': '0 0 20px -3px rgba(56, 189, 248, 0.45)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Themes and Visual Fidelity -->
+<style data-purpose="custom-scrollbars">
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #080c14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+  </style>
+<style data-purpose="glow-effects">
+    .card-border-glow-cyan {
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      box-shadow: 0 0 15px -3px rgba(0, 217, 255, 0.25);
+    }
+    .card-border-glow-neon {
+      border: 1px solid rgba(0, 255, 178, 0.4);
+      box-shadow: 0 0 15px -3px rgba(0, 255, 178, 0.3);
+    }
+    .card-border-glow-purple {
+      border: 1px solid rgba(136, 92, 246, 0.4);
+      box-shadow: 0 0 15px -3px rgba(136, 92, 246, 0.3);
+    }
+    .card-border-glow-green {
+      border: 1px solid rgba(57, 255, 136, 0.4);
+      box-shadow: 0 0 15px -3px rgba(57, 255, 136, 0.3);
+    }
+    .card-border-glow-ice {
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 15px -3px rgba(56, 189, 248, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-[#05070e] text-slate-200 font-sans antialiased min-h-screen selection:bg-cyan-500 selection:text-black">
+<!-- BEGIN: MainHeader -->
+<header class="sticky top-0 z-50 bg-[#070913]/90 backdrop-blur-md border-b border-slate-800/80 px-4 lg:px-8 py-3.5 transition-all">
+<div class="max-w-[1720px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+<!-- Brand & Title -->
+<div class="flex items-center gap-3.5">
+<div class="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-600 via-blue-600 to-indigo-500 shadow-lg shadow-cyan-500/20 text-white">
+<!-- Cloud SVG Icon -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute -top-1 -right-1 flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h1 class="text-xl md:text-2xl font-black tracking-tight text-white flex items-center gap-1.5">
+<span>DND</span>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400">DROP SPACE</span>
+</h1>
+<span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase bg-cyan-950/80 text-cyan-300 border border-cyan-800/50 rounded-full">v2.4 Design System</span>
+</div>
+<p class="text-[11px] md:text-xs font-semibold text-slate-400 tracking-wider uppercase">
+            Theme Color Showcase - Giao diện minh họa thực tế
+          </p>
+</div>
+</div>
+<!-- Quick Switcher and Info Tags -->
+<div class="flex items-center flex-wrap gap-2.5">
+<div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-[12px] text-slate-300">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span>5 Theme Color Palette &amp; UI Preview: Hiện đại • Công nghệ • Lưu trữ dữ liệu • Cyber LED • Dark Mode</span>
+</div>
+<div class="flex items-center bg-slate-900/90 p-1 rounded-lg border border-slate-800 text-xs">
+<button class="px-3 py-1 rounded-md font-semibold text-white bg-cyan-600 transition shadow" id="btn-tab-all" onclick="filterThemes('all')">Tất cả (All 5)</button>
+<button class="px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-white transition" id="btn-tab-01" onclick="filterThemes('01')">01. Blue</button>
+<button class="px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-white transition" id="btn-tab-02" onclick="filterThemes('02')">02. Neon</button>
+<button class="px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-white transition" id="btn-tab-03" onclick="filterThemes('03')">03. Purple</button>
+<button class="px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-white transition" id="btn-tab-04" onclick="filterThemes('04')">04. Terminal</button>
+<button class="px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-white transition" id="btn-tab-05" onclick="filterThemes('05')">05. Ice</button>
+</div>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="max-w-[1720px] mx-auto p-4 lg:p-6 space-y-6">
+<!-- Top Grid: Themes 01, 02, 03 -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6" id="grid-top-three">
+<!-- ==============================================
+           THEME 01: CYBER SPACE BLUE (ĐỀ XUẤT / MẶC ĐỊNH)
+           ============================================== -->
+<section class="theme-block flex flex-col rounded-2xl bg-[#080d19] border border-cyan-500/25 p-5 shadow-2xl shadow-cyan-950/20 relative overflow-hidden transition duration-300 hover:border-cyan-400/50" id="theme-card-01">
+<!-- Glow gradient highlight -->
+<div class="absolute -top-24 -left-24 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Header Info -->
+<div class="mb-4">
+<div class="flex items-center justify-between gap-2">
+<h2 class="text-xl font-bold text-cyan-400 tracking-tight flex items-center gap-1.5">
+<span class="text-cyan-500 font-mono text-lg">01.</span> Cyber Space Blue
+            </h2>
+<span class="px-2.5 py-0.5 text-[11px] font-bold uppercase rounded bg-cyan-500 text-slate-950 shadow-sm shadow-cyan-500/50">
+              ĐỀ XUẤT / MẶC ĐỊNH
+            </span>
+</div>
+<p class="text-xs text-slate-400 mt-1">Hiện đại, công nghệ, phù hợp ứng dụng lưu trữ dữ liệu</p>
+<!-- Palette Swatches -->
+<div class="flex items-center justify-between gap-1.5 mt-3 pt-2.5 border-t border-slate-800/80">
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#070814] border border-slate-700 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#070814</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#101827] border border-slate-700 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#101827</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#00D9FF] block shadow-md shadow-cyan-400/40"></span>
+<span class="font-mono text-[9px] text-cyan-300 font-medium mt-1">#00D9FF</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#6366F1] block shadow"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#6366F1</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#22D3EE] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#22D3EE</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#22C55E] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#22C55E</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#F59E0B] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#F59E0B</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#EF4444] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#EF4444</span>
+</div>
+</div>
+</div>
+<!-- Mini App Mockup -->
+<div class="rounded-xl bg-[#080d19] border border-slate-800 overflow-hidden flex flex-col shadow-inner">
+<div class="flex flex-1 min-h-[350px]">
+<!-- Sidebar -->
+<div class="w-36 bg-[#070b14] border-r border-slate-800/80 p-2.5 flex flex-col justify-between text-xs">
+<div class="space-y-3">
+<div class="flex items-center gap-1.5 px-1 py-1 font-bold text-[11px] text-white">
+<svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span class="truncate">DND Drop Space</span>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-cyan-600/20 text-cyan-400 font-semibold border-l-2 border-cyan-400 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Trang chủ</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<span class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Tệp của tôi</span>
+</span>
+<span class="text-[9px]">›</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Đã chia sẻ</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Gần đây</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Yêu thích</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Thùng rác</span>
+</a>
+</nav>
+</div>
+<!-- Storage Progress -->
+<div class="pt-3 border-t border-slate-800">
+<div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+<span>Bộ nhớ</span>
+<span class="text-cyan-400 font-bold">68%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full" style="width: 68%"></div>
+</div>
+<div class="text-[9px] text-slate-500 mt-1 font-mono">68.2 GB / 100 GB</div>
+</div>
+</div>
+<!-- Main Area -->
+<div class="flex-1 p-3 bg-[#0a1120] flex flex-col space-y-3">
+<!-- Top bar search -->
+<div class="flex items-center justify-between gap-2">
+<div class="relative flex-1">
+<span class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-slate-500">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span>
+<input class="w-full bg-[#101b2e] border border-slate-800 rounded-lg pl-7 pr-2 py-1 text-[11px] text-slate-300 placeholder-slate-500 focus:outline-none" placeholder="Tìm kiếm tệp, thư mục..." readonly="" type="text"/>
+</div>
+<button class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-800/80 text-slate-400 text-xs">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<div class="w-6 h-6 rounded-full bg-cyan-600 text-white font-bold text-[10px] flex items-center justify-center ring-2 ring-cyan-400/30">
+                  T
+                </div>
+</div>
+<!-- Upload Zone -->
+<div class="border border-dashed border-cyan-500/50 bg-cyan-950/20 rounded-xl p-3.5 flex flex-col items-center justify-center text-center">
+<div class="w-7 h-7 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 mb-1.5">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<div class="text-[11px] font-semibold text-white">Kéo &amp; thả tệp vào đây</div>
+<div class="text-[9px] text-slate-400 mb-2">Hoặc nhấp để tải lên</div>
+<button class="px-3.5 py-1 text-[11px] font-semibold rounded-md bg-cyan-400 text-slate-950 shadow-sm shadow-cyan-400/40 hover:bg-cyan-300">
+                  Tải lên tệp
+                </button>
+</div>
+<!-- Recent Files -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-[11px] font-semibold text-slate-300">Tệp gần đây</span>
+<a class="text-[10px] text-cyan-400 hover:underline" href="#">Xem tất cả</a>
+</div>
+<div class="space-y-1.5">
+<!-- File item 1 -->
+<div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-[9px]">PDF</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Báo cáo dự án.pdf</p>
+<p class="text-[9px] text-slate-500 mt-0.5">2.4 MB • 5 phút trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<!-- File item 2 -->
+<div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[9px]">PNG</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Hình ảnh sản phẩm.png</p>
+<p class="text-[9px] text-slate-500 mt-0.5">1.2 MB • 1 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<!-- File item 3 -->
+<div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-[9px]">MP4</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Video giới thiệu.mp4</p>
+<p class="text-[9px] text-slate-500 mt-0.5">45.8 MB • 3 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- UI Components Preview -->
+<div class="mt-4 pt-3 border-t border-slate-800/80 space-y-3">
+<div class="text-[11px] font-semibold text-slate-400">Thành phần UI minh họa</div>
+<!-- Buttons -->
+<div class="grid grid-cols-3 gap-2 text-[11px]">
+<button class="py-1.5 px-2 font-semibold rounded-lg bg-cyan-400 text-slate-950 text-center shadow-md shadow-cyan-400/30">Primary Button</button>
+<button class="py-1.5 px-2 font-semibold rounded-lg border border-cyan-400 text-cyan-300 text-center bg-cyan-950/40">Hover</button>
+<button class="py-1.5 px-2 font-medium rounded-lg bg-slate-800/60 text-slate-600 cursor-not-allowed text-center">Disabled</button>
+</div>
+<!-- Cards Preview -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<div>
+<span class="text-[10px] text-slate-400 block mb-1">Thẻ tệp (File Card)</span>
+<div class="p-2 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-rose-500 text-white font-bold text-[8px] flex items-center justify-center">PDF</div>
+<div>
+<div class="text-[10px] font-medium text-slate-200">Tài liệu.pdf</div>
+<div class="text-[8px] text-slate-500">2.4 MB • PDF</div>
+</div>
+</div>
+<span class="text-slate-500 text-xs">⋮</span>
+</div>
+</div>
+<div>
+<span class="text-[10px] text-cyan-400 block mb-1">Hover State</span>
+<div class="p-2 rounded-lg bg-slate-900/90 border border-cyan-400 card-border-glow-cyan flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-rose-500 text-white font-bold text-[8px] flex items-center justify-center">PDF</div>
+<div>
+<div class="text-[10px] font-semibold text-cyan-300">Tài liệu.pdf</div>
+<div class="text-[8px] text-slate-400">2.4 MB • PDF</div>
+</div>
+</div>
+<span class="text-cyan-400 text-xs">⋮</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==============================================
+           THEME 02: NEON STORAGE
+           ============================================== -->
+<section class="theme-block flex flex-col rounded-2xl bg-[#080d0d] border border-emerald-500/25 p-5 shadow-2xl shadow-emerald-950/20 relative overflow-hidden transition duration-300 hover:border-emerald-400/50" id="theme-card-02">
+<!-- Glow gradient highlight -->
+<div class="absolute -top-24 -left-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Header Info -->
+<div class="mb-4">
+<div class="flex items-center justify-between gap-2">
+<h2 class="text-xl font-bold text-[#00FFB2] tracking-tight flex items-center gap-1.5">
+<span class="text-emerald-500 font-mono text-lg">02.</span> Neon Storage
+            </h2>
+</div>
+<p class="text-xs text-slate-400 mt-1">Cyberpunk mạnh mẽ, LED RGB, phù hợp dashboard công nghệ cao</p>
+<!-- Palette Swatches -->
+<div class="flex items-center justify-between gap-1.5 mt-3 pt-2.5 border-t border-slate-800/80">
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#050505] border border-slate-800 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#050505</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#101419] border border-slate-800 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#101419</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#00FFB2] block shadow-md shadow-emerald-400/40"></span>
+<span class="font-mono text-[9px] text-[#00FFB2] font-medium mt-1">#00FFB2</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#00B8FF] block shadow"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#00B8FF</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#A855F7] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#A855F7</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#00E676] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#00E676</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#FFD600] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#FFD600</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#FF3D71] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#FF3D71</span>
+</div>
+</div>
+</div>
+<!-- Mini App Mockup -->
+<div class="rounded-xl bg-[#091010] border border-slate-800 overflow-hidden flex flex-col shadow-inner">
+<div class="flex flex-1 min-h-[350px]">
+<!-- Sidebar -->
+<div class="w-36 bg-[#060b0a] border-r border-slate-800/80 p-2.5 flex flex-col justify-between text-xs">
+<div class="space-y-3">
+<div class="flex items-center gap-1.5 px-1 py-1 font-bold text-[11px] text-white">
+<svg class="w-4 h-4 text-[#00FFB2]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span class="truncate">DND Drop Space</span>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-emerald-500/20 text-[#00FFB2] font-semibold border-l-2 border-[#00FFB2] text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Trang chủ</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<span class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Tệp của tôi</span>
+</span>
+<span class="text-[9px]">›</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Đã chia sẻ</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Gần đây</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Yêu thích</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Thùng rác</span>
+</a>
+</nav>
+</div>
+<!-- Storage Progress -->
+<div class="pt-3 border-t border-slate-800">
+<div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+<span>Bộ nhớ</span>
+<span class="text-[#00FFB2] font-bold">82%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-emerald-500 to-[#00FFB2] rounded-full" style="width: 82%"></div>
+</div>
+<div class="text-[9px] text-slate-500 mt-1 font-mono">82 GB / 100 GB</div>
+</div>
+</div>
+<!-- Main Area -->
+<div class="flex-1 p-3 bg-[#0a1413] flex flex-col space-y-3">
+<!-- Top bar search -->
+<div class="flex items-center justify-between gap-2">
+<div class="relative flex-1">
+<span class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-slate-500">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span>
+<input class="w-full bg-[#101e1c] border border-slate-800 rounded-lg pl-7 pr-2 py-1 text-[11px] text-slate-300 placeholder-slate-500 focus:outline-none" placeholder="Tìm kiếm tệp, thư mục..." readonly="" type="text"/>
+</div>
+<button class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-800/80 text-slate-400 text-xs">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-black font-bold text-[10px] flex items-center justify-center ring-2 ring-emerald-400/30">
+                  T
+                </div>
+</div>
+<!-- Upload Zone -->
+<div class="border border-dashed border-[#00FFB2]/50 bg-emerald-950/20 rounded-xl p-3.5 flex flex-col items-center justify-center text-center">
+<div class="w-7 h-7 rounded-full bg-emerald-500/10 flex items-center justify-center text-[#00FFB2] mb-1.5">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<div class="text-[11px] font-semibold text-white">Kéo &amp; thả tệp vào đây</div>
+<div class="text-[9px] text-slate-400 mb-2">Hoặc nhấp để tải lên</div>
+<button class="px-3.5 py-1 text-[11px] font-bold rounded-md bg-[#00FFB2] text-slate-950 shadow-sm shadow-[#00FFB2]/40 hover:bg-emerald-300">
+                  Tải lên tệp
+                </button>
+</div>
+<!-- Recent Files -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-[11px] font-semibold text-slate-300">Tệp gần đây</span>
+<a class="text-[10px] text-[#00FFB2] hover:underline" href="#">Xem tất cả</a>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-purple-500/20 text-purple-300 flex items-center justify-center font-bold text-[9px]">FIG</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Thiết kế UI.fig</p>
+<p class="text-[9px] text-slate-500 mt-0.5">12.5 MB • 10 phút trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-amber-500/20 text-amber-300 flex items-center justify-center font-bold text-[9px]">ZIP</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Code source.zip</p>
+<p class="text-[9px] text-slate-500 mt-0.5">8.7 MB • 2 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-pink-500/20 text-pink-300 flex items-center justify-center font-bold text-[9px]">MP3</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Music background.mp3</p>
+<p class="text-[9px] text-slate-500 mt-0.5">4.1 MB • 5 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- UI Components Preview -->
+<div class="mt-4 pt-3 border-t border-slate-800/80 space-y-3">
+<div class="text-[11px] font-semibold text-slate-400">Thành phần UI minh họa</div>
+<!-- Buttons -->
+<div class="grid grid-cols-3 gap-2 text-[11px]">
+<button class="py-1.5 px-2 font-bold rounded-lg bg-[#00FFB2] text-slate-950 text-center shadow-md shadow-[#00FFB2]/30">Primary Button</button>
+<button class="py-1.5 px-2 font-semibold rounded-lg border border-[#00FFB2] text-[#00FFB2] text-center bg-emerald-950/40">Hover</button>
+<button class="py-1.5 px-2 font-medium rounded-lg bg-slate-800/60 text-slate-600 cursor-not-allowed text-center">Disabled</button>
+</div>
+<!-- Cards Preview -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<div>
+<span class="text-[10px] text-slate-400 block mb-1">Thẻ tệp (File Card)</span>
+<div class="p-2 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-purple-600 text-white font-bold text-[8px] flex items-center justify-center">FIG</div>
+<div>
+<div class="text-[10px] font-medium text-slate-200">Thiết kế UI.fig</div>
+<div class="text-[8px] text-slate-500">12.5 MB • FIG</div>
+</div>
+</div>
+<span class="text-slate-500 text-xs">⋮</span>
+</div>
+</div>
+<div>
+<span class="text-[10px] text-[#00FFB2] block mb-1">Hover State</span>
+<div class="p-2 rounded-lg bg-slate-900/90 border border-[#00FFB2] card-border-glow-neon flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-purple-600 text-white font-bold text-[8px] flex items-center justify-center">FIG</div>
+<div>
+<div class="text-[10px] font-semibold text-[#00FFB2]">Thiết kế UI.fig</div>
+<div class="text-[8px] text-slate-400">12.5 MB • FIG</div>
+</div>
+</div>
+<span class="text-[#00FFB2] text-xs">⋮</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==============================================
+           THEME 03: DEEP CLOUD PURPLE
+           ============================================== -->
+<section class="theme-block flex flex-col rounded-2xl bg-[#0d0916] border border-purple-500/25 p-5 shadow-2xl shadow-purple-950/20 relative overflow-hidden transition duration-300 hover:border-purple-400/50" id="theme-card-03">
+<!-- Glow gradient highlight -->
+<div class="absolute -top-24 -left-24 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Header Info -->
+<div class="mb-4">
+<div class="flex items-center justify-between gap-2">
+<h2 class="text-xl font-bold text-[#A855F7] tracking-tight flex items-center gap-1.5">
+<span class="text-purple-400 font-mono text-lg">03.</span> Deep Cloud Purple
+            </h2>
+</div>
+<p class="text-xs text-slate-400 mt-1">SaaS / Cloud Storage hiện đại, mềm mại, phù hợp production</p>
+<!-- Palette Swatches -->
+<div class="flex items-center justify-between gap-1.5 mt-3 pt-2.5 border-t border-slate-800/80">
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#09090F] border border-slate-800 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#09090F</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#151522] border border-slate-800 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#151522</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#885CF6] block shadow-md shadow-purple-500/40"></span>
+<span class="font-mono text-[9px] text-[#A855F7] font-medium mt-1">#885CF6</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#06B6D4] block shadow"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#06B6D4</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#EC4899] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#EC4899</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#10B981] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#10B981</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#F59E0B] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#F59E0B</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#F43F5E] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#F43F5E</span>
+</div>
+</div>
+</div>
+<!-- Mini App Mockup -->
+<div class="rounded-xl bg-[#110e1e] border border-slate-800 overflow-hidden flex flex-col shadow-inner">
+<div class="flex flex-1 min-h-[350px]">
+<!-- Sidebar -->
+<div class="w-36 bg-[#0b0816] border-r border-slate-800/80 p-2.5 flex flex-col justify-between text-xs">
+<div class="space-y-3">
+<div class="flex items-center gap-1.5 px-1 py-1 font-bold text-[11px] text-white">
+<svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span class="truncate">DND Drop Space</span>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-purple-600/20 text-purple-300 font-semibold border-l-2 border-purple-400 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Trang chủ</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<span class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Tệp của tôi</span>
+</span>
+<span class="text-[9px]">›</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Đã chia sẻ</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Gần đây</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Yêu thích</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Thùng rác</span>
+</a>
+</nav>
+</div>
+<!-- Storage Progress -->
+<div class="pt-3 border-t border-slate-800">
+<div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+<span>Bộ nhớ</span>
+<span class="text-[#A855F7] font-bold">46%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-purple-500 to-indigo-400 rounded-full" style="width: 46%"></div>
+</div>
+<div class="text-[9px] text-slate-500 mt-1 font-mono">46 GB / 100 GB</div>
+</div>
+</div>
+<!-- Main Area -->
+<div class="flex-1 p-3 bg-[#130f24] flex flex-col space-y-3">
+<!-- Top bar search -->
+<div class="flex items-center justify-between gap-2">
+<div class="relative flex-1">
+<span class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-slate-500">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span>
+<input class="w-full bg-[#1b1531] border border-slate-800 rounded-lg pl-7 pr-2 py-1 text-[11px] text-slate-300 placeholder-slate-500 focus:outline-none" placeholder="Tìm kiếm tệp, thư mục..." readonly="" type="text"/>
+</div>
+<button class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-800/80 text-slate-400 text-xs">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<div class="w-6 h-6 rounded-full bg-purple-600 text-white font-bold text-[10px] flex items-center justify-center ring-2 ring-purple-400/30">
+                  T
+                </div>
+</div>
+<!-- Upload Zone -->
+<div class="border border-dashed border-[#885CF6]/50 bg-purple-950/20 rounded-xl p-3.5 flex flex-col items-center justify-center text-center">
+<div class="w-7 h-7 rounded-full bg-purple-500/10 flex items-center justify-center text-[#A855F7] mb-1.5">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<div class="text-[11px] font-semibold text-white">Kéo &amp; thả tệp vào đây</div>
+<div class="text-[9px] text-slate-400 mb-2">Hoặc nhấp để tải lên</div>
+<button class="px-3.5 py-1 text-[11px] font-semibold rounded-md bg-[#885CF6] text-white shadow-sm shadow-purple-500/40 hover:bg-purple-500">
+                  Tải lên tệp
+                </button>
+</div>
+<!-- Recent Files -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-[11px] font-semibold text-slate-300">Tệp gần đây</span>
+<a class="text-[10px] text-purple-400 hover:underline" href="#">Xem tất cả</a>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold text-[9px]">PNG</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Hình ảnh banner.png</p>
+<p class="text-[9px] text-slate-500 mt-0.5">3.2 MB • 15 phút trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-[9px]">DOC</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Tài liệu hướng dẫn.docx</p>
+<p class="text-[9px] text-slate-500 mt-0.5">1.1 MB • 1 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[9px]">XLS</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Dữ liệu khách hàng.xlsx</p>
+<p class="text-[9px] text-slate-500 mt-0.5">2.8 MB • 3 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- UI Components Preview -->
+<div class="mt-4 pt-3 border-t border-slate-800/80 space-y-3">
+<div class="text-[11px] font-semibold text-slate-400">Thành phần UI minh họa</div>
+<!-- Buttons -->
+<div class="grid grid-cols-3 gap-2 text-[11px]">
+<button class="py-1.5 px-2 font-semibold rounded-lg bg-[#885CF6] text-white text-center shadow-md shadow-purple-500/30">Primary Button</button>
+<button class="py-1.5 px-2 font-semibold rounded-lg border border-[#885CF6] text-purple-300 text-center bg-purple-950/40">Hover</button>
+<button class="py-1.5 px-2 font-medium rounded-lg bg-slate-800/60 text-slate-600 cursor-not-allowed text-center">Disabled</button>
+</div>
+<!-- Cards Preview -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<div>
+<span class="text-[10px] text-slate-400 block mb-1">Thẻ tệp (File Card)</span>
+<div class="p-2 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-pink-600 text-white font-bold text-[8px] flex items-center justify-center">PNG</div>
+<div>
+<div class="text-[10px] font-medium text-slate-200">Hình ảnh.png</div>
+<div class="text-[8px] text-slate-500">3.2 MB • PNG</div>
+</div>
+</div>
+<span class="text-slate-500 text-xs">⋮</span>
+</div>
+</div>
+<div>
+<span class="text-[10px] text-purple-400 block mb-1">Hover State</span>
+<div class="p-2 rounded-lg bg-slate-900/90 border border-purple-500 card-border-glow-purple flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-pink-600 text-white font-bold text-[8px] flex items-center justify-center">PNG</div>
+<div>
+<div class="text-[10px] font-semibold text-purple-300">Hình ảnh.png</div>
+<div class="text-[8px] text-slate-400">3.2 MB • PNG</div>
+</div>
+</div>
+<span class="text-purple-400 text-xs">⋮</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Bottom Grid: Themes 04, 05 -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="grid-bottom-two">
+<!-- ==============================================
+           THEME 04: SPACE TERMINAL
+           ============================================== -->
+<section class="theme-block flex flex-col rounded-2xl bg-[#030a06] border border-emerald-500/25 p-5 shadow-2xl shadow-emerald-950/20 relative overflow-hidden transition duration-300 hover:border-emerald-400/50" id="theme-card-04">
+<!-- Glow gradient highlight -->
+<div class="absolute -top-24 -left-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Header Info -->
+<div class="mb-4">
+<div class="flex items-center justify-between gap-2">
+<h2 class="text-xl font-bold text-[#39FF88] tracking-tight flex items-center gap-1.5 font-mono">
+<span class="text-emerald-500 text-lg">04.</span> Space Terminal
+            </h2>
+</div>
+<p class="text-xs text-slate-400 mt-1">Server / Terminal / Hacker nhưng vẫn đủ sạch để sử dụng</p>
+<!-- Palette Swatches -->
+<div class="flex items-center justify-start gap-4 mt-3 pt-2.5 border-t border-slate-800/80">
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#020604] border border-slate-800 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#020604</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#09140E] border border-slate-800 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#09140E</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#39FF88] block shadow-md shadow-emerald-400/40"></span>
+<span class="font-mono text-[9px] text-[#39FF88] font-medium mt-1">#39FF88</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#00E5FF] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#00E5FF</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#FFD166] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#FFD166</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#FF4D6D] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#FF4D6D</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#83A58F] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#83A58F</span>
+</div>
+</div>
+</div>
+<!-- Mini App Mockup -->
+<div class="rounded-xl bg-[#06110a] border border-slate-800 overflow-hidden flex flex-col shadow-inner">
+<div class="flex flex-1 min-h-[300px]">
+<!-- Sidebar -->
+<div class="w-40 bg-[#040c07] border-r border-slate-800/80 p-2.5 flex flex-col justify-between text-xs">
+<div class="space-y-3">
+<div class="flex items-center gap-1.5 px-1 py-1 font-bold text-[11px] text-white">
+<svg class="w-4 h-4 text-[#39FF88]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span class="truncate">DND Drop Space</span>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-emerald-500/20 text-[#39FF88] font-semibold border-l-2 border-[#39FF88] text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Trang chủ</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<span class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Tệp của tôi</span>
+</span>
+<span class="text-[9px]">›</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Đã chia sẻ</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Gần đây</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Yêu thích</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Thùng rác</span>
+</a>
+</nav>
+</div>
+<!-- Storage Progress -->
+<div class="pt-3 border-t border-slate-800">
+<div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+<span>Bộ nhớ</span>
+<span class="text-rose-400 font-bold">91%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-rose-500 rounded-full" style="width: 91%"></div>
+</div>
+<div class="text-[9px] text-slate-500 mt-1 font-mono">91 GB / 100 GB</div>
+</div>
+</div>
+<!-- Main Area -->
+<div class="flex-1 p-3 bg-[#08170d] flex flex-col space-y-3">
+<!-- Top bar search -->
+<div class="flex items-center justify-between gap-2">
+<div class="relative flex-1">
+<span class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-slate-500">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span>
+<input class="w-full bg-[#0d2214] border border-slate-800 rounded-lg pl-7 pr-2 py-1 text-[11px] text-slate-300 placeholder-slate-500 focus:outline-none" placeholder="Tìm kiếm tệp, thư mục..." readonly="" type="text"/>
+</div>
+<button class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-800/80 text-slate-400 text-xs">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-black font-bold text-[10px] flex items-center justify-center ring-2 ring-emerald-400/30">
+                  T
+                </div>
+</div>
+<!-- Upload Zone & CTA -->
+<div class="border border-dashed border-[#39FF88]/40 bg-emerald-950/20 rounded-xl p-3 flex items-center justify-between gap-3">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-[#39FF88]">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<div>
+<div class="text-[11px] font-semibold text-white">Kéo &amp; thả tệp vào đây</div>
+<div class="text-[9px] text-slate-400">Hoặc nhấp để tải lên</div>
+</div>
+</div>
+<button class="px-3.5 py-1.5 text-[11px] font-bold rounded-lg bg-[#39FF88] text-slate-950 shadow-sm shadow-[#39FF88]/40 hover:bg-emerald-300">
+                  Tải lên tệp
+                </button>
+</div>
+<!-- Recent Files Grid -->
+<div>
+<span class="text-[11px] font-semibold text-slate-300 block mb-1.5">Tệp gần đây</span>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+<div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-emerald-500/20 text-[#39FF88] flex items-center justify-center font-bold text-[9px]">TXT</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Server log.txt</p>
+<p class="text-[9px] text-slate-500 mt-0.5">546 KB • 5 phút trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-[9px]">ZIP</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Backup.zip</p>
+<p class="text-[9px] text-slate-500 mt-0.5">125 MB • 4 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-[9px]">SQL</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Database.sql</p>
+<p class="text-[9px] text-slate-500 mt-0.5">1.8 MB • 1 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- UI Components Preview -->
+<div class="mt-4 pt-3 border-t border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="w-full md:w-1/2 space-y-2">
+<div class="text-[11px] font-semibold text-slate-400">Thành phần UI minh họa</div>
+<div class="grid grid-cols-3 gap-2 text-[11px]">
+<button class="py-1.5 px-2 font-bold rounded-lg bg-[#39FF88] text-slate-950 text-center shadow-md shadow-[#39FF88]/30">Primary Button</button>
+<button class="py-1.5 px-2 font-semibold rounded-lg border border-[#39FF88] text-[#39FF88] text-center bg-emerald-950/40">Hover</button>
+<button class="py-1.5 px-2 font-medium rounded-lg bg-slate-800/60 text-slate-600 cursor-not-allowed text-center">Disabled</button>
+</div>
+</div>
+<div class="w-full md:w-1/2 flex items-center gap-3">
+<div class="flex-1">
+<span class="text-[10px] text-slate-400 block mb-1">Thẻ tệp (File Card)</span>
+<div class="p-2 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-emerald-600 text-slate-950 font-bold text-[8px] flex items-center justify-center">SQL</div>
+<div>
+<div class="text-[10px] font-medium text-slate-200">Database.sql</div>
+<div class="text-[8px] text-slate-500">1.8 MB • SQL</div>
+</div>
+</div>
+<span class="text-slate-500 text-xs">⋮</span>
+</div>
+</div>
+<div class="flex-1">
+<span class="text-[10px] text-[#39FF88] block mb-1">Hover State</span>
+<div class="p-2 rounded-lg bg-slate-900/90 border border-[#39FF88] card-border-glow-green flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-emerald-600 text-slate-950 font-bold text-[8px] flex items-center justify-center">SQL</div>
+<div>
+<div class="text-[10px] font-semibold text-[#39FF88]">Database.sql</div>
+<div class="text-[8px] text-slate-400">1.8 MB • SQL</div>
+</div>
+</div>
+<span class="text-[#39FF88] text-xs">⋮</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==============================================
+           THEME 05: ICE DATA CENTER
+           ============================================== -->
+<section class="theme-block flex flex-col rounded-2xl bg-[#080f17] border border-sky-500/25 p-5 shadow-2xl shadow-sky-950/20 relative overflow-hidden transition duration-300 hover:border-sky-400/50" id="theme-card-05">
+<!-- Glow gradient highlight -->
+<div class="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Header Info -->
+<div class="mb-4">
+<div class="flex items-center justify-between gap-2">
+<h2 class="text-xl font-bold text-[#38BDF8] tracking-tight flex items-center gap-1.5">
+<span class="text-sky-400 font-mono text-lg">05.</span> Ice Data Center
+            </h2>
+</div>
+<p class="text-xs text-slate-400 mt-1">Data Center, Cloud, AI, tối giản và chuyên nghiệp</p>
+<!-- Palette Swatches -->
+<div class="flex items-center justify-start gap-3.5 mt-3 pt-2.5 border-t border-slate-800/80">
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#071018] border border-slate-800 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#071018</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#10212D] border border-slate-800 block shadow-inner"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#10212D</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#38BDF8] block shadow-md shadow-sky-400/40"></span>
+<span class="font-mono text-[9px] text-[#38BDF8] font-medium mt-1">#38BDF8</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#2DD4BF] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#2DD4BF</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#818CF8] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#818CF8</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#2DD4BF] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#2DD4BF</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#FBBF24] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#FBBF24</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-[#FB7185] block"></span>
+<span class="font-mono text-[9px] text-slate-400 mt-1">#FB7185</span>
+</div>
+</div>
+</div>
+<!-- Mini App Mockup -->
+<div class="rounded-xl bg-[#0b1722] border border-slate-800 overflow-hidden flex flex-col shadow-inner">
+<div class="flex flex-1 min-h-[300px]">
+<!-- Sidebar -->
+<div class="w-40 bg-[#07111a] border-r border-slate-800/80 p-2.5 flex flex-col justify-between text-xs">
+<div class="space-y-3">
+<div class="flex items-center gap-1.5 px-1 py-1 font-bold text-[11px] text-white">
+<svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span class="truncate">DND Drop Space</span>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-sky-500/20 text-sky-400 font-semibold border-l-2 border-sky-400 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Trang chủ</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<span class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Tệp của tôi</span>
+</span>
+<span class="text-[9px]">›</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Đã chia sẻ</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Gần đây</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Yêu thích</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-[11px]" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>Thùng rác</span>
+</a>
+</nav>
+</div>
+<!-- Storage Progress -->
+<div class="pt-3 border-t border-slate-800">
+<div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+<span>Bộ nhớ</span>
+<span class="text-sky-400 font-bold">73%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-teal-500 to-sky-400 rounded-full" style="width: 73%"></div>
+</div>
+<div class="text-[9px] text-slate-500 mt-1 font-mono">73 GB / 100 GB</div>
+</div>
+</div>
+<!-- Main Area -->
+<div class="flex-1 p-3 bg-[#0d1d2b] flex flex-col space-y-3">
+<!-- Top bar search -->
+<div class="flex items-center justify-between gap-2">
+<div class="relative flex-1">
+<span class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-slate-500">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span>
+<input class="w-full bg-[#13283b] border border-slate-800 rounded-lg pl-7 pr-2 py-1 text-[11px] text-slate-300 placeholder-slate-500 focus:outline-none" placeholder="Tìm kiếm tệp, thư mục..." readonly="" type="text"/>
+</div>
+<button class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-800/80 text-slate-400 text-xs">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<div class="w-6 h-6 rounded-full bg-sky-600 text-white font-bold text-[10px] flex items-center justify-center ring-2 ring-sky-400/30">
+                  T
+                </div>
+</div>
+<!-- Upload Zone & CTA -->
+<div class="border border-dashed border-[#38BDF8]/40 bg-sky-950/20 rounded-xl p-3 flex items-center justify-between gap-3">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-sky-500/10 flex items-center justify-center text-[#38BDF8]">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<div>
+<div class="text-[11px] font-semibold text-white">Kéo &amp; thả tệp vào đây</div>
+<div class="text-[9px] text-slate-400">Hoặc nhấp để tải lên</div>
+</div>
+</div>
+<button class="px-3.5 py-1.5 text-[11px] font-bold rounded-lg bg-[#38BDF8] text-slate-950 shadow-sm shadow-[#38BDF8]/40 hover:bg-sky-300">
+                  Tải lên tệp
+                </button>
+</div>
+<!-- Recent Files Grid -->
+<div>
+<span class="text-[11px] font-semibold text-slate-300 block mb-1.5">Tệp gần đây</span>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+<div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-[9px]">AI</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Bản vẽ thiết kế.ai</p>
+<p class="text-[9px] text-slate-500 mt-0.5">8.4 MB • 20 phút trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-[9px]">PDF</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Báo cáo tài chính.pdf</p>
+<p class="text-[9px] text-slate-500 mt-0.5">1.9 MB • 2 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-[9px]">MP4</div>
+<div>
+<p class="text-[11px] font-medium text-slate-200 leading-none">Video họp.mp4</p>
+<p class="text-[9px] text-slate-500 mt-0.5">32.1 MB • 6 giờ trước</p>
+</div>
+</div>
+<button class="text-slate-500 text-xs px-1">⋮</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- UI Components Preview -->
+<div class="mt-4 pt-3 border-t border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="w-full md:w-1/2 space-y-2">
+<div class="text-[11px] font-semibold text-slate-400">Thành phần UI minh họa</div>
+<div class="grid grid-cols-3 gap-2 text-[11px]">
+<button class="py-1.5 px-2 font-bold rounded-lg bg-[#38BDF8] text-slate-950 text-center shadow-md shadow-[#38BDF8]/30">Primary Button</button>
+<button class="py-1.5 px-2 font-semibold rounded-lg border border-[#38BDF8] text-[#38BDF8] text-center bg-sky-950/40">Hover</button>
+<button class="py-1.5 px-2 font-medium rounded-lg bg-slate-800/60 text-slate-600 cursor-not-allowed text-center">Disabled</button>
+</div>
+</div>
+<div class="w-full md:w-1/2 flex items-center gap-3">
+<div class="flex-1">
+<span class="text-[10px] text-slate-400 block mb-1">Thẻ tệp (File Card)</span>
+<div class="p-2 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-amber-600 text-slate-950 font-bold text-[8px] flex items-center justify-center">AI</div>
+<div>
+<div class="text-[10px] font-medium text-slate-200">Bản vẽ thiết kế.ai</div>
+<div class="text-[8px] text-slate-500">8.4 MB • AI</div>
+</div>
+</div>
+<span class="text-slate-500 text-xs">⋮</span>
+</div>
+</div>
+<div class="flex-1">
+<span class="text-[10px] text-[#38BDF8] block mb-1">Hover State</span>
+<div class="p-2 rounded-lg bg-slate-900/90 border border-[#38BDF8] card-border-glow-ice flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-amber-600 text-slate-950 font-bold text-[8px] flex items-center justify-center">AI</div>
+<div>
+<div class="text-[10px] font-semibold text-[#38BDF8]">Bản vẽ thiết kế.ai</div>
+<div class="text-[8px] text-slate-400">8.4 MB • AI</div>
+</div>
+</div>
+<span class="text-[#38BDF8] text-xs">⋮</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: Notification Toast -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition duration-300 pointer-events-none flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-cyan-500/40 text-cyan-300 text-xs shadow-2xl" id="toast">
+<svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span id="toast-text">Mã màu đã được sao chép!</span>
+</div>
+<!-- END: Notification Toast -->
+<!-- BEGIN: Interactive Filter Script -->
+<script data-purpose="theme-filtering">
+    function filterThemes(themeId) {
+      const topGrid = document.getElementById('grid-top-three');
+      const bottomGrid = document.getElementById('grid-bottom-two');
+      const blocks = document.querySelectorAll('.theme-block');
+      const tabButtons = document.querySelectorAll('[id^="btn-tab-"]');
+
+      // Update Tab Button Styles
+      tabButtons.forEach(btn => {
+        btn.classList.remove('bg-cyan-600', 'text-white', 'shadow');
+        btn.classList.add('text-slate-400');
+      });
+      const activeBtn = document.getElementById(`btn-tab-${themeId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400');
+        activeBtn.classList.add('bg-cyan-600', 'text-white', 'shadow');
+      }
+
+      if (themeId === 'all') {
+        topGrid.classList.remove('hidden');
+        bottomGrid.classList.remove('hidden');
+        blocks.forEach(b => b.classList.remove('hidden'));
+        return;
+      }
+
+      // Hide all and show specific
+      blocks.forEach(block => {
+        if (block.id === `theme-card-${themeId}`) {
+          block.classList.remove('hidden');
+        } else {
+          block.classList.add('hidden');
+        }
+      });
+
+      // Show grids if any child visible
+      const topHasVisible = Array.from(topGrid.querySelectorAll('.theme-block')).some(el => !el.classList.contains('hidden'));
+      const botHasVisible = Array.from(bottomGrid.querySelectorAll('.theme-block')).some(el => !el.classList.contains('hidden'));
+
+      topGrid.classList.toggle('hidden', !topHasVisible);
+      bottomGrid.classList.toggle('hidden', !botHasVisible);
+    }
+
+    // Swatch Click to Copy Hex
+    document.addEventListener('DOMContentLoaded', () => {
+      const swatches = document.querySelectorAll('.theme-block .font-mono');
+      swatches.forEach(el => {
+        if (el.textContent.startsWith('#')) {
+          el.parentElement.style.cursor = 'pointer';
+          el.parentElement.title = 'Nhấp để sao chép mã màu';
+          el.parentElement.addEventListener('click', () => {
+            const hex = el.textContent.trim();
+            navigator.clipboard.writeText(hex).then(() => {
+              showToast(`Đã sao chép mã màu: ${hex}`);
+            });
+          });
+        }
+      });
+    });
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toast-text');
+      toastText.textContent = message;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 2200);
+    }
+  </script>
+<!-- END: Interactive Filter Script -->
+</body></html>

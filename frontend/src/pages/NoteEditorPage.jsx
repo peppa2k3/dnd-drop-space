@@ -95,18 +95,18 @@ export default function NoteEditorPage() {
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-4">
       <div className="flex items-center justify-between">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-sm text-slate hover:text-ink">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary">
           <ArrowLeft size={15} /> Quay lại
         </button>
 
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[11px] text-slate-light">
+          <span className="font-mono text-[11px] text-text-muted">
             {saveStatus === 'saving' ? 'Đang lưu...' : saveStatus === 'saved' ? 'Đã lưu' : ''}
           </span>
           <IconButton
             icon={Star}
             label="Yêu thích"
-            variant={item.favorite ? 'gold' : 'default'}
+            variant={item.favorite ? 'accent' : 'default'}
             onClick={() => actions.toggleFavorite(id)}
           />
           <IconButton
@@ -123,7 +123,7 @@ export default function NoteEditorPage() {
         onChange={(e) => setTitle(e.target.value)}
         onBlur={() => saveMeta()}
         placeholder="Tiêu đề ghi chú..."
-        className="w-full bg-transparent font-display text-3xl font-semibold text-ink placeholder:text-slate-light focus:outline-none"
+        className="w-full bg-transparent font-display text-3xl font-semibold text-text-primary placeholder:text-text-muted focus:outline-none"
       />
 
       <div className="flex flex-wrap items-center gap-3">
@@ -133,7 +133,7 @@ export default function NoteEditorPage() {
             setFolder(e.target.value);
             saveMeta({ folder: e.target.value || null });
           }}
-          className="rounded-card border border-line bg-paper-card px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-gold/50"
+          className="rounded-card border border-border bg-surface px-2.5 py-1.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           <option value="">— Không có thư mục (gốc) —</option>
           {folderOptions.map((opt) => (
@@ -157,7 +157,7 @@ export default function NoteEditorPage() {
               }
             }}
             placeholder="Thêm thẻ..."
-            className="w-24 rounded-card border border-line bg-paper-card px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-gold/50"
+            className="w-24 rounded-card border border-border bg-surface px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
         </div>
       </div>
@@ -165,31 +165,31 @@ export default function NoteEditorPage() {
       <div className="flex gap-1 lg:hidden">
         <button
           onClick={() => setMobilePane('edit')}
-          className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs transition-colors duration-200 ${mobilePane === 'edit' ? 'bg-gold-soft text-gold-deep' : 'bg-paper-dim text-slate'}`}
+          className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs transition-colors duration-200 ${mobilePane === 'edit' ? 'bg-primary/10 text-primary-hover' : 'bg-background-secondary text-text-secondary'}`}
         >
           <Pencil size={13} /> Soạn thảo
         </button>
         <button
           onClick={() => setMobilePane('preview')}
-          className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs transition-colors duration-200 ${mobilePane === 'preview' ? 'bg-gold-soft text-gold-deep' : 'bg-paper-dim text-slate'}`}
+          className={`flex items-center gap-1.5 rounded-card px-3 py-1.5 text-xs transition-colors duration-200 ${mobilePane === 'preview' ? 'bg-primary/10 text-primary-hover' : 'bg-background-secondary text-text-secondary'}`}
         >
           <Eye size={13} /> Xem trước
         </button>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className={`overflow-hidden rounded-card border border-line ${mobilePane !== 'edit' ? 'hidden lg:block' : ''}`}>
+        <div className={`overflow-hidden rounded-card border border-border ${mobilePane !== 'edit' ? 'hidden lg:block' : ''}`}>
           <NoteEditorToolbar textareaRef={textareaRef} value={content} onChange={setContent} folderId={folder} />
           <textarea
             ref={textareaRef}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Viết nội dung ghi chú bằng Markdown..."
-            className="h-[60vh] w-full resize-none bg-paper-card p-4 font-mono text-sm text-ink focus:outline-none"
+            className="h-[60vh] w-full resize-none bg-surface p-4 font-sans text-sm text-text-primary focus:outline-none"
           />
         </div>
 
-        <div className={`h-[60vh] overflow-y-auto rounded-card border border-line bg-paper-card p-4 ${mobilePane !== 'preview' ? 'hidden lg:block' : ''}`}>
+        <div className={`h-[60vh] overflow-y-auto rounded-card border border-border bg-surface p-4 ${mobilePane !== 'preview' ? 'hidden lg:block' : ''}`}>
           <NotePreview content={content} />
         </div>
       </div>

@@ -42,22 +42,22 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="font-display text-2xl font-semibold text-ink">Bảng điều khiển</h1>
-        <p className="mt-1 text-sm text-slate">Tổng quan kho lưu trữ dữ liệu cá nhân của bạn.</p>
+        <h1 className="font-display text-2xl font-semibold text-text-primary">Bảng điều khiển</h1>
+        <p className="mt-1 text-sm text-text-secondary">Tổng quan kho lưu trữ dữ liệu cá nhân của bạn.</p>
       </div>
 
       <div className="catalog-card flex flex-wrap items-center gap-3 p-4">
         {user?.avatarUrl && <img src={mediaUrl(user.avatarUrl)} referrerPolicy="no-referrer" alt="Ảnh đại diện" className="h-12 w-12 rounded-full" />}
-        <div className="min-w-0 grow"><p className="font-semibold">{user?.name}</p><p className="break-all text-sm text-slate">{user?.username} · {user?.email}</p></div>
-        <button className="text-sm text-gold-deep underline" onClick={() => navigate('/app/settings')}>Sửa hồ sơ</button>
-        {user?.role === 'admin' && <button className="text-sm text-gold-deep underline" onClick={() => navigate('/app/admin/users')}>Quản trị người dùng</button>}
+        <div className="min-w-0 grow"><p className="font-semibold">{user?.name}</p><p className="break-all text-sm text-text-secondary">{user?.username} · {user?.email}</p></div>
+        <button className="text-sm text-primary-hover underline" onClick={() => navigate('/app/settings')}>Sửa hồ sơ</button>
+        {user?.role === 'admin' && <button className="text-sm text-primary-hover underline" onClick={() => navigate('/app/admin/users')}>Quản trị người dùng</button>}
       </div>
       <div className="catalog-card flex flex-wrap gap-3 p-4 text-sm">
-        <button className="text-gold-deep underline" onClick={() => navigate('/app/friends')}>Bạn bè và lời mời</button>
-        <button className="text-gold-deep underline" onClick={() => navigate('/app/groups')}>Nhóm của tôi</button>
-        <button className="text-gold-deep underline" onClick={() => navigate('/app/shared')}>Tệp được chia sẻ</button>
+        <button className="text-primary-hover underline" onClick={() => navigate('/app/friends')}>Bạn bè và lời mời</button>
+        <button className="text-primary-hover underline" onClick={() => navigate('/app/groups')}>Nhóm của tôi</button>
+        <button className="text-primary-hover underline" onClick={() => navigate('/app/shared')}>Tệp được chia sẻ</button>
       </div>
-      {stats.storageLimitBytes === 0 && <p role="alert" className="rounded-card bg-brick-soft p-3 text-sm text-brick">Chưa được cấp dung lượng. Liên hệ quản trị viên để tạo dữ liệu và tải tệp lên.</p>}
+      {stats.storageLimitBytes === 0 && <p role="alert" className="rounded-card bg-danger/10 p-3 text-sm text-danger">Chưa được cấp dung lượng. Liên hệ quản trị viên để tạo dữ liệu và tải tệp lên.</p>}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {cards.map((card) => (
           <button
@@ -65,18 +65,18 @@ export default function Dashboard() {
             onClick={card.onClick}
             className="catalog-card flex flex-col items-start gap-2 p-4 text-left"
           >
-            <card.icon size={18} className="text-gold-deep" />
-            <span className="font-display text-2xl font-semibold text-ink">{card.value}</span>
-            <span className="font-mono text-[11px] uppercase tracking-wide text-slate-light">{card.label}</span>
+            <card.icon size={18} className="text-primary-hover" />
+            <span className="font-display text-2xl font-semibold text-text-primary">{card.value}</span>
+            <span className="text-xs font-medium text-text-secondary">{card.label}</span>
           </button>
         ))}
       </div>
 
       <div className="catalog-card flex items-center gap-4 p-4 shadow-card">
-        <HardDrive size={20} className="shrink-0 text-gold-deep" />
+        <HardDrive size={20} className="shrink-0 text-primary-hover" />
         <div className="min-w-0 grow">
-          <p className="text-sm font-medium text-ink">Dung lượng đã sử dụng</p>
-          <p className="font-mono text-xs text-slate-light">
+          <p className="text-sm font-medium text-text-primary">Dung lượng đã sử dụng</p>
+          <p className="font-mono text-xs text-text-muted">
             {formatBytes(stats.usedStorageBytes)} / {formatBytes(stats.storageLimitBytes)}
           </p>
         </div>
@@ -84,8 +84,8 @@ export default function Dashboard() {
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-lg font-semibold text-ink">Hoạt động gần đây</h2>
-          <button onClick={() => navigate('/app/library')} className="text-sm text-gold-deep hover:underline">
+          <h2 className="font-display text-lg font-semibold text-text-primary">Hoạt động gần đây</h2>
+          <button onClick={() => navigate('/app/library')} className="text-sm text-primary-hover hover:underline">
             Xem tất cả
           </button>
         </div>

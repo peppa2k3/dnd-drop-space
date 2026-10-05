@@ -7,9 +7,9 @@ const ToastContext = createContext(null);
 
 const ICONS = { success: CheckCircle2, error: XCircle, info: Info };
 const COLORS = {
-  success: 'text-gold-deep',
-  error: 'text-brick',
-  info: 'text-ink',
+  success: 'text-success',
+  error: 'text-danger',
+  info: 'text-text-primary',
 };
 
 export function ToastProvider({ children }) {
@@ -32,17 +32,18 @@ export function ToastProvider({ children }) {
     <ToastContext.Provider value={{ addToast }}>
       {children}
       {createPortal(
-        <div className="fixed bottom-4 right-4 z-[100] flex w-full max-w-sm flex-col gap-2 sm:bottom-6 sm:right-6">
+        <div className="fixed bottom-4 left-4 right-4 z-[100] flex max-w-sm flex-col gap-2 sm:bottom-6 sm:left-auto sm:right-6">
           {toasts.map((t) => {
             const Icon = ICONS[t.type] || Info;
             return (
               <div
                 key={t.id}
-                className="animate-slide-up flex items-start gap-2.5 rounded-card border border-line bg-paper-card px-4 py-3 shadow-popover"
+                role={t.type === 'error' ? 'alert' : 'status'}
+                className="animate-slide-up flex items-start gap-2.5 rounded-card border border-border bg-surface px-4 py-3 shadow-popover"
               >
                 <Icon size={18} className={clsx('mt-0.5 shrink-0', COLORS[t.type])} />
-                <p className="grow text-sm text-ink">{t.message}</p>
-                <button onClick={() => removeToast(t.id)} className="text-slate-light hover:text-ink" aria-label="Đóng thông báo">
+                <p className="grow text-sm text-text-primary">{t.message}</p>
+                <button onClick={() => removeToast(t.id)} className="text-text-muted hover:text-text-primary" aria-label="Đóng thông báo">
                   <X size={14} />
                 </button>
               </div>

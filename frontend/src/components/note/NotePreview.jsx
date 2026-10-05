@@ -4,7 +4,7 @@ import rehypeHighlight from 'rehype-highlight';
 
 export default function NotePreview({ content }) {
   if (!content?.trim()) {
-    return <p className="text-sm italic text-slate-light">Chưa có nội dung để xem trước...</p>;
+    return <p className="text-sm italic text-text-muted">Chưa có nội dung để xem trước...</p>;
   }
 
   return (

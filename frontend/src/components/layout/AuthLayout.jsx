@@ -3,8 +3,8 @@ import ThemeQuickSwitch from '../theme/ThemeQuickSwitch';
 
 export default function AuthLayout({ title, subtitle, children }) {
   return (
-    <div className="flex min-h-screen bg-paper transition-colors duration-200">
-      <div className="relative hidden w-[42%] flex-col justify-between overflow-hidden border-r border-line/40 bg-sidebar p-10 text-sidebar-text lg:flex">
+    <div className="flex min-h-screen bg-background transition-colors duration-200">
+      <div className="relative hidden w-[42%] flex-col justify-between overflow-hidden border-r border-border/40 bg-background-secondary p-10 text-text-primary lg:flex">
         <div className="relative z-10 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <BrandMark />
@@ -14,14 +14,14 @@ export default function AuthLayout({ title, subtitle, children }) {
         </div>
 
         <div className="relative z-10 max-w-sm">
-          <p className="mb-5 font-mono text-xs uppercase tracking-[0.2em] text-gold">YOUR CLOUD, YOUR SPACE</p>
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-primary-hover">YOUR CLOUD, YOUR SPACE</p>
           <p className="font-display text-3xl font-medium leading-snug">
             Mọi ghi chú, liên kết, ảnh và tệp tin — lưu ở một nơi, tìm thấy trong vài giây.
           </p>
-          <p className="mt-4 font-mono text-xs text-sidebar-muted">Kho lưu trữ dữ liệu cá nhân tập trung, truy cập từ mọi thiết bị.</p>
+          <p className="mt-4 text-sm text-text-secondary">Kho lưu trữ dữ liệu cá nhân tập trung, truy cập từ mọi thiết bị.</p>
         </div>
 
-        <p className="relative z-10 font-mono text-[11px] text-sidebar-muted">DND Drop Space</p>
+        <p className="relative z-10 text-xs text-text-muted">DND Drop Space</p>
 
         <div className="auth-orbit pointer-events-none absolute inset-0" />
       </div>
@@ -31,13 +31,13 @@ export default function AuthLayout({ title, subtitle, children }) {
           <div className="mb-8 flex items-center justify-between gap-2 lg:hidden">
             <div className="flex items-center gap-2">
               <BrandMark />
-              <span className="font-display text-lg font-semibold text-ink">DND Drop Space</span>
+              <span className="font-display text-lg font-semibold text-text-primary">DND Drop Space</span>
             </div>
             <ThemeQuickSwitch />
           </div>
 
-          <h1 className="font-display text-2xl font-semibold text-ink">{title}</h1>
-          {subtitle && <p className="mt-1.5 text-sm text-slate">{subtitle}</p>}
+          <h1 className="font-display text-2xl font-semibold text-text-primary">{title}</h1>
+          {subtitle && <p className="mt-1.5 text-sm text-text-secondary">{subtitle}</p>}
 
           <div className="mt-6">{children}</div>
         </div>

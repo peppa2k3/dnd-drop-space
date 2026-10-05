@@ -145,11 +145,11 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
       <div className="flex flex-col gap-4">
         <UploadDropzone onFilesSelected={addFiles} disabled={uploadMutation.isPending || checkingCapacity ||
           (stats && stats.usedStorageBytes >= stats.storageLimitBytes)} />
-        <p className="text-xs text-slate-light" aria-live="polite">
+        <p className="text-xs text-text-muted" aria-live="polite">
           {stats ? `${formatBytes(stats.usedStorageBytes)} / ${formatBytes(stats.storageLimitBytes)} đã dùng; còn ${formatBytes(Math.max(0, stats.storageLimitBytes - stats.usedStorageBytes))}` : 'Đang kiểm tra dung lượng...'}
         </p>
         {(capacityIssue || uploadError || isError) && (
-          <p role="alert" className="rounded-card bg-brick-soft px-3 py-2 text-sm text-brick">
+          <p role="alert" className="rounded-card bg-danger/10 px-3 py-2 text-sm text-danger">
             {isError ? 'Không thể kiểm tra dung lượng lưu trữ. Vui lòng thử lại.' : capacityIssue || uploadError}
           </p>
         )}
@@ -157,22 +157,22 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
         {files.length > 0 && (
           <div className="flex flex-col gap-1.5">
             {files.map((f, i) => (
-              <div key={`${f.file.name}-${i}`} className="flex items-center gap-2.5 rounded-card border border-line bg-paper-dim px-3 py-2">
-                <FileIcon size={15} className="shrink-0 text-slate-light" />
+              <div key={`${f.file.name}-${i}`} className="flex items-center gap-2.5 rounded-card border border-border bg-background-secondary px-3 py-2">
+                <FileIcon size={15} className="shrink-0 text-text-muted" />
                 <div className="min-w-0 grow">
-                  <p className="truncate text-sm text-ink">{f.file.name}</p>
+                  <p className="truncate text-sm text-text-primary">{f.file.name}</p>
                   <div className="flex items-center gap-2">
-                    <div className="h-1 grow overflow-hidden rounded-full bg-line">
+                    <div className="h-1 grow overflow-hidden rounded-full bg-border">
                       <div
-                        className="h-full bg-gold transition-all duration-200"
+                        className="h-full bg-primary transition-all duration-200"
                         style={{ width: `${uploadMutation.isPending ? f.progress : 0}%` }}
                       />
                     </div>
-                    <span className="shrink-0 font-mono text-[10px] text-slate-light">{formatBytes(f.file.size)}</span>
+                    <span className="shrink-0 font-mono text-[10px] text-text-muted">{formatBytes(f.file.size)}</span>
                   </div>
                 </div>
                 {uploadMutation.isPending && f.progress >= 100 ? (
-                  <CheckCircle2 size={15} className="shrink-0 text-gold-deep" />
+                  <CheckCircle2 size={15} className="shrink-0 text-primary-hover" />
                 ) : (
                   !uploadMutation.isPending && (
                     <IconButton icon={X} label="Bỏ tệp" onClick={() => removeFile(i)} />
@@ -185,11 +185,11 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-ink">Thư mục</label>
+            <label className="text-sm font-medium text-text-primary">Thư mục</label>
             <select
               value={folder}
               onChange={(e) => setFolder(e.target.value)}
-              className="w-full rounded-card border border-line bg-paper-card px-3.5 py-2.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
+              className="w-full rounded-card border border-border bg-surface px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
             >
               <option value="">— Không có thư mục (gốc) —</option>
               {folderOptions.map((opt) => (
@@ -201,8 +201,8 @@ export default function UploadModal({ open, onClose, defaultFolder = null }) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-ink">Thẻ</label>
-            <div className="flex flex-wrap items-center gap-1.5 rounded-card border border-line bg-paper-card px-2.5 py-2">
+            <label className="text-sm font-medium text-text-primary">Thẻ</label>
+            <div className="flex flex-wrap items-center gap-1.5 rounded-card border border-border bg-surface px-2.5 py-2">
               {tags.map((t) => (
                 <TagChip key={t} name={t} onRemove={() => setTags(tags.filter((x) => x !== t))} />
               ))}

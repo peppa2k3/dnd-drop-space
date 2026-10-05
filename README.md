@@ -2,7 +2,7 @@
 
 Kho cá nhân cho ghi chú Markdown, bookmark, ảnh/video và tệp. React/Vite PWA + Express + MongoDB **4.0** + MinIO; Nginx phục vụ web và proxy `/api`.
 
-Trong **Cài đặt → Giao diện**, chọn một trong năm theme và chế độ Tối/Sáng. Thanh trên cùng có bộ chọn nhanh; thay đổi hiện ngay. Khi đăng nhập, lựa chọn được lưu trong hồ sơ và khôi phục ở lần đăng nhập sau; khi chưa đăng nhập, lựa chọn lưu trên trình duyệt. Nếu không có preference, ứng dụng dùng Cyber Space Blue ở chế độ tối.
+Trong **Cài đặt → Giao diện**, chọn một trong năm theme và chế độ Sáng/Tối/Hệ thống. Chế độ Hệ thống theo màu của thiết bị; thanh trên cùng có bộ chọn nhanh. Thay đổi hiện ngay. Khi đăng nhập, lựa chọn được lưu trong hồ sơ và khôi phục ở lần đăng nhập sau; khi chưa đăng nhập, lựa chọn lưu trên trình duyệt. Nếu không có preference, ứng dụng dùng Cyber Space Blue ở chế độ tối.
 
 ## Chạy nhanh
 

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { THEMES, DEFAULT_APPEARANCE, applyAppearance, normalizeAppearance,
+import { THEMES, DEFAULT_APPEARANCE, applyAppearance, normalizeAppearance, resolvedMode,
   readAppearance, writeAppearance } from '../src/config/themes.js';
 
 function luminance(channels) {
@@ -24,12 +24,11 @@ for (const theme of THEMES) {
     const palette = theme[mode];
     assert.deepEqual(Object.keys(palette).sort(), expectedTokens, `${theme.id}/${mode}: incomplete palette`);
     for (const [foreground, background, minimum] of [
-      ['ink', 'paper', 7], ['ink', 'paper-card', 7],
-      ['slate', 'paper', 4.5], ['slate-light', 'paper-card', 4.5],
-      ['gold-deep', 'paper', 4.5], ['gold-deep', 'gold-soft', 4.5],
-      ['primary-contrast', 'gold', 4.5],
-      ['sidebar-text', 'sidebar', 7], ['sidebar-muted', 'sidebar', 4.5],
-      ['brick', 'paper', 4.5], ['success', 'paper', 4.5],
+      ['text-primary', 'background', 7], ['text-primary', 'surface', 7],
+      ['text-secondary', 'surface', 4.5], ['text-muted', 'surface', 4.5],
+      ['primary-hover', 'background', 4.5], ['primary-hover', 'surface', 4.5],
+      ['primary-contrast', 'primary', 4.5],
+      ['danger', 'surface', 4.5], ['success', 'surface', 4.5],
     ]) {
       const ratio = contrast(palette[foreground], palette[background]);
       assert.ok(ratio >= minimum,
@@ -55,12 +54,23 @@ for (const theme of THEMES) {
     applyAppearance({ theme: theme.id, mode });
     assert.equal(document.documentElement.dataset.theme, theme.id);
     assert.equal(document.documentElement.dataset.mode, mode);
-    assert.equal(cssVariables.get('--paper'), theme[mode].paper);
-    assert.equal(cssVariables.get('--gold'), theme[mode].gold);
+    assert.equal(cssVariables.get('--background'), theme[mode].background);
+    assert.equal(cssVariables.get('--primary'), theme[mode].primary);
   }
 }
-const selected = { theme: 'ice-data', mode: 'light' };
+assert.equal(resolvedMode('system', false), 'light');
+assert.equal(resolvedMode('system', true), 'dark');
+applyAppearance({ theme: 'ice-datacenter', mode: 'system' }, false);
+assert.equal(document.documentElement.dataset.modePreference, 'system');
+assert.equal(document.documentElement.dataset.mode, 'light');
+assert.equal(cssVariables.get('--background'), THEMES[4].light.background);
+applyAppearance({ theme: 'ice-datacenter', mode: 'system' }, true);
+assert.equal(document.documentElement.dataset.mode, 'dark');
+assert.equal(cssVariables.get('--background'), THEMES[4].dark.background);
+assert.deepEqual(normalizeAppearance({ theme: 'ice-data', mode: 'light' }),
+  { theme: 'ice-datacenter', mode: 'light' });
+const selected = { theme: 'ice-datacenter', mode: 'system' };
 writeAppearance('theme-test', selected);
 assert.deepEqual(normalizeAppearance(readAppearance('theme-test')), selected);
 assert.deepEqual(normalizeAppearance({ theme: 'invalid', mode: 'invalid' }), DEFAULT_APPEARANCE);
-console.log('Theme switching and local restore OK');
+console.log('Theme switching, system mode and local restore OK');

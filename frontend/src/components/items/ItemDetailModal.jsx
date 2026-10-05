@@ -51,18 +51,18 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
     if (item.type === 'url') {
       const thumb = item.urls?.thumbnail ? mediaUrl(item.urls.thumbnail) : null;
       return (
-        <div className="overflow-hidden rounded-card border border-line bg-paper-dim">
+        <div className="overflow-hidden rounded-card border border-border bg-background-secondary">
           {thumb ? (
             <img src={thumb} alt="" className="max-h-72 w-full object-cover" />
           ) : (
-            <div className="flex h-40 items-center justify-center text-slate-light">
+            <div className="flex h-40 items-center justify-center text-text-muted">
               <ExternalLink size={32} strokeWidth={1.5} />
             </div>
           )}
           <div className="flex items-center justify-between gap-3 p-3">
             <div className="min-w-0">
-              <p className="truncate font-mono text-xs text-slate">{item.urlMeta?.siteName || item.urlMeta?.url}</p>
-              <p className="truncate text-sm text-ink">{item.urlMeta?.url}</p>
+              <p className="truncate font-mono text-xs text-text-secondary">{item.urlMeta?.siteName || item.urlMeta?.url}</p>
+              <p className="truncate text-sm text-text-primary">{item.urlMeta?.url}</p>
             </div>
             <Button as="a" href={item.urlMeta?.url} target="_blank" rel="noreferrer" variant="secondary" size="sm">
               Mở liên kết <ExternalLink size={13} className="ml-1" />
@@ -77,7 +77,7 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
         <img
           src={mediaUrl(item.urls.stream || item.urls.thumbnail)}
           alt={item.title}
-          className="max-h-[60vh] w-full rounded-card border border-line object-contain bg-paper-dim"
+          className="max-h-[60vh] w-full rounded-card border border-border object-contain bg-background-secondary"
         />
       );
     }
@@ -85,20 +85,20 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
     if (item.type === 'file' && category === 'video') {
       return (
         // Uploaded videos may not have a separate caption track.
-        <video controls className="max-h-[60vh] w-full rounded-card border border-line bg-black" src={mediaUrl(item.urls.stream)} />
+        <video controls className="max-h-[60vh] w-full rounded-card border border-border bg-background" src={mediaUrl(item.urls.stream)} />
       );
     }
 
     if (item.type === 'file' && category === 'pdf') {
-      return <iframe title={item.title} src={mediaUrl(item.urls.stream)} className="h-[65vh] w-full rounded-card border border-line" />;
+      return <iframe title={item.title} src={mediaUrl(item.urls.stream)} className="h-[65vh] w-full rounded-card border border-border" />;
     }
 
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-card border border-dashed border-line bg-paper-dim py-14">
-        <FileIcon size={40} className="text-slate-light" strokeWidth={1.5} />
+      <div className="flex flex-col items-center justify-center gap-3 rounded-card border border-dashed border-border bg-background-secondary py-14">
+        <FileIcon size={40} className="text-text-muted" strokeWidth={1.5} />
         <div className="text-center">
-          <p className="text-sm font-medium text-ink">{item.fileMeta?.originalName}</p>
-          <p className="font-mono text-xs text-slate-light">{formatBytes(item.fileMeta?.size)}</p>
+          <p className="text-sm font-medium text-text-primary">{item.fileMeta?.originalName}</p>
+          <p className="font-mono text-xs text-text-muted">{formatBytes(item.fileMeta?.size)}</p>
         </div>
         {item.type === 'file' && (
           <Button as="a" href={mediaUrl(item.urls.download)} variant="secondary" size="sm">
@@ -127,8 +127,8 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
         </>
       }
     >
-      <div className="flex items-center justify-between border-b border-line pb-3">
-        <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-slate-light">
+      <div className="flex items-center justify-between border-b border-border pb-3">
+        <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-text-muted">
           <Icon size={13} /> {label}
         </div>
         <div className="flex items-center gap-1">
@@ -136,7 +136,7 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
           <IconButton
             icon={Star}
             label="Yêu thích"
-            variant={item.favorite ? 'gold' : 'default'}
+            variant={item.favorite ? 'accent' : 'default'}
             onClick={() => onToggleFavorite(item._id)}
           />
           <IconButton icon={Trash2} label="Chuyển vào Thùng rác" variant="danger" onClick={() => onDelete(item._id)} />
@@ -151,7 +151,7 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
         <Textarea label="Mô tả" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Thêm mô tả..." />
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-ink">Thẻ</label>
+          <label className="text-sm font-medium text-text-primary">Thẻ</label>
           <div className="flex flex-wrap items-center gap-1.5">
             {tags.map((t) => (
               <TagChip key={t} name={t} onRemove={() => setTags(tags.filter((x) => x !== t))} size="md" />
@@ -167,7 +167,7 @@ export default function ItemDetailModal({ item, onClose, onUpdate, onToggleFavor
                   }
                 }}
                 placeholder="Thêm thẻ..."
-                className="w-24 rounded-card border border-line bg-paper-card px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
+                className="w-24 rounded-card border border-border bg-surface px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
               />
               <IconButton icon={Plus} label="Thêm thẻ" onClick={addTag} />
             </div>

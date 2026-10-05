@@ -29,20 +29,29 @@ export default function ItemRow({ item, onOpen, onToggleFavorite, onRename, onMo
 
   return (
     <div
-      className="group flex cursor-pointer items-center gap-3 border-b border-line px-3 py-2.5 transition-all duration-200 hover:-translate-y-px hover:bg-paper-dim"
+      className="group flex cursor-pointer items-center gap-3 border-b border-border px-3 py-2.5 transition-all duration-200 hover:-translate-y-px hover:bg-background-secondary"
       onClick={() => onOpen?.(item)}
+      role="button"
+      tabIndex={0}
+      aria-label={`Mở ${item.title}`}
+      onKeyDown={(event) => {
+        if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          onOpen?.(item);
+        }
+      }}
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-card border border-line bg-paper-dim">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-card border border-border bg-background-secondary">
         {thumbnailSrc ? (
           <img src={thumbnailSrc} alt="" className="h-full w-full object-cover" loading="lazy" />
         ) : (
-          <Icon size={17} className="text-slate-light" strokeWidth={1.5} />
+          <Icon size={17} className="text-text-muted" strokeWidth={1.5} />
         )}
       </div>
 
       <div className="min-w-0 grow">
-        <p className="truncate text-sm font-medium text-ink">{item.title}</p>
-        <div className="flex items-center gap-2 font-mono text-[11px] text-slate-light">
+        <p className="truncate text-sm font-medium text-text-primary">{item.title}</p>
+        <div className="flex flex-wrap items-center gap-x-2 font-mono text-[11px] text-text-muted">
           <span>{label}</span>
           {item.folder?.name && <span>· {item.folder.name}</span>}
           {item.fileMeta?.size ? <span>· {formatBytes(item.fileMeta.size)}</span> : null}
@@ -65,7 +74,7 @@ export default function ItemRow({ item, onOpen, onToggleFavorite, onRename, onMo
             e.stopPropagation();
             onToggleFavorite?.(item._id);
           }}
-          className={clsx('shrink-0', item.favorite ? 'text-gold' : 'text-slate-light hover:text-ink')}
+          className={clsx('shrink-0', item.favorite ? 'text-primary-hover' : 'text-text-muted hover:text-text-primary')}
           aria-label="Đánh dấu yêu thích"
         >
           <Star size={16} fill={item.favorite ? 'currentColor' : 'none'} />

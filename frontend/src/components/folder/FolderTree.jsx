@@ -60,7 +60,7 @@ export default function FolderTree({ folders, activeFolderId, onSelectFolder }) 
   return (
     <div className="flex flex-col gap-0.5">
       <div className="flex items-center justify-between px-2 py-1">
-        <span className="font-mono text-[11px] uppercase tracking-wider text-sidebar-muted">Thư mục</span>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">Thư mục</span>
         <IconButton icon={Plus} label="Thêm thư mục gốc" variant="onDark" onClick={() => setCreatingUnder(null)} />
       </div>
 
@@ -120,10 +120,19 @@ function FolderNode({ folder, depth, activeFolderId, onSelectFolder, onAddChild,
       <div
         className={clsx(
           'group flex cursor-pointer items-center gap-1 rounded-card py-1.5 pr-1 text-sm transition-colors',
-          isActive ? 'bg-sidebar-active text-sidebar-text' : 'text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text'
+          isActive ? 'bg-primary/10 text-text-primary' : 'text-text-muted hover:bg-surface-hover hover:text-text-primary'
         )}
         style={{ paddingLeft: `${8 + depth * 14}px` }}
         onClick={() => onSelectFolder(folder._id)}
+        role="button"
+        tabIndex={0}
+        aria-label={`Mở thư mục ${folder.name}`}
+        onKeyDown={(event) => {
+          if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            onSelectFolder(folder._id);
+          }
+        }}
       >
         <button
           type="button"
@@ -135,7 +144,7 @@ function FolderNode({ folder, depth, activeFolderId, onSelectFolder, onAddChild,
         >
           <ChevronRight size={13} />
         </button>
-        {isActive ? <FolderOpen size={14} className="shrink-0 text-gold" /> : <Folder size={14} className="shrink-0" />}
+        {isActive ? <FolderOpen size={14} className="shrink-0 text-primary-hover" /> : <Folder size={14} className="shrink-0" />}
         <span className="truncate">{folder.name}</span>
         <div className="ml-auto hidden shrink-0 items-center gap-0.5 group-hover:flex">
           <Menu

@@ -12,6 +12,7 @@ Luồng: `backlog/` → `progress/` → `completed/`. Move cùng file, giữ ID;
 | [006](completed/006-build_sharing_file_and_user_group_feature.md) | Bạn bè, nhóm, chia sẻ tệp và quản trị | Hoàn tất; xem logscontext/006-collaboration.md |
 | [007](progress/007-build_GOOGLE_auth_feature.md) | Google Login, xác thực email và OTP | Code đã chuẩn bị; chờ SMTP/Google và UI thực tế |
 | [008](progress/008-themes-mode-feature.md) | DND Drop Space, 5 theme và dark/light | Code/test đạt; chờ kiểm tra UI trong browser |
+| [008-1](progress/008-1-rebuild-UI-themes-dark-light-mode.md) | Rebuild UI, design tokens và Light/Dark/System | Code/build/lint/theme đạt; chờ kiểm tra trực quan màn hình |
 | [009](progress/009-build_workflow_github-VPS-deploy.md) | Production CI/CD, registry, VPS deploy/backup/rollback | Code/tài liệu đã chuẩn bị; chờ chạy GitHub/VPS |
 | [010](backlog/010-production-release.md) | Đưa public, kiểm tra backup/restore | Chờ hạ tầng và nghiệm thu |
 

@@ -56,8 +56,8 @@ export default function Library({ preset = 'all' }) {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="font-display text-2xl font-semibold text-ink">{pageTitle}</h1>
-        {meta && <p className="mt-1 text-sm text-slate">{meta.total} mục</p>}
+        <h1 className="font-display text-2xl font-semibold text-text-primary">{pageTitle}</h1>
+        {meta && <p className="mt-1 text-sm text-text-secondary">{meta.total} mục</p>}
       </div>
 
       <LibraryToolbar

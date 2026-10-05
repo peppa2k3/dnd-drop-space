@@ -46,17 +46,17 @@ export default function Settings() {
         <label className="text-sm">Ảnh đại diện (tối đa 2 MB)
           <input aria-label="Ảnh đại diện" type="file" accept="image/*" disabled={busy} onChange={chooseAvatar} className="mt-2 block w-full" />
         </label>
-        <p className="break-all text-xs text-slate">ID: {user?.id}</p>
+        <p className="break-all text-xs text-text-secondary">ID: {user?.id}</p>
         <p className="text-sm">{user?.email} · {user?.role === 'admin' ? 'Quản trị viên' : 'Người dùng'}</p>
         <form onSubmit={(event) => { event.preventDefault(); run(() => userApi.update(form)); }} className="flex flex-col gap-3">
-          <label className="text-sm">Họ tên<input required minLength={2} maxLength={100} value={form.name} disabled={busy} onChange={(e) => setForm({ ...form, name: e.target.value })} className="mt-1 block w-full rounded-card border border-line p-2" /></label>
-          <label className="text-sm">Username<input required pattern="[a-z0-9_]{3,32}" title="3–32 chữ thường, số hoặc dấu gạch dưới" value={form.username} disabled={busy} onChange={(e) => setForm({ ...form, username: e.target.value })} className="mt-1 block w-full rounded-card border border-line p-2" /></label>
-          <label className="text-sm">Giới thiệu<textarea maxLength={500} value={form.bio} disabled={busy} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="mt-1 block w-full rounded-card border border-line p-2" /></label>
+          <label className="text-sm">Họ tên<input required minLength={2} maxLength={100} value={form.name} disabled={busy} onChange={(e) => setForm({ ...form, name: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2" /></label>
+          <label className="text-sm">Username<input required pattern="[a-z0-9_]{3,32}" title="3–32 chữ thường, số hoặc dấu gạch dưới" value={form.username} disabled={busy} onChange={(e) => setForm({ ...form, username: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2" /></label>
+          <label className="text-sm">Giới thiệu<textarea maxLength={500} value={form.bio} disabled={busy} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="mt-1 block w-full rounded-card border border-border p-2" /></label>
           <Button type="submit" loading={busy}>Lưu hồ sơ</Button>
         </form>
       </div>
       <p className="text-sm">{stats ? `Đã dùng ${formatBytes(stats.usedStorageBytes)} / ${formatBytes(stats.storageLimitBytes)}` : 'Đang tải dung lượng...'}</p>
-      {stats?.storageLimitBytes === 0 && <p role="alert" className="text-brick">Chưa được cấp dung lượng. Liên hệ quản trị viên để sử dụng kho lưu trữ.</p>}
+      {stats?.storageLimitBytes === 0 && <p role="alert" className="text-danger">Chưa được cấp dung lượng. Liên hệ quản trị viên để sử dụng kho lưu trữ.</p>}
       <Button variant="danger" onClick={logout} disabled={busy}>Đăng xuất</Button>
     </div>
   );

@@ -14,6 +14,8 @@ export function ThemeProvider({ children }) {
   const { addToast } = useToast();
   const [appearance, setAppearanceState] = useState(() =>
     normalizeAppearance(readAppearance(LAST_KEY) || DEFAULT_APPEARANCE));
+  const [prefersDark, setPrefersDark] = useState(() =>
+    globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true);
   const [isSaving, setIsSaving] = useState(false);
   const currentAppearance = useRef(appearance);
   const confirmedAppearance = useRef(appearance);
@@ -22,6 +24,14 @@ export function ThemeProvider({ children }) {
   const changeVersion = useRef(0);
   const saveQueue = useRef(Promise.resolve());
   const userId = user?.id ? String(user.id) : null;
+
+  useEffect(() => {
+    const media = globalThis.matchMedia?.('(prefers-color-scheme: dark)');
+    if (!media) return undefined;
+    const onChange = (event) => setPrefersDark(event.matches);
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
 
   useEffect(() => {
     if (isInitializing || (initialized.current && currentUserId.current === userId)) return;
@@ -38,16 +48,16 @@ export function ThemeProvider({ children }) {
   }, [isInitializing, userId, user]);
 
   useEffect(() => {
-    applyAppearance(appearance);
+    applyAppearance(appearance, prefersDark);
     writeAppearance(LAST_KEY, appearance);
-  }, [appearance]);
+  }, [appearance, prefersDark]);
 
   const changeAppearance = useCallback((change) => {
     const next = normalizeAppearance({ ...currentAppearance.current, ...change });
     if (same(next, currentAppearance.current)) return;
     currentAppearance.current = next;
     setAppearanceState(next);
-    applyAppearance(next);
+    applyAppearance(next, prefersDark);
     writeAppearance(LAST_KEY, next);
 
     const id = currentUserId.current;
@@ -75,9 +85,9 @@ export function ThemeProvider({ children }) {
     }).finally(() => {
       if (currentUserId.current === id && version === changeVersion.current) setIsSaving(false);
     });
-  }, [addToast, setUser]);
+  }, [addToast, prefersDark, setUser]);
 
-  return <ThemeContext.Provider value={{ ...appearance, isSaving,
+  return <ThemeContext.Provider value={{ ...appearance, effectiveMode: appearance.mode === 'system' ? (prefersDark ? 'dark' : 'light') : appearance.mode, isSaving,
     setTheme: (theme) => changeAppearance({ theme }),
     setMode: (mode) => changeAppearance({ mode }) }}>
     {children}

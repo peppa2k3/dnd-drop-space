@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 
 const VARIANTS = {
-  default: 'text-slate hover:text-ink hover:bg-paper-dim',
-  onDark: 'text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-hover',
-  gold: 'text-gold-deep hover:bg-gold-soft',
-  danger: 'text-slate hover:text-brick hover:bg-brick-soft',
+  default: 'text-text-secondary hover:text-text-primary hover:bg-background-secondary',
+  onDark: 'text-text-muted hover:text-text-primary hover:bg-surface-hover',
+  accent: 'text-primary-hover hover:bg-primary/10',
+  danger: 'text-text-secondary hover:text-danger hover:bg-danger/10',
 };
 
 export default function IconButton({ icon: Icon, size = 16, variant = 'default', className, label, ...props }) {

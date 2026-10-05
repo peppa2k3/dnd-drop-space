@@ -23,8 +23,8 @@ export default function Trash() {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-ink">Thùng rác</h1>
-          <p className="mt-1 text-sm text-slate">
+          <h1 className="font-display text-2xl font-semibold text-text-primary">Thùng rác</h1>
+          <p className="mt-1 text-sm text-text-secondary">
             Dữ liệu đã xóa được giữ tại đây 30 ngày trước khi bị xóa vĩnh viễn tự động.
           </p>
         </div>

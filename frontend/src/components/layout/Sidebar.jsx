@@ -1,6 +1,7 @@
 import { NavLink, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import clsx from 'clsx';
-import { X } from 'lucide-react';
+import { Shield, Users, X } from 'lucide-react';
 import { NAV_ITEMS, TRASH_NAV_ITEM } from '../../config/navigation';
 import FolderTree from '../folder/FolderTree';
 import IconButton from '../common/IconButton';
@@ -23,52 +24,62 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
   const usedPercent = storageLimitBytes > 0 ? Math.min((usedBytes / storageLimitBytes) * 100, 100) : 0;
   const activeFolderId = location.pathname.startsWith('/app/folder') ? folderId : null;
 
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const onEscape = (event) => { if (event.key === 'Escape') onCloseMobile(); };
+    document.addEventListener('keydown', onEscape);
+    return () => document.removeEventListener('keydown', onEscape);
+  }, [mobileOpen, onCloseMobile]);
+
   return (
     <>
-      {mobileOpen && <div className="fixed inset-0 z-30 bg-overlay/70 lg:hidden" onClick={onCloseMobile} />}
+      {mobileOpen && <div className="fixed inset-0 z-30 bg-overlay/70 md:hidden" onClick={onCloseMobile} aria-hidden="true" />}
 
       <aside
+        id="app-sidebar"
         className={clsx(
-          'fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col border-r border-line/40 bg-sidebar text-sidebar-text transition-transform duration-200 lg:static lg:translate-x-0',
-          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+          'fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col border-r border-border bg-background-secondary text-text-primary transition-transform duration-200 md:static md:w-[4.5rem] md:translate-x-0 lg:w-64',
+          mobileOpen ? 'visible translate-x-0' : 'invisible -translate-x-full md:visible'
         )}
       >
         <div className="flex items-center justify-between px-4 py-4">
           <div className="flex items-center gap-2">
             <BrandMark />
-            <div className="leading-tight">
-              <p className="font-display text-sm font-semibold text-sidebar-text">DND Drop Space</p>
-              <p className="font-mono text-[10px] uppercase tracking-wider text-sidebar-muted">CLOUD WORKSPACE</p>
+            <div className="leading-tight md:hidden lg:block">
+              <p className="font-display text-sm font-semibold text-text-primary">DND Drop Space</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">CLOUD WORKSPACE</p>
             </div>
           </div>
-          <IconButton icon={X} label="Đóng menu" variant="onDark" className="lg:hidden" onClick={onCloseMobile} />
+          <IconButton icon={X} label="Đóng menu" variant="onDark" className="md:hidden" onClick={onCloseMobile} />
         </div>
 
         <nav className="flex flex-col gap-0.5 px-2 pb-2">
-          {user?.role === 'admin' && <NavLink to="/app/admin/users" onClick={onCloseMobile} className="rounded-card px-2.5 py-2 text-sm text-gold">Quản trị người dùng</NavLink>}
-          {user?.role === 'admin' && <NavLink to="/app/admin/collaboration" onClick={onCloseMobile} className="rounded-card px-2.5 py-2 text-sm text-gold">Quản trị cộng tác</NavLink>}
+          {user?.role === 'admin' && <NavLink to="/app/admin/users" title="Quản trị người dùng" onClick={onCloseMobile} className="flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm text-primary-hover hover:bg-surface-hover"><Users size={16} /><span className="md:hidden lg:inline">Quản trị người dùng</span></NavLink>}
+          {user?.role === 'admin' && <NavLink to="/app/admin/collaboration" title="Quản trị cộng tác" onClick={onCloseMobile} className="flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm text-primary-hover hover:bg-surface-hover"><Shield size={16} /><span className="md:hidden lg:inline">Quản trị cộng tác</span></NavLink>}
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
+              title={item.label}
+              aria-label={item.label}
               end={item.end}
               onClick={onCloseMobile}
               className={({ isActive }) =>
                 clsx(
                   'flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm transition-all duration-200 hover:translate-x-0.5',
-                  isActive ? 'bg-sidebar-active text-sidebar-text shadow-glow' : 'text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text'
+                  isActive ? 'border-l-2 border-primary bg-primary/10 text-primary-hover shadow-glow' : 'border-l-2 border-transparent text-text-muted hover:bg-surface-hover hover:text-text-primary'
                 )
               }
             >
               <item.icon size={15} />
-              {item.label}
+              <span className="md:hidden lg:inline">{item.label}</span>
             </NavLink>
           ))}
         </nav>
 
-        <div className="mx-2 mb-2 border-t border-sidebar-muted/20" />
+        <div className="mx-2 mb-2 border-t border-border" />
 
-        <div className="min-h-0 grow overflow-y-auto px-2">
+        <div className="min-h-0 grow overflow-y-auto px-2 md:invisible lg:visible">
           <FolderTree
             folders={folders}
             activeFolderId={activeFolderId}
@@ -79,27 +90,29 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
           />
         </div>
 
-        <div className="mx-2 border-t border-sidebar-muted/20" />
+        <div className="mx-2 border-t border-border" />
 
         <NavLink
           to={TRASH_NAV_ITEM.path}
+          title={TRASH_NAV_ITEM.label}
+          aria-label={TRASH_NAV_ITEM.label}
           onClick={onCloseMobile}
           className={({ isActive }) =>
             clsx(
               'mx-2 my-2 flex items-center gap-2.5 rounded-card px-2.5 py-2 text-sm transition-all duration-200 hover:translate-x-0.5',
-              isActive ? 'bg-sidebar-active text-sidebar-text shadow-glow' : 'text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text'
+              isActive ? 'border-l-2 border-primary bg-primary/10 text-primary-hover shadow-glow' : 'border-l-2 border-transparent text-text-muted hover:bg-surface-hover hover:text-text-primary'
             )
           }
         >
           <TRASH_NAV_ITEM.icon size={15} />
-          {TRASH_NAV_ITEM.label}
+          <span className="md:hidden lg:inline">{TRASH_NAV_ITEM.label}</span>
         </NavLink>
 
-        <div className="px-4 pb-4 pt-1">
-          <div className="h-1 w-full overflow-hidden rounded-full bg-sidebar-muted/20">
-            <div className="h-full rounded-full bg-gold" style={{ width: `${usedPercent}%` }} />
+        <div className="px-4 pb-4 pt-1 md:px-2 lg:px-4">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-border/30">
+            <div className="h-full rounded-full bg-primary" style={{ width: `${usedPercent}%` }} />
           </div>
-          <p className="mt-1.5 font-mono text-[10px] text-sidebar-muted">
+          <p className="mt-1.5 font-mono text-[10px] text-text-muted md:hidden lg:block">
             {stats ? `${formatBytes(usedBytes)} / ${formatBytes(storageLimitBytes)} đã dùng` : 'Đang tải dung lượng...'}
           </p>
         </div>

@@ -82,11 +82,11 @@ export default function NoteEditorToolbar({ textareaRef, value, onChange, folder
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-0.5 border-b border-line bg-paper-dim px-2 py-1.5">
+    <div className="flex flex-wrap items-center gap-0.5 border-b border-border bg-background-secondary px-2 py-1.5">
       {BUTTONS.map((btn) => (
         <IconButton key={btn.key} icon={btn.icon} label={btn.label} onClick={() => runAction(btn.key)} />
       ))}
-      <div className="mx-1 h-4 w-px bg-line" />
+      <div className="mx-1 h-4 w-px bg-border" />
       <IconButton
         icon={uploading ? Loader2 : ImageIcon}
         label={storageFull ? 'Bộ lưu trữ đã đầy' : 'Chèn ảnh/tệp'}

@@ -11,14 +11,14 @@ const SORT_OPTIONS = [
 
 export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order, onSortChange, onOrderToggle, tags = [], activeTag, onTagChange }) {
   return (
-    <div className="flex flex-col gap-3 border-b border-line pb-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 border-b border-border pb-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-2 overflow-x-auto">
         <button
           type="button"
           onClick={() => onTagChange(null)}
           className={clsx(
-            'shrink-0 rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors duration-200',
-            !activeTag ? 'border-gold bg-gold-soft text-gold-deep' : 'border-line text-slate hover:border-gold/60'
+            'shrink-0 rounded-full border px-2.5 py-1 text-xs transition-colors duration-200',
+            !activeTag ? 'border-primary bg-primary/10 text-primary-hover' : 'border-border text-text-secondary hover:border-primary/60'
           )}
         >
           Tất cả thẻ
@@ -29,8 +29,8 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
             type="button"
             onClick={() => onTagChange(tag._id)}
             className={clsx(
-              'shrink-0 rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors duration-200',
-              activeTag === tag._id ? 'border-gold bg-gold-soft text-gold-deep' : 'border-line text-slate hover:border-gold/60'
+              'shrink-0 rounded-full border px-2.5 py-1 text-xs transition-colors duration-200',
+              activeTag === tag._id ? 'border-primary bg-primary/10 text-primary-hover' : 'border-border text-text-secondary hover:border-primary/60'
             )}
           >
             #{tag.name}
@@ -42,7 +42,7 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
         <select
           value={sort}
           onChange={(e) => onSortChange(e.target.value)}
-          className="rounded-card border border-line bg-paper-card px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-gold/50"
+          className="rounded-card border border-border bg-surface px-2.5 py-1.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -52,11 +52,11 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
         </select>
         <IconButton icon={order === 'asc' ? ArrowUpNarrowWide : ArrowDownWideNarrow} label="Đổi thứ tự sắp xếp" onClick={onOrderToggle} />
 
-        <div className="flex items-center rounded-card border border-line p-0.5">
+        <div className="flex items-center rounded-card border border-border p-0.5">
           <button
             type="button"
             onClick={() => onViewModeChange('grid')}
-            className={clsx('rounded-[8px] p-1.5 transition-colors duration-200', viewMode === 'grid' ? 'bg-gold-soft text-gold-deep' : 'text-slate-light hover:text-ink')}
+            className={clsx('rounded-[8px] p-1.5 transition-colors duration-200', viewMode === 'grid' ? 'bg-primary/10 text-primary-hover' : 'text-text-muted hover:text-text-primary')}
             aria-label="Xem dạng lưới"
           >
             <LayoutGrid size={15} />
@@ -64,7 +64,7 @@ export default function LibraryToolbar({ viewMode, onViewModeChange, sort, order
           <button
             type="button"
             onClick={() => onViewModeChange('list')}
-            className={clsx('rounded-[8px] p-1.5 transition-colors duration-200', viewMode === 'list' ? 'bg-gold-soft text-gold-deep' : 'text-slate-light hover:text-ink')}
+            className={clsx('rounded-[8px] p-1.5 transition-colors duration-200', viewMode === 'list' ? 'bg-primary/10 text-primary-hover' : 'text-text-muted hover:text-text-primary')}
             aria-label="Xem dạng danh sách"
           >
             <List size={15} />

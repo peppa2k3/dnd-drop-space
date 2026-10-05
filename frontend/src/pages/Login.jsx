@@ -73,16 +73,16 @@ export default function Login() {
         <Input label="Email" type="email" placeholder="ban@example.com" autoFocus {...register('email')} error={errors.email?.message} />
         <Input label="Mật khẩu" type="password" placeholder="••••••••" {...register('password')} error={errors.password?.message} />
 
-        {serverError && <p className="rounded-card bg-brick-soft px-3 py-2 text-sm text-brick">{serverError}</p>}
+        {serverError && <p className="rounded-card bg-danger/10 px-3 py-2 text-sm text-danger">{serverError}</p>}
 
         <Button type="submit" size="lg" loading={isSubmitting} className="mt-1 w-full">
           Đăng nhập
         </Button>
       </form> : <form onSubmit={onOtp} className="flex flex-col gap-4">
-        <label className="text-sm">Email<input type="email" required value={otpEmail} onChange={(e) => setOtpEmail(e.target.value)} disabled={otpSent} className="mt-1 w-full rounded-card border border-line p-2" /></label>
-        {otpSent && <><p className="text-sm text-slate">Nếu tài khoản hợp lệ, mã đăng nhập đã được gửi đến email.</p>
-          <label className="text-sm">Mã OTP<input inputMode="numeric" autoComplete="one-time-code" required minLength={6} maxLength={8} value={otpCode} onChange={(e) => setOtpCode(e.target.value)} className="mt-1 w-full rounded-card border border-line p-2" /></label></>}
-        {serverError && <p role="alert" className="text-sm text-brick">{serverError}</p>}
+        <label className="text-sm">Email<input type="email" required value={otpEmail} onChange={(e) => setOtpEmail(e.target.value)} disabled={otpSent} className="mt-1 w-full rounded-card border border-border p-2" /></label>
+        {otpSent && <><p className="text-sm text-text-secondary">Nếu tài khoản hợp lệ, mã đăng nhập đã được gửi đến email.</p>
+          <label className="text-sm">Mã OTP<input inputMode="numeric" autoComplete="one-time-code" required minLength={6} maxLength={8} value={otpCode} onChange={(e) => setOtpCode(e.target.value)} className="mt-1 w-full rounded-card border border-border p-2" /></label></>}
+        {serverError && <p role="alert" className="text-sm text-danger">{serverError}</p>}
         {info && <p role="status" className="text-sm text-success">{info}</p>}
         <Button type="submit" loading={otpBusy}>{otpSent ? 'Đăng nhập bằng mã' : 'Gửi mã đăng nhập'}</Button>
         {otpSent && <Button type="button" variant="secondary" disabled={otpBusy} onClick={async () => {
@@ -92,12 +92,12 @@ export default function Login() {
       </form>}
 
       <div className="mt-4 flex flex-wrap justify-between gap-2 text-sm">
-        <button type="button" className="text-gold-deep hover:underline" onClick={() => { setMode(mode === 'password' ? 'otp' : 'password'); setServerError(null); }}>
+        <button type="button" className="text-primary-hover hover:underline" onClick={() => { setMode(mode === 'password' ? 'otp' : 'password'); setServerError(null); }}>
           {mode === 'password' ? 'Đăng nhập bằng mã email' : 'Đăng nhập bằng mật khẩu'}
         </button>
-        <Link to="/reset-password" className="text-gold-deep hover:underline">Quên mật khẩu?</Link>
+        <Link to="/reset-password" className="text-primary-hover hover:underline">Quên mật khẩu?</Link>
       </div>
-      <div className="mt-6 border-t border-line pt-5"><GoogleSignInButton onCredential={onGoogleCredential} /></div>
+      <div className="mt-6 border-t border-border pt-5"><GoogleSignInButton onCredential={onGoogleCredential} /></div>
       {googleLinkPending && <form className="mt-4 flex flex-col gap-3" onSubmit={async (event) => {
         event.preventDefault(); setServerError(null); setLinking(true);
         try {
@@ -107,14 +107,14 @@ export default function Login() {
         finally { setLinking(false); }
       }}>
         <p className="text-sm">Nhập mã gửi tới {googleLinkPending.email} để liên kết tài khoản hiện có.</p>
-        <input aria-label="Mã liên kết Google" inputMode="numeric" autoComplete="one-time-code" required minLength={6} maxLength={8} value={googleLinkCode} onChange={(e) => setGoogleLinkCode(e.target.value)} className="rounded-card border border-line p-2" />
+        <input aria-label="Mã liên kết Google" inputMode="numeric" autoComplete="one-time-code" required minLength={6} maxLength={8} value={googleLinkCode} onChange={(e) => setGoogleLinkCode(e.target.value)} className="rounded-card border border-border p-2" />
         <Button type="submit" loading={linking}>Liên kết và đăng nhập</Button>
       </form>}
-      <p className="mt-3 text-center text-sm"><Link to="/verify-email" className="text-gold-deep hover:underline">Chưa xác thực email? Nhập mã tại đây</Link></p>
+      <p className="mt-3 text-center text-sm"><Link to="/verify-email" className="text-primary-hover hover:underline">Chưa xác thực email? Nhập mã tại đây</Link></p>
 
-      <p className="mt-6 text-center text-sm text-slate">
+      <p className="mt-6 text-center text-sm text-text-secondary">
         Chưa có tài khoản?{' '}
-        <Link to="/register" className="font-medium text-gold-deep hover:underline">
+        <Link to="/register" className="font-medium text-primary-hover hover:underline">
           Tạo tài khoản mới
         </Link>
       </p>

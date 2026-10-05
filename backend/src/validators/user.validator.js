@@ -6,8 +6,8 @@ const profileFields = {
   bio: z.string().trim().max(500).optional(),
 };
 const appearanceSchema = z.object({
-  theme: z.enum(['cyber-blue', 'neon-storage', 'deep-purple', 'space-terminal', 'ice-data']),
-  mode: z.enum(['dark', 'light']),
+  theme: z.enum(['cyber-blue', 'neon-storage', 'deep-purple', 'space-terminal', 'ice-data', 'ice-datacenter']),
+  mode: z.enum(['dark', 'light', 'system']),
 }).strict();
 const profileSchema = z.object({ ...profileFields, appearance: appearanceSchema.optional() }).strict();
 const adminUserSchema = z.object({

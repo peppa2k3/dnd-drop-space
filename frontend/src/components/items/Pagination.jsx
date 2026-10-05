@@ -5,7 +5,7 @@ export default function Pagination({ meta, onPageChange }) {
   if (!meta || meta.totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between border-t border-line pt-4 font-mono text-xs text-slate">
+    <div className="flex items-center justify-between border-t border-border pt-4 font-mono text-xs text-text-secondary">
       <span>
         Trang {meta.page}/{meta.totalPages} · {meta.total} mục
       </span>

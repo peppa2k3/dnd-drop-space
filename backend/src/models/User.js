@@ -15,8 +15,8 @@ const userSchema = new mongoose.Schema(
     bio: { type: String, default: '', maxlength: 500 },
     appearance: {
       type: new mongoose.Schema({
-        theme: { type: String, enum: ['cyber-blue', 'neon-storage', 'deep-purple', 'space-terminal', 'ice-data'], required: true },
-        mode: { type: String, enum: ['dark', 'light'], required: true },
+        theme: { type: String, enum: ['cyber-blue', 'neon-storage', 'deep-purple', 'space-terminal', 'ice-data', 'ice-datacenter'], required: true },
+        mode: { type: String, enum: ['dark', 'light', 'system'], required: true },
       }, { _id: false }),
       default: undefined,
     },

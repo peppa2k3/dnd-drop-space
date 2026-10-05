@@ -37,16 +37,16 @@ export default function Register() {
         <Input label="Mật khẩu" type="password" placeholder="Tối thiểu 8 ký tự" {...register('password')} error={errors.password?.message} />
         <Input label="Nhập lại mật khẩu" type="password" {...register('confirmPassword')} error={errors.confirmPassword?.message} />
 
-        {serverError && <p className="rounded-card bg-brick-soft px-3 py-2 text-sm text-brick">{serverError}</p>}
+        {serverError && <p className="rounded-card bg-danger/10 px-3 py-2 text-sm text-danger">{serverError}</p>}
 
         <Button type="submit" size="lg" loading={isSubmitting} className="mt-1 w-full">
           Tạo tài khoản và gửi mã
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate">
+      <p className="mt-6 text-center text-sm text-text-secondary">
         Đã có tài khoản?{' '}
-        <Link to="/login" className="font-medium text-gold-deep hover:underline">
+        <Link to="/login" className="font-medium text-primary-hover hover:underline">
           Đăng nhập
         </Link>
       </p>
