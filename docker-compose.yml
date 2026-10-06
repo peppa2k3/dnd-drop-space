@@ -11,7 +11,7 @@ services:
       retries: 10
 
   minio:
-    image: peppa2k3/minio/minio:rel250723
+    image: peppa2k3/minio-minio:rel250723
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
