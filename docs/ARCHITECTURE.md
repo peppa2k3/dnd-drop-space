@@ -1,11 +1,9 @@
 # Kiến trúc
 
 ```text
-Browser → Nginx (:8080 local, HTTPS ở production)
-             ├─ React/Vite/PWA (static)
-             └─ /api → Express (:5000 nội bộ)
-                         ├─ MongoDB 4.0: metadata, tài khoản, phiên
-                         └─ MinIO: tệp, thumbnail
+Local: Browser → Nginx (:8080) → React/Vite/PWA; /api → Express
+Production: Browser → Traefik (web, HTTPS) → Nginx (web) hoặc Express (/api)
+                                        Express → private network → MongoDB 4.0, MinIO có sẵn
 ```
 
 ## Phân vùng
@@ -38,4 +36,4 @@ Browser → Nginx (:8080 local, HTTPS ở production)
 - i18n: `frontend/src/i18n/languages.js` khai báo chín ngôn ngữ; `config.js` tải JSON theo locale/namespace bằng i18next + react-i18next, dự phòng `vi`. `LanguageProvider` độc lập ThemeProvider; ưu tiên `User.language` → localStorage → ngôn ngữ browser → `vi`, cập nhật `<html lang>` và lưu tài khoản qua PATCH `/users/me`. `User.language` là trường tùy chọn nên tài khoản cũ không cần migration. `utils/format.js` dùng Intl cho số, dung lượng, ngày giờ và thời gian tương đối; chỉ dịch UI, giữ nguyên nội dung người dùng. API lỗi cũ chưa có mã chuẩn: frontend ánh xạ mã nếu có, tiếp đến HTTP status và thông báo dịch theo ngữ cảnh, tránh hiển thị nguyên văn message từ backend.
 
 ## Hướng triển khai
-Một VPS Linux + Docker Compose cho giai đoạn đầu. Push `main` chạy CI trước khi build/push image backend/web vào GHCR, tùy chọn Docker Hub. Production Compose chỉ dùng tag SHA bất biến, giữ image riêng cho service không đổi; tag `production` chỉ đổi sau verify. Trên VPS, pull image trước downtime, dừng app/MinIO để backup cặp MongoDB–MinIO, rồi up/verify bốn service và URL HTTPS; state/symlink hiện hành chỉ đổi sau verify. Lỗi quay lại image/Compose trước mà không restore hay xóa volume. HTTPS, secrets, backup offsite/restore là điều kiện đưa public; xem [DEPLOYMENT](DEPLOYMENT.md) và [context_deploy](context_deploy.md).
+Một VPS Linux + Docker Compose cho giai đoạn đầu. Push `main` chạy CI riêng trước khi build/push image backend/web vào GHCR, tùy chọn Docker Hub. Production Compose project `pkh-dnd-app` chỉ quản lý hai container ứng dụng, kết nối Traefik qua external network `web` và MongoDB 4.0/MinIO dùng chung qua private network đã có. Các router Traefik phục vụ site, site `/api` và API domain; tên entrypoint/cert resolver lấy từ VPS private env. Image dùng SHA bất biến; tag `production` và state/symlink chỉ đổi sau verify HTTPS/health. Lỗi quay lại image ứng dụng trước đã xác nhận, không thao tác dịch vụ hoặc volume dùng chung. Backup/restore hai kho dữ liệu là trách nhiệm vận hành riêng; xem [DEPLOYMENT](DEPLOYMENT.md) và [context_deploy](context_deploy.md).

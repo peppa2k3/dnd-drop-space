@@ -27,6 +27,7 @@ jobs:
       - run: npm run lint --prefix frontend
       - run: npm run test:themes --prefix frontend
       - run: npm run build --prefix frontend
+      - run: bash scripts/test-deploy-flow.sh
       - run: node scripts/init-env.cjs
       - run: docker compose --env-file backend/.env config --quiet
       - run: docker compose --env-file backend/.env up -d --build --wait --wait-timeout 180

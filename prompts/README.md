@@ -13,8 +13,9 @@ Luồng: `backlog/` → `progress/` → `completed/`. Move cùng file, giữ ID;
 | [007](progress/007-build_GOOGLE_auth_feature.md) | Google Login, xác thực email và OTP | Code đã chuẩn bị; chờ SMTP/Google và UI thực tế |
 | [008](progress/008-themes-mode-feature.md) | DND Drop Space, 5 theme và dark/light | Code/test đạt; chờ kiểm tra UI trong browser |
 | [008-1](progress/008-1-rebuild-UI-themes-dark-light-mode.md) | Rebuild UI, design tokens và Light/Dark/System | Code/build/lint/theme đạt; chờ kiểm tra trực quan màn hình |
-| [009](progress/009-build_workflow_github-VPS-deploy.md) | Production CI/CD, registry, VPS deploy/backup/rollback | Code/tài liệu đã chuẩn bị; chờ chạy GitHub/VPS |
+| [009](progress/009-build_workflow_github-VPS-deploy.md) | Production CI/CD nền tảng | Thiết kế bốn service cũ được 011 thay thế; chưa nghiệm thu GitHub/VPS |
 | [010](backlog/010-production-release.md) | Đưa public, kiểm tra backup/restore | Chờ hạ tầng và nghiệm thu |
 | [010-i18n](progress/010-multi-language.md) | Đa ngôn ngữ cho website | Code/build/lint/translation đạt; chờ kiểm tra trực quan vi/en/zh-CN |
+| [011](progress/011-cicd-refactor-workflow.md) | Production app-only trên Traefik, MongoDB 4.0/MinIO dùng chung | Code/config local đã chuẩn bị; chờ xác nhận hạ tầng và kiểm tra GitHub/VPS |
 
 Code ban đầu ở commit `860f085`; không dựng lại lịch sử prompt chưa tồn tại.

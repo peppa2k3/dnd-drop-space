@@ -1,5 +1,7 @@
 # 009 — Xây dựng Production CI/CD Workflow
 
+> Cập nhật 2026-10-07: phần Compose production bốn service và backup/dừng MinIO của thiết kế ban đầu đã được prompt [011](011-cicd-refactor-workflow.md) thay thế. Giữ prompt này ở `progress/` vì chưa có bằng chứng chạy GitHub/VPS; dùng `DEPLOY_GUIDES.md` và `docs/context_deploy.md` hiện tại làm nguồn vận hành.
+
 - Phạm vi file: workflow CI/CD, Compose production, deploy script, env mẫu, guide/context, `AGENTS.md` và tài liệu tiến độ.
 - Ngoài phạm vi: cấu hình secret thật, push/deploy lên GitHub/VPS, đổi dữ liệu/MongoDB.
 - Rủi ro dữ liệu: deploy thật dừng ghi để backup MongoDB + MinIO, cần đủ dung lượng và bản offsite; rollback chỉ đổi image, không đảo migration. Không chạy trên production trong lượt này.

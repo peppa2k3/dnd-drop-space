@@ -2,10 +2,8 @@
 set -Eeuo pipefail
 umask 077
 
-# Runs on the VPS as the dedicated deploy user. This script never restores or
-# removes data volumes; rollback only switches application images.
-project=pkh-production
-backup_helper=alpine:3.22
+# Runs on the VPS as deploy. Only backend/nginx are managed by this project.
+project=pkh-dnd-app
 action="${1:?Usage: deploy.sh apply|verify|rollback|manual-rollback ROOT SHA [BACKEND_IMAGE WEB_IMAGE]}"
 root="${2:?Set the absolute VPS deploy root}"
 sha="${3:?Set a full commit SHA}"
@@ -44,7 +42,50 @@ check_private_env() {
   [[ "$(setting "$env_file" NODE_ENV)" == production ]] || { echo 'NODE_ENV must be production'; exit 1; }
   local origin
   origin="$(setting "$env_file" CLIENT_ORIGIN)"
-  [[ "$origin" =~ ^https://[A-Za-z0-9.-]+(:[0-9]+)?$ ]] || { echo 'CLIENT_ORIGIN must be an HTTPS origin'; exit 1; }
+  [[ "$origin" == https://dangngochai.io.vn ]] || { echo 'CLIENT_ORIGIN must match the frontend HTTPS domain'; exit 1; }
+  local mongo endpoint storage entrypoint resolver public_endpoint
+  mongo="$(setting "$env_file" MONGO_URI)"
+  endpoint="$(setting "$env_file" MINIO_ENDPOINT)"
+  storage="$(setting "$env_file" PKH_STORAGE_NETWORK)"
+  entrypoint="$(setting "$env_file" TRAEFIK_HTTPS_ENTRYPOINT)"
+  resolver="$(setting "$env_file" TRAEFIK_CERT_RESOLVER)"
+  public_endpoint="$(setting "$env_file" MINIO_PUBLIC_ENDPOINT)"
+  [[ "$mongo" =~ ^mongodb(\+srv)?:// && "$mongo" != *localhost* && "$mongo" != *127.0.0.1* ]] || { echo 'Set a non-local MONGO_URI for the shared MongoDB 4.0 service'; exit 1; }
+  [[ "$endpoint" =~ ^[A-Za-z0-9.-]+$ && "$endpoint" != localhost && "$endpoint" != 127.0.0.1 ]] || { echo 'Set a non-local MINIO_ENDPOINT'; exit 1; }
+  [[ "$storage" =~ ^[A-Za-z0-9_.-]+$ && "$storage" != web ]] || { echo 'Set the existing private PKH_STORAGE_NETWORK (separate from web)'; exit 1; }
+  [[ "$entrypoint" =~ ^[A-Za-z0-9_-]+$ && "$resolver" =~ ^[A-Za-z0-9_-]+$ ]] || { echo 'Set existing Traefik HTTPS entrypoint and cert resolver'; exit 1; }
+  [[ "$public_endpoint" =~ ^[A-Za-z0-9.-]+$ && "$public_endpoint" != localhost ]] || { echo 'Set browser-facing MINIO_PUBLIC_ENDPOINT'; exit 1; }
+  [[ "$(setting "$env_file" MINIO_PUBLIC_USE_SSL)" == true ]] || { echo 'MINIO_PUBLIC_USE_SSL must be true'; exit 1; }
+}
+
+check_networks() {
+  docker network inspect web >/dev/null 2>&1 || { echo 'External Traefik network web is missing'; return 1; }
+  docker network inspect "$(setting "$env_file" PKH_STORAGE_NETWORK)" >/dev/null 2>&1 || {
+    echo 'External private storage network is missing'; return 1;
+  }
+}
+
+check_router_conflicts() {
+  local cid owner labels cids
+  cids="$(docker ps -q --filter network=web)" || return 1
+  while IFS= read -r cid; do
+    [[ -n "$cid" ]] || continue
+    owner="$(docker inspect -f '{{index .Config.Labels "com.docker.compose.project"}}' "$cid")"
+    [[ "$owner" != "$project" ]] || continue
+    labels="$(docker inspect -f '{{json .Config.Labels}}' "$cid")"
+    if [[ "$labels" == *dangngochai.io.vn* || "$labels" == *pkh-dnd-* ]]; then
+      echo 'Another container on web may own the domain/router; inspect Traefik labels before deploy'
+      return 1
+    fi
+  done <<< "$cids"
+}
+
+check_app_only_manifest() {
+  local target_sha="$1" backend_image="$2" web_image="$3" services
+  services="$(compose "$target_sha" "$backend_image" "$web_image" config --services)" || return 1
+  [[ "$services" == $'backend\nnginx' || "$services" == $'nginx\nbackend' ]] || {
+    echo 'Release Compose must contain only backend and nginx; legacy deployment needs a separate migration'; return 1;
+  }
 }
 
 read_current() {
@@ -61,6 +102,7 @@ read_current() {
     [[ -f "$root/releases/$previous_sha/docker-compose.prod.yml" ]] || {
       echo 'Previous Compose release is missing; refusing to replace it'; exit 1;
     }
+    check_app_only_manifest "$previous_sha" "$previous_backend" "$previous_web" || exit 1
   fi
 }
 
@@ -73,19 +115,15 @@ write_state() {
 }
 
 check_release() {
-  local target_sha="$1" backend_image="$2" web_image="$3" service cid health port origin status response body
-  for service in mongo minio backend nginx; do
+  local target_sha="$1" backend_image="$2" web_image="$3" service cid health status response body url
+  for service in backend nginx; do
     cid="$(compose "$target_sha" "$backend_image" "$web_image" ps -a -q "$service")"
     [[ -n "$cid" ]] || { echo "Missing container: $service"; return 1; }
     health="$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$cid")"
     [[ "$health" == healthy ]] || { echo "Unhealthy container: $service ($health)"; return 1; }
   done
-  port="$(setting "$env_file" WEB_PORT)"
-  port="${port:-8080}"
-  [[ "$port" =~ ^[0-9]+$ ]] || { echo 'Invalid WEB_PORT'; return 1; }
-  origin="$(setting "$env_file" CLIENT_ORIGIN)"
-  for url in "http://127.0.0.1:$port/" "http://127.0.0.1:$port/api/health" \
-             "$origin/" "$origin/api/health"; do
+  for url in 'https://dangngochai.io.vn/' 'https://dangngochai.io.vn/api/health' \
+             'https://api.dangngochai.io.vn/api/health'; do
     response="$(curl --fail --silent --show-error --max-time 20 --retry 3 --retry-delay 2 \
       --write-out '\n%{http_code}' "$url")" || return 1
     status="${response##*$'\n'}"
@@ -112,18 +150,20 @@ rollback_pending() {
   valid_image "$candidate_backend" && valid_image "$candidate_web" || return 1
   compose "$sha" "$candidate_backend" "$candidate_web" stop nginx backend || true
   if [[ -z "$old_sha" ]]; then
-    echo 'First release failed; application stopped, data volumes retained.'
+    compose "$sha" "$candidate_backend" "$candidate_web" rm -f -s nginx backend
+    echo 'First release failed; candidate application containers removed. Shared MongoDB/MinIO were not changed.'
     rm -f "$pending"
     return 0
   fi
   [[ "$old_sha" =~ ^[a-f0-9]{40}$ ]] && valid_image "$old_backend" && valid_image "$old_web" || return 1
-  compose "$old_sha" "$old_backend" "$old_web" up -d --no-build --pull never --wait --wait-timeout 180
+  check_app_only_manifest "$old_sha" "$old_backend" "$old_web" || return 1
+  compose "$old_sha" "$old_backend" "$old_web" up -d --no-deps --no-build --pull never --wait --wait-timeout 180 backend nginx
   check_release "$old_sha" "$old_backend" "$old_web"
   write_state "$state" "$old_sha" "$old_backend" "$old_web"
   ln -sfn "$root/releases/$old_sha" "$root/.current-$sha"
   mv -Tf "$root/.current-$sha" "$root/current"
   rm -f "$pending"
-  echo "Restored previous release $old_sha; data volumes were not changed."
+  echo "Restored previous application release $old_sha; shared services were not changed."
 }
 
 rollback_on_error() {
@@ -136,9 +176,11 @@ rollback_on_error() {
 }
 
 apply_release() {
-  local backend_image="$1" web_image="$2" backup minio_cid minio_volume volume
+  local backend_image="$1" web_image="$2" existing
   [[ -f "$release/docker-compose.prod.yml" ]] || { echo 'Release Compose file missing'; return 1; }
   [[ ! -e "$pending" ]] || { echo 'Resolve the pending release before starting another'; return 1; }
+  check_networks
+  check_router_conflicts
   read_current
   backend_image="${backend_image:--}"
   web_image="${web_image:--}"
@@ -147,19 +189,15 @@ apply_release() {
   valid_image "$backend_image" && valid_image "$web_image" || {
     echo 'Both immutable image references are required for the first release'; return 1;
   }
+  check_app_only_manifest "$sha" "$backend_image" "$web_image"
   if [[ -z "$previous_sha" ]]; then
-    for volume in "${project}_mongo40-data" "${project}_minio-data"; do
-      if docker volume inspect "$volume" >/dev/null 2>&1; then
-        echo 'Existing production volume without current-images.env; manual migration required'
-        return 1
-      fi
-    done
+    existing="$(docker ps -aq --filter "label=com.docker.compose.project=$project")"
+    [[ -z "$existing" ]] || { echo 'Application project exists without release state; inspect before bootstrap'; return 1; }
   fi
   compose "$sha" "$backend_image" "$web_image" config --quiet
   docker pull "$backend_image"
   docker pull "$web_image"
-  [[ -z "$previous_sha" ]] || docker pull "$backup_helper"
-  mkdir -p "$shared" "$root/backups"
+  mkdir -p "$shared"
   {
     printf 'PENDING_SHA=%s\nPREVIOUS_SHA=%s\n' "$sha" "$previous_sha"
     printf 'PREVIOUS_BACKEND_IMAGE=%s\nPREVIOUS_WEB_IMAGE=%s\n' "$previous_backend" "$previous_web"
@@ -168,33 +206,9 @@ apply_release() {
   mv -f "$pending.tmp.$$" "$pending"
   trap rollback_on_error EXIT
 
-  if [[ -n "$previous_sha" ]]; then
-    backup="$root/backups/$(date -u +%Y%m%dT%H%M%SZ)-$sha"
-    mkdir -m 700 "$backup"
-    install -m 600 "$env_file" "$backup/backend.env"
-    install -m 600 "$state" "$backup/current-images.env"
-    printf 'Previous release: %s\nCandidate release: %s\n' "$previous_sha" "$sha" > "$backup/release.txt"
-    # Quiesce application writes, then snapshot both stores as one backup pair.
-    compose "$previous_sha" "$previous_backend" "$previous_web" stop nginx
-    compose "$previous_sha" "$previous_backend" "$previous_web" stop backend
-    compose "$previous_sha" "$previous_backend" "$previous_web" stop minio
-    compose "$previous_sha" "$previous_backend" "$previous_web" exec -T mongo mongodump --archive > "$backup/mongo.archive.part"
-    [[ -s "$backup/mongo.archive.part" ]] || { echo 'MongoDB backup is empty'; return 1; }
-    mv "$backup/mongo.archive.part" "$backup/mongo.archive"
-    minio_cid="$(compose "$previous_sha" "$previous_backend" "$previous_web" ps -a -q minio)"
-    minio_volume="$(docker inspect -f '{{range .Mounts}}{{if eq .Destination "/data"}}{{.Name}}{{end}}{{end}}' "$minio_cid")"
-    [[ "$minio_volume" =~ ^[A-Za-z0-9_.-]+$ ]] || { echo 'Could not identify MinIO data volume'; return 1; }
-    docker run --rm --network none --read-only \
-      -v "$minio_volume:/data:ro" -v "$backup:/backup" "$backup_helper" \
-      tar -C /data -cf /backup/minio.tar.part .
-    [[ -s "$backup/minio.tar.part" ]] || { echo 'MinIO backup is empty'; return 1; }
-    mv "$backup/minio.tar.part" "$backup/minio.tar"
-    touch "$backup/COMPLETE"
-    echo "Backup created at $backup (copy this pair off-VPS)."
-  fi
-  compose "$sha" "$backend_image" "$web_image" up -d --no-build --pull never --wait --wait-timeout 180
+  compose "$sha" "$backend_image" "$web_image" up -d --no-deps --no-build --pull never --wait --wait-timeout 180 backend nginx
   trap - EXIT
-  echo "Candidate $sha is running; public verification is required before promotion."
+  echo "Candidate $sha is running; HTTPS verification is required before promotion."
 }
 
 verify_release() {
@@ -205,6 +219,7 @@ verify_release() {
   backend_image="$(setting "$pending" CANDIDATE_BACKEND_IMAGE)"
   web_image="$(setting "$pending" CANDIDATE_WEB_IMAGE)"
   valid_image "$backend_image" && valid_image "$web_image" || return 1
+  check_app_only_manifest "$sha" "$backend_image" "$web_image"
   check_release "$sha" "$backend_image" "$web_image"
   write_state "$release/images.env" "$sha" "$backend_image" "$web_image"
   write_state "$state" "$sha" "$backend_image" "$web_image"

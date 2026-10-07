@@ -1,6 +1,6 @@
 # DND Drop Space
 
-Kho cá nhân cho ghi chú Markdown, bookmark, ảnh/video và tệp. React/Vite PWA + Express + MongoDB **4.0** + MinIO; Nginx phục vụ web và proxy `/api`.
+Kho cá nhân cho ghi chú Markdown, bookmark, ảnh/video và tệp. React/Vite PWA + Express + MongoDB **4.0** + MinIO; Nginx phục vụ web và proxy `/api` ở local/CI, production dùng Traefik chuyển `/api` trực tiếp tới backend.
 
 Trong **Cài đặt → Giao diện**, chọn một trong năm theme và chế độ Sáng/Tối/Hệ thống. Chế độ Hệ thống theo màu của thiết bị; thanh trên cùng có bộ chọn nhanh. Thay đổi hiện ngay. Khi đăng nhập, lựa chọn được lưu trong hồ sơ và khôi phục ở lần đăng nhập sau; khi chưa đăng nhập, lựa chọn lưu trên trình duyệt. Nếu không có preference, ứng dụng dùng Cyber Space Blue ở chế độ tối.
 
@@ -91,4 +91,4 @@ API chính: `/api/auth`, `/api/items`, `/api/folders`, `/api/tags`, `/api/search
 
 Đọc [AGENTS.md](AGENTS.md) trước khi sửa. Dùng [mẫu prompt](prompts/TEMPLATE.md); theo dõi việc đang làm/đã xong tại [bảng tiến độ](prompts/README.md). Hoàn tất thì move prompt sang `completed/`, cập nhật context, kiểm tra và commit.
 
-CI chạy khi push `main/master` hoặc mở PR: syntax/lint → build frontend → Compose với `mongo:4.0` → smoke/RBAC/collaboration/auth. Push `main` kích hoạt thêm production workflow: chọn service đổi, validate, build/push image SHA, backup, deploy VPS, verify và rollback nếu lỗi. Chưa chạy thật trên GitHub/VPS; cấu hình và trình tự vận hành ở [DEPLOY_GUIDES](DEPLOY_GUIDES.md), trạng thái ở [DEPLOYMENT](docs/DEPLOYMENT.md).
+CI chạy khi push `main/master` hoặc mở PR: syntax/lint → build frontend → Compose local với `mongo:4.0` → smoke/RBAC/collaboration/auth. Push `main` kích hoạt thêm production workflow: chọn service đổi, validate, build/push image SHA, deploy **chỉ backend/web** qua Traefik trên VPS, verify HTTPS rồi promote; lỗi thì rollback image ứng dụng. MongoDB 4.0 và MinIO production là dịch vụ dùng chung, backup/restore riêng. Chưa chạy thật trên GitHub/VPS; cấu hình và trình tự vận hành ở [DEPLOY_GUIDES](DEPLOY_GUIDES.md), trạng thái ở [DEPLOYMENT](docs/DEPLOYMENT.md).

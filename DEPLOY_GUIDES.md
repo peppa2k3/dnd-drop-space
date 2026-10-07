@@ -1,126 +1,66 @@
-# Triển khai DND Drop Space lên VPS
+# Triển khai DND Drop Space qua Traefik hiện có
 
-Workflow: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). Chạy khi push `main`; `workflow_dispatch` trên `main` luôn build đủ hai image, phù hợp lần triển khai đầu. GitHub chỉ giữ credential để SSH/publish image; cấu hình ứng dụng nằm riêng trên VPS. Hướng dẫn này chưa phải bằng chứng hệ thống đã chạy trên GitHub/VPS.
+Trạng thái: cấu hình trong repo đã chuẩn bị; chưa xác nhận một lần chạy GitHub/VPS. Production chỉ deploy hai image ứng dụng. MongoDB phải là **4.0**; MongoDB, MinIO và Traefik là dịch vụ dùng chung do VPS vận hành, cần kế hoạch backup riêng. Không dùng Compose của ứng dụng để tạo, dừng, xóa hoặc nâng cấp chúng.
 
-## 1. Chuẩn bị VPS và tên miền
+## 1. Xác nhận hạ tầng trước deploy
 
-1. Trỏ DNS `app.example.com` tới VPS; nếu dùng avatar, trỏ thêm `storage.example.com` tới VPS.
-2. Cài Docker Engine + Compose plugin theo [hướng dẫn Docker cho Ubuntu](https://docs.docker.com/engine/install/ubuntu/). Cài `curl`, `tar`, `openssh-server` và reverse proxy HTTPS trên host. Kiểm tra `docker compose version` và `docker info`.
-3. Tạo user riêng `pkhdeploy`, chỉ cho SSH key, không cấp `sudo`. User phải gọi được Docker daemon. **Quyền vào Docker daemon gần tương đương root**; chỉ cấp cho tài khoản tin cậy, dùng VPS riêng cho ứng dụng. Có thể triển khai Docker rootless nếu tự cấu hình lại socket/volume.
-4. Tạo `/srv/pkh/shared`, `/srv/pkh/releases`, `/srv/pkh/backups` do `pkhdeploy` sở hữu, quyền thư mục `700`. Đảm bảo đủ dung lượng trống để lưu cả `mongodump` và bản tar MinIO trước mỗi lần nâng cấp. Đặt lịch sao chép cặp backup ra ngoài VPS, mã hóa và thử restore định kỳ.
-5. Chỉ mở SSH từ IP quản trị/GitHub runner phù hợp, 80/443 cho web. Compose production bind web và MinIO vào `127.0.0.1`; MongoDB và backend không có cổng host.
+- DNS `dangngochai.io.vn` và `api.dangngochai.io.vn` trỏ VPS. Traefik hiện có phải nối external Docker network `web`, có HTTPS entrypoint và cert resolver hoạt động. Lấy **tên thực** của entrypoint/resolver từ cấu hình Traefik; kiểm tra không có router nào khác chiếm hai hostname hoặc các tên `pkh-dnd-web`, `pkh-dnd-api`, `pkh-dnd-web-api`.
+- Xác nhận external network riêng chứa MongoDB 4.0 và MinIO, tên DNS nội bộ/port thực của từng dịch vụ. Backend sẽ tham gia mạng này; không dùng `localhost` hoặc bind host để truy cập dịch vụ khác. Nếu dịch vụ hiện không ở cùng một network, phối hợp người vận hành kết nối network theo kế hoạch riêng; không đổi container/volume bằng workflow này.
+- Tài khoản SSH `deploy` truy cập Docker Engine/Compose; Docker access cho phép thao tác cấp root nên chỉ cấp cho tài khoản tin cậy. Tạo `/srv/pkh/shared` và `/srv/pkh/releases` do `deploy` sở hữu, quyền `700` (hoặc đặt `VPS_DEPLOY_ROOT` khác). Docker Compose plugin và `curl` phải có trên VPS.
+- Kiểm tra project `pkh-dnd-app` chưa được web khác dùng. Cấu hình này không publish host port. Các project/volume cũ tên `pkh-production` **không bị script đụng tới**; nếu đang chạy bản cũ, phải lập kế hoạch chuyển traffic/state riêng trước lần deploy mới. Không gắn volume MongoDB đã dùng phiên bản cao hơn vào 4.0.
 
-Ví dụ tạo tài khoản/thư mục (chạy từ tài khoản quản trị VPS, điều chỉnh đường dẫn nếu đổi `VPS_DEPLOY_ROOT`):
-
-```sh
-sudo useradd -m -s /bin/bash pkhdeploy
-sudo usermod -aG docker pkhdeploy
-sudo install -d -m 700 -o pkhdeploy -g pkhdeploy /srv/pkh /srv/pkh/shared /srv/pkh/releases /srv/pkh/backups
-sudo install -d -m 700 -o pkhdeploy -g pkhdeploy /home/pkhdeploy/.ssh
-sudo install -m 600 -o pkhdeploy -g pkhdeploy /dev/null /home/pkhdeploy/.ssh/authorized_keys
-```
-
-Trên máy quản trị, tạo cặp key Ed25519 riêng cho workflow, không đặt passphrase vì job chạy tự động:
+Lệnh kiểm tra chỉ đọc trên VPS:
 
 ```sh
-ssh-keygen -t ed25519 -f ./pkhdeploy_ed25519 -C pkh-github-deploy -N ''
+docker compose version
+docker network inspect web --format '{{json .Containers}}'
+docker network inspect <storage-network> --format '{{json .Containers}}'
+docker ps --filter label=com.docker.compose.project=pkh-dnd-app
+docker ps --format '{{.Names}} {{.Labels}}' | grep -E 'pkh-dnd-|dangngochai.io.vn' || true
 ```
 
-Đưa **nội dung file `.pub`** vào `/home/pkhdeploy/.ssh/authorized_keys` trên VPS; đưa **nội dung private key** vào GitHub Secret `VPS_SSH_PRIVATE_KEY`, rồi xóa bản key tạm trên máy chia sẻ nếu có. Xác minh fingerprint host key trực tiếp qua console VPS trước khi lưu dòng `known_hosts` vào `VPS_SSH_KNOWN_HOSTS`; không tin kết quả `ssh-keyscan` nếu chưa đối chiếu. Với SSH port khác 22, dòng host phải có dạng `[host]:port`.
+## 2. Private env và registry
 
-## 2. Registry
+Sao chép [mẫu key](backend/.env.example) tới `/srv/pkh/shared/backend.env` trực tiếp trên VPS, chỉ cho `deploy` đọc (`chmod 600`). Không gửi file đã điền qua GitHub hoặc commit. Điền các giá trị production sau:
 
-GHCR luôn được publish vào `ghcr.io/<owner>/<repo>/backend:<sha>` và `.../web:<sha>`. Workflow dùng `GITHUB_TOKEN` với `packages: write`; không cần tạo PAT để **push** GHCR. Nếu package private, trên VPS đăng nhập GHCR bằng PAT classic chỉ có `read:packages` và được quyền đọc package: `docker login ghcr.io`. Liên kết package với repo nếu `GITHUB_TOKEN` chưa được cấp quyền push. Xem [tài liệu GHCR](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
+| Key | Giá trị cần xác nhận |
+| --- | --- |
+| `NODE_ENV`, `CLIENT_ORIGIN` | `production`, `https://dangngochai.io.vn` |
+| `PKH_STORAGE_NETWORK` | Tên external private network thực, khác `web` |
+| `TRAEFIK_HTTPS_ENTRYPOINT`, `TRAEFIK_CERT_RESOLVER` | Tên đã có trong Traefik |
+| `MONGO_URI` | URI MongoDB **4.0** thực, có database/credential nếu cần, hostname trong network private |
+| `MINIO_ENDPOINT`, `MINIO_PORT`, `MINIO_USE_SSL` | Đích MinIO nội bộ thực trong network private |
+| `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_BUCKET` | Credential và bucket ứng dụng trên MinIO hiện có |
+| `MINIO_PUBLIC_ENDPOINT`, `MINIO_PUBLIC_PORT`, `MINIO_PUBLIC_USE_SSL` | Host/port HTTPS hiện có để browser mở signed avatar URL; SSL = `true` |
+| `JWT_*`, `GOOGLE_CLIENT_ID`, `EMAIL_*`, `OTP_*` | Theo mẫu và hướng dẫn chạy trong [README](README.md) |
 
-Muốn publish thêm Docker Hub, tạo hai repo image `<namespace>/<repo>-backend` và `<namespace>/<repo>-web` (tên `<repo>` lấy từ GitHub repository), tạo access token có quyền push, rồi đặt `PUBLISH_DOCKERHUB=true`, `DOCKERHUB_NAMESPACE`, `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN` trên GitHub. Image: `docker.io/<namespace>/<repo>-backend:<sha>` và `...-web:<sha>`. Trên VPS, đăng nhập Docker Hub bằng tài khoản/token chỉ cần quyền pull. Đặt `DEPLOY_REGISTRY=dockerhub` nếu muốn VPS lấy image từ Docker Hub; mặc định `ghcr`. Nếu chọn Docker Hub nhưng chưa bật publish/thiếu credential, workflow dừng trước deploy.
+Backend cần quyền truy cập MongoDB và bucket MinIO; `/api/health` kiểm tra ping MongoDB và `bucketExists` MinIO. Traefik định tuyến `dangngochai.io.vn/` vào Nginx, `dangngochai.io.vn/api` và `api.dangngochai.io.vn` vào backend. Frontend dùng `/api` cùng origin. Traefik là một proxy hop tới API (`TRUST_PROXY_HOPS=1`); Nginx vẫn proxy `/api` trong môi trường local/CI. Nếu thêm Socket.io sau này, cấu hình route Traefik tương ứng trước khi dùng production.
 
-Mỗi image có tag SHA dùng làm tham chiếu release (GHCR không ghi đè tag SHA đã có). Tag `production` được cập nhật **sau** verify; Compose chỉ dùng tag SHA nên rollback không phụ thuộc tag di động. Nếu job cập nhật alias lỗi, release đã verify vẫn chạy và workflow báo đỏ để sửa registry; alias có thể tạm cũ. Chỉ service thay đổi được build/push; service còn lại dùng tham chiếu image của release đang chạy. Lần đầu phải chạy `workflow_dispatch` để có đủ hai image.
+GHCR mặc định publish `ghcr.io/<owner>/<repo>/backend:<sha>` và `.../web:<sha>` bằng `GITHUB_TOKEN` có `packages: write`. Với package private, đăng nhập **trên VPS dưới user `deploy`** bằng token chỉ có quyền pull và quyền đọc package: `docker login ghcr.io`. Nếu dùng Docker Hub, đặt `PUBLISH_DOCKERHUB=true`, `DOCKERHUB_NAMESPACE`, secrets `DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN`; đăng nhập Docker Hub trên VPS rồi chọn `DEPLOY_REGISTRY=dockerhub`. Không lưu password trong repo. `docker pull` từng image SHA trên VPS là phép thử quyền pull tốt nhất trước rollout.
 
-## 3. GitHub Secrets, Variables và environment
+## 3. GitHub Actions
 
-Vào **Settings → Secrets and variables → Actions** của repo. Đặt ở **repository scope** vì các job `deploy`, `verify`, `rollback` dùng cùng cấu hình; environment secret chỉ có ở job khai báo environment.
+Tạo repo secrets `VPS_SSH_PRIVATE_KEY`, `VPS_SSH_KNOWN_HOSTS` (dòng host key đã đối chiếu fingerprint qua console VPS), và Docker Hub secrets nếu dùng. Repo variables: `VPS_HOST`, `VPS_PORT` (mặc định 22), `VPS_DEPLOY_ROOT` (mặc định `/srv/pkh`), `DEPLOY_REGISTRY` (`ghcr` mặc định hoặc `dockerhub`), các biến Docker Hub tùy chọn. Workflow luôn SSH bằng user **`deploy`**. Host key cho port khác 22 phải có dạng `[host]:port`; không lấy `ssh-keyscan` rồi tin ngay nếu chưa đối chiếu.
 
-| Loại | Tên | Giá trị |
-| --- | --- | --- |
-| Secret | `VPS_SSH_PRIVATE_KEY` | Private key của deploy account |
-| Secret | `VPS_SSH_KNOWN_HOSTS` | Dòng known_hosts đã xác minh fingerprint |
-| Secret, khi dùng Hub | `DOCKERHUB_USERNAME` | Tài khoản publish |
-| Secret, khi dùng Hub | `DOCKERHUB_TOKEN` | Access token publish |
-| Variable | `VPS_HOST` | DNS/IP SSH của VPS |
-| Variable | `VPS_USER` | `pkhdeploy` |
-| Variable | `VPS_PORT` | Port SSH, mặc định 22 |
-| Variable | `VPS_DEPLOY_ROOT` | `/srv/pkh`, mặc định này nếu bỏ trống |
-| Variable | `DEPLOY_REGISTRY` | `ghcr` (mặc định) hoặc `dockerhub` |
-| Variable | `PUBLISH_DOCKERHUB` | `true` hoặc bỏ trống |
-| Variable, khi dùng Hub | `DOCKERHUB_NAMESPACE` | Docker Hub username/organization chữ thường |
+Tạo environment `production` và chỉ cho branch `main` deploy. Push `main` chọn image bị ảnh hưởng, gọi CI local riêng (MongoDB `mongo:4.0`, MinIO test), build/push image SHA, SSH apply, verify HTTPS rồi mới promote tag `production`. `workflow_dispatch` trên `main` build cả hai image cho lần đầu. Thay đổi chỉ tài liệu không deploy. Tag `production` là alias; VPS chạy ref SHA trong `shared/current-images.env`. Không push code chỉ để thử cho đến khi các đầu vào phía trên đã xác nhận.
 
-Tạo environment `production`, giới hạn deployment branch là `main` theo [GitHub Environments](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments). Có thể bật reviewer để duyệt trước job `deploy`; khi đó push `main` chạy pipeline nhưng chờ duyệt tại bước deploy. Các job build/push dùng GitHub-hosted runner; không chạy code PR trên VPS.
+## 4. Kiểm tra và rollback
 
-## 4. Cấu hình ứng dụng và HTTPS trên VPS
-
-Từ máy quản trị, sao chép **mẫu** [`backend/.env.example`](backend/.env.example) sang VPS rồi sửa giá trị trực tiếp trên VPS; không chuyển file đã chứa secret qua GitHub:
+Sau khi có release, kiểm tra:
 
 ```sh
-scp backend/.env.example pkhdeploy@app.example.com:/srv/pkh/shared/backend.env
-ssh pkhdeploy@app.example.com 'chmod 600 /srv/pkh/shared/backend.env'
+docker ps --filter label=com.docker.compose.project=pkh-dnd-app
+curl -fsS https://dangngochai.io.vn/api/health
+curl -fsS https://api.dangngochai.io.vn/api/health
+curl -fsS -o /dev/null -w '%{http_code}\n' https://dangngochai.io.vn/
 ```
 
-Điền toàn bộ giá trị production trong file, giữ chủ file `pkhdeploy` và quyền `600`. Các nhóm key:
+`apply` chỉ pull/khởi chạy backend và Nginx, `verify` kiểm tra hai container cùng ba URL HTTPS; API health kiểm tra kết nối MongoDB/MinIO. Chỉ sau verify mới đổi symlink `current` và state. Nếu lỗi, tự quay về **image ứng dụng** của release đã verify trước; lần đầu lỗi sẽ dừng/xóa container ứng dụng của candidate và báo rõ không có bản để phục hồi. Shared services/data vẫn nguyên. Không tự rollback schema/data; giữ lịch backup MongoDB và MinIO của dịch vụ dùng chung, diễn tập restore riêng và lưu offsite. Không chạy `down --volumes`, `volume rm`, hoặc prune dịch vụ dùng chung.
 
-- Server/domain: `NODE_ENV=production`, `CLIENT_ORIGIN=https://app.example.com`, `WEB_PORT`, `MINIO_API_PORT`, `MINIO_CONSOLE_PORT`. `PORT=5000`, `TRUST_PROXY_HOPS=2` được Compose production đặt cho backend.
-- MongoDB: `MONGO_URI` được Compose production khóa tới service `mongo:27017`; giữ `mongo:4.0`, không gắn volume từ bản MongoDB mới hơn. Không cần database password ở cấu hình hiện tại vì Mongo chỉ nằm trong Docker network; bảo vệ Docker daemon và host.
-- MinIO: `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_BUCKET`; `MINIO_PUBLIC_ENDPOINT=storage.example.com`, `MINIO_PUBLIC_PORT=443`, `MINIO_PUBLIC_USE_SSL=true` cho URL avatar ký. Endpoint nội bộ được Compose đặt là `minio:9000`.
-- JWT/auth: hai secret khác nhau dài từ 32 ký tự, thời hạn và tên cookie; `GOOGLE_CLIENT_ID` của OAuth **Web application**. Thêm `https://app.example.com` vào Authorized JavaScript origins. Luồng ID token hiện tại không dùng Google client secret/callback URL.
-- SMTP/OTP: `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_SECURE`, `EMAIL_USER`, `EMAIL_PASSWORD`, `EMAIL_FROM`, các `OTP_*`. Gmail dùng App Password nếu tài khoản/nhà cung cấp yêu cầu; kiểm tra gửi email thật sau deploy.
-- Upload/trash/preview: `MAX_FILE_SIZE_MB`, `MAX_FILES_PER_UPLOAD`, `TRASH_AUTO_PURGE_DAYS`, `URL_FETCH_TIMEOUT_MS`.
-
-Host HTTPS proxy phải chuyển `app.example.com` → `127.0.0.1:WEB_PORT` và `storage.example.com` → `127.0.0.1:MINIO_API_PORT`. Với Nginx host, **ghi đè** `X-Forwarded-For` bằng IP client tại hop ngoài và đặt `X-Forwarded-Proto=https`; Nginx trong image thêm hop thứ hai. Với MinIO, giữ nguyên `Host`/đường dẫn để chữ ký S3 hợp lệ. Ví dụ phần `location` trong hai HTTPS server đã có chứng chỉ:
-
-```nginx
-# app.example.com
-client_max_body_size 1100m;
-location / {
-    proxy_pass http://127.0.0.1:8080;
-    proxy_set_header Host $host;
-    proxy_set_header X-Forwarded-For $remote_addr;
-    proxy_set_header X-Forwarded-Proto https;
-    proxy_read_timeout 300s;
-    proxy_send_timeout 300s;
-}
-
-# storage.example.com
-location / {
-    proxy_pass http://127.0.0.1:9000;
-    proxy_set_header Host $http_host;
-    proxy_set_header X-Forwarded-Proto https;
-}
-```
-
-Thay `8080/9000` theo env; không mở MinIO Console ra Internet. Kiểm tra chứng chỉ HTTPS, cookie Secure, Google consent, email OTP và avatar URL trên domain thật.
-
-## 5. Triển khai và kiểm tra
-
-1. Đảm bảo `backend.env`, registry login trên VPS, DNS/HTTPS và SSH đã sẵn sàng **trước** khi push workflow lên `main`. Nếu production cũ đã có volume `pkh-production_*` nhưng không có `current-images.env`, script từ chối bootstrap; cần kế hoạch migration riêng.
-2. Push code lên `main` khi sẵn sàng; lần đầu có thể chọn **Actions → Production CI/CD → Run workflow** trên `main` để build cả backend/web. PR không deploy. Push chỉ thay tài liệu không tạo release.
-3. `changes → validate` gọi CI hiện có (lint/syntax, frontend build, smoke/RBAC/collaboration/auth trên Compose MongoDB 4.0). Dự án JavaScript chưa có TypeScript typecheck riêng. `build-images` tạo image artifact; `push-images` publish SHA; `deploy` gửi Compose/script qua SSH. Không có secret ứng dụng trong image.
-4. VPS pull image **trước** downtime. Nếu có release cũ, dừng web/backend/MinIO để ngừng ghi, `mongodump` và tar MinIO vào cùng thư mục `/srv/pkh/backups/<UTC>-<sha>`; kèm `backend.env` và manifest cũ quyền riêng. Chỉ dùng bản có file `COMPLETE`; bản `.part` là backup lỗi. Sau đó Compose `up --wait`. Backup chưa tự đưa ra khỏi VPS: sao chép/mã hóa ngoài VPS theo lịch vận hành.
-5. `verify` kiểm tra health cả bốn container, frontend/API trên loopback và HTTPS public, rồi ghi `shared/current-images.env`, cập nhật `current` symlink. Nếu deploy/verify lỗi, rollback phục hồi image cũ và kiểm tra lại; MongoDB/MinIO volume giữ nguyên. Lần đầu lỗi thì dừng app lỗi, giữ volume để điều tra; nếu volume đã được tạo, lần thử tiếp theo bị chặn cho đến khi đánh giá dữ liệu và lập kế hoạch tiếp tục bootstrap an toàn.
-
-Xem trạng thái mà không đọc env bí mật:
-
-```sh
-cat /srv/pkh/shared/current-images.env
-docker ps --filter label=com.docker.compose.project=pkh-production
-curl -fsS https://app.example.com/api/health
-curl -fsS -o /dev/null -w '%{http_code}\n' https://app.example.com/
-```
-
-## 6. Rollback và dữ liệu
-
-Rollback thủ công về release SHA đã từng verify (dùng script của release hiện hành):
+Rollback thủ công về SHA đã verify:
 
 ```sh
 bash /srv/pkh/current/scripts/deploy.sh manual-rollback /srv/pkh <40-character-old-sha>
 ```
 
-Lệnh này cũng backup cặp dữ liệu hiện tại trước khi đổi image, verify lại, rồi cập nhật `current`. Không xóa/restore database hay MinIO khi rollback ứng dụng. Nếu có migration dữ liệu **không tương thích ngược**, dừng triển khai và lập kế hoạch restore riêng: phải khôi phục MongoDB **và** MinIO từ cùng một thư mục backup vào môi trường riêng để thử trước. Không chạy `docker compose down --volumes`, `docker volume rm`, hay prune release/image đang dùng. Xem trạng thái chi tiết và điểm cần tiếp tục trong [`docs/context_deploy.md`](docs/context_deploy.md).
+Script từ chối Compose release cũ có `mongo`/`minio`; chuyển từ kiến trúc 009 bốn service cần kế hoạch migration riêng. Xem [context triển khai](docs/context_deploy.md) để nắm state và phần chưa nghiệm thu.

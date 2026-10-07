@@ -177,7 +177,7 @@ jobs:
       - name: Transfer release and apply on VPS
         env:
           VPS_HOST: ${{ vars.VPS_HOST }}
-          VPS_USER: ${{ vars.VPS_USER }}
+          VPS_USER: deploy
           VPS_PORT: ${{ vars.VPS_PORT }}
           DEPLOY_ROOT: ${{ vars.VPS_DEPLOY_ROOT }}
           DEPLOY_REGISTRY: ${{ vars.DEPLOY_REGISTRY }}
@@ -235,7 +235,7 @@ jobs:
       - name: Check services, HTTPS and promote release
         env:
           VPS_HOST: ${{ vars.VPS_HOST }}
-          VPS_USER: ${{ vars.VPS_USER }}
+          VPS_USER: deploy
           VPS_PORT: ${{ vars.VPS_PORT }}
           DEPLOY_ROOT: ${{ vars.VPS_DEPLOY_ROOT }}
         shell: bash
@@ -264,7 +264,7 @@ jobs:
           DEPLOY_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           KNOWN_HOSTS: ${{ secrets.VPS_SSH_KNOWN_HOSTS }}
           VPS_HOST: ${{ vars.VPS_HOST }}
-          VPS_USER: ${{ vars.VPS_USER }}
+          VPS_USER: deploy
           VPS_PORT: ${{ vars.VPS_PORT }}
           DEPLOY_ROOT: ${{ vars.VPS_DEPLOY_ROOT }}
         shell: bash
