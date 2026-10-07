@@ -73,8 +73,10 @@ check_router_conflicts() {
     owner="$(docker inspect -f '{{index .Config.Labels "com.docker.compose.project"}}' "$cid")"
     [[ "$owner" != "$project" ]] || continue
     labels="$(docker inspect -f '{{json .Config.Labels}}' "$cid")"
-    if [[ "$labels" == *dangngochai.io.vn* || "$labels" == *pkh-dnd-* ]]; then
-      echo 'Another container on web may own the domain/router; inspect Traefik labels before deploy'
+    if [[ "$labels" == *'Host(`dangngochai.io.vn`)'* \
+        || "$labels" == *'Host(`api.dangngochai.io.vn`)'* \
+        || "$labels" == *'pkh-dnd-'* ]]; then
+      echo "Another container on web owns a DND domain/router: $cid"
       return 1
     fi
   done <<< "$cids"
