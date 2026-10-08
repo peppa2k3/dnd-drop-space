@@ -64,3 +64,6 @@ bash /srv/pkh/current/scripts/deploy.sh manual-rollback /srv/pkh <40-character-o
 ```
 
 Script từ chối Compose release cũ có `mongo`/`minio`; chuyển từ kiến trúc 009 bốn service cần kế hoạch migration riêng. Xem [context triển khai](docs/context_deploy.md) để nắm state và phần chưa nghiệm thu.
+
+## Gán Admin cho mail
+docker exec -it pkh-dnd-app-backend-1 node scripts/set-admin.js EMAIL_CUA_BAN

@@ -218,6 +218,7 @@ jobs:
     needs: [changes, deploy]
     if: needs.changes.outputs.deploy == 'true'
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 15
     steps:
       - name: Configure pinned SSH identity
@@ -254,6 +255,7 @@ jobs:
     needs: [changes, deploy, verify]
     if: ${{ always() && needs.changes.outputs.deploy == 'true' && (needs.deploy.result == 'failure' || needs.verify.result == 'failure') }}
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -288,6 +290,7 @@ jobs:
     needs: [changes, verify]
     if: needs.changes.outputs.deploy == 'true'
     runs-on: ubuntu-latest
+    environment: production
     permissions:
       contents: read
       packages: write
