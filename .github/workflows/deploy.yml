@@ -286,20 +286,24 @@ jobs:
             -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -p "$port" "$VPS_USER@$VPS_HOST" \
             "bash -s -- rollback '$root' '$GITHUB_SHA'" < scripts/deploy.sh
 
+
   promote-tags:
     needs: [changes, verify]
     if: needs.changes.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     environment: production
+
     permissions:
       contents: read
       packages: write
+
     strategy:
       fail-fast: false
       matrix:
         service: ${{ fromJSON(needs.changes.outputs.matrix) }}
+
     steps:
-      - name: Move production alias only after verified deployment
+      - name: Promote verified production images
         env:
           SERVICE: ${{ matrix.service }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -307,20 +311,45 @@ jobs:
           HUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
           HUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
           HUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
         shell: bash
         run: |
           set -Eeuo pipefail
+
           repo="${GITHUB_REPOSITORY,,}"
           ghcr="ghcr.io/$repo/$SERVICE"
-          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+
+          # 1. Login GHCR
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io \
+            -u "$GITHUB_ACTOR" --password-stdin
+
+          # 2. Pull immutable image SHA from GHCR
           docker pull "$ghcr:$GITHUB_SHA"
+
+          # 3. Publish immutable SHA to Docker Hub
+          if [[ "$HUB_ENABLED" == true ]]; then
+            [[ "$HUB_NAMESPACE" =~ ^[a-z0-9_-]+$ \
+              && -n "$HUB_USER" \
+              && -n "$HUB_TOKEN" ]] || exit 1
+
+            hub="docker.io/$HUB_NAMESPACE/${repo#*/}-$SERVICE"
+
+            printf '%s' "$HUB_TOKEN" | docker login docker.io \
+              -u "$HUB_USER" --password-stdin
+
+            docker tag "$ghcr:$GITHUB_SHA" "$hub:$GITHUB_SHA"
+            docker push "$hub:$GITHUB_SHA"
+          fi
+
+          # 4. Promote GHCR production alias
           docker tag "$ghcr:$GITHUB_SHA" "$ghcr:production"
           docker push "$ghcr:production"
+
+          # 5. Promote Docker Hub production alias
           if [[ "$HUB_ENABLED" == true ]]; then
-            [[ "$HUB_NAMESPACE" =~ ^[a-z0-9_-]+$ && -n "$HUB_USER" && -n "$HUB_TOKEN" ]] || exit 1
-            hub="docker.io/$HUB_NAMESPACE/${repo#*/}-$SERVICE"
-            printf '%s' "$HUB_TOKEN" | docker login docker.io -u "$HUB_USER" --password-stdin
-            docker pull "$hub:$GITHUB_SHA"
-            docker tag "$hub:$GITHUB_SHA" "$hub:production"
+            docker tag "$ghcr:$GITHUB_SHA" "$hub:production"
             docker push "$hub:production"
           fi
+
+          echo "Production promoted successfully: $SERVICE"
+
