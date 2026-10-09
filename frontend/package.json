@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "lint": "eslint src",
     "test:themes": "node scripts/check-themes.mjs",
-    "test:i18n": "node scripts/check-i18n.mjs"
+    "test:i18n": "node scripts/check-i18n.mjs && node scripts/check-i18n-runtime.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

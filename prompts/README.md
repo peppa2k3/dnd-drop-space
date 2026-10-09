@@ -16,6 +16,7 @@ Luồng: `backlog/` → `progress/` → `completed/`. Move cùng file, giữ ID;
 | [009](progress/009-build_workflow_github-VPS-deploy.md) | Production CI/CD nền tảng | Thiết kế bốn service cũ được 011 thay thế; chưa nghiệm thu GitHub/VPS |
 | [010](backlog/010-production-release.md) | Đưa public, kiểm tra backup/restore | Chờ hạ tầng và nghiệm thu |
 | [010-i18n](progress/010-multi-language.md) | Đa ngôn ngữ cho website | Code/build/lint/translation đạt; chờ kiểm tra trực quan vi/en/zh-CN |
+| [010-1](completed/010-1-fix-multi-language.md) | Sửa UI hiện key thay vì bản dịch | Hoàn tất code; runtime 9 locale, build Node 22 đạt; chưa push/deploy VPS |
 | [011](progress/011-cicd-refactor-workflow.md) | Production app-only trên Traefik, MongoDB 4.0/MinIO dùng chung | Code/config local đã chuẩn bị; chờ xác nhận hạ tầng và kiểm tra GitHub/VPS |
 
 Code ban đầu ở commit `860f085`; không dựng lại lịch sử prompt chưa tồn tại.

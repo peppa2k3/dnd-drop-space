@@ -21,7 +21,6 @@ export const i18nReady = i18n.init({
   load: 'currentOnly',
   ns: NAMESPACES,
   defaultNS: 'common',
-  resources: {},
   interpolation: { escapeValue: false },
   returnNull: false,
   react: { useSuspense: false },
